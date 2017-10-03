@@ -2,15 +2,16 @@
 // Copyright (c) 2009-2012 The Bitcoin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_ALLOCATORS_H
-#define BITCOIN_ALLOCATORS_H
+#ifndef ALLOCATORS_H
+#define ALLOCATORS_H
 
-#include "cleanse.h"
+#include "support/cleanse.h"
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/once.hpp>
 #include <map>
-#include <string.h>
 #include <string>
+#include <string.h>
+
 
 /**
  * Thread-safe class to keep track of locked (ie, non-swappable) memory pages.
@@ -33,7 +34,7 @@ public:
         assert(!(page_size & (page_size-1))); // size must be power of two
         page_mask = ~(page_size - 1);
     }
-	
+
     ~LockedPageManagerBase()
     {
         assert(this->GetLockedPageCount() == 0);
@@ -101,6 +102,7 @@ private:
     Histogram histogram;
 };
 
+
 /**
  * OS-dependent memory page locking/unlocking.
  * Defined as policy class to make stubbing for test possible.
@@ -111,11 +113,11 @@ public:
     /** Lock memory pages.
      * addr and len must be a multiple of the system page size
      */
-	bool Lock(const void *addr, size_t len);
+    bool Lock(const void *addr, size_t len);
     /** Unlock memory pages.
      * addr and len must be a multiple of the system page size
      */
-	bool Unlock(const void *addr, size_t len);
+    bool Unlock(const void *addr, size_t len);
 };
 
 /**
@@ -137,9 +139,10 @@ public:
         boost::call_once(LockedPageManager::CreateInstance, LockedPageManager::init_flag);
         return *LockedPageManager::_instance;
     }
+
 private:
-	LockedPageManager();
-	
+    LockedPageManager();
+
     static void CreateInstance()
     {
         // Using a local static instance guarantees that the object is initialized
@@ -247,4 +250,4 @@ struct zero_after_free_allocator : public std::allocator<T>
 // This is exactly like std::string, but with a custom allocator.
 typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> > SecureString;
 
-#endif
+#endif // ALLOCATORS_H

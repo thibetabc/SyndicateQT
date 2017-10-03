@@ -195,13 +195,14 @@ public:
     void lockCoin(COutPoint& output);
     void unlockCoin(COutPoint& output);
     void listLockedCoins(std::vector<COutPoint>& vOutpts);
-	bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
+    bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
+    CWallet* getWallet();
 
 private:
     CWallet *wallet;
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
-	bool fProcessingQueuedTransactions;
+    bool fProcessingQueuedTransactions;
 
     // Wallet has an options model for wallet-specific options
     // (transaction fee, for example)

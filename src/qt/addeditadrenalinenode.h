@@ -1,4 +1,4 @@
-﻿#ifndef ADDEDITADRENALINENODE_H
+#ifndef ADDEDITADRENALINENODE_H
 #define ADDEDITADRENALINENODE_H
 
 #include <QDialog>
@@ -18,15 +18,16 @@ public:
     explicit AddEditAdrenalineNode(QWidget *parent = 0);
     ~AddEditAdrenalineNode();
 
-
 protected:
 
 private slots:
     void on_okButton_clicked();
     void on_cancelButton_clicked();
+    void on_AddEditAddressPasteButton_clicked();
+    void on_AddEditPrivkeyPasteButton_clicked();
+    void on_AddEditTxhashPasteButton_clicked();
 
 signals:
-
 
 private:
     Ui::AddEditAdrenalineNode *ui;

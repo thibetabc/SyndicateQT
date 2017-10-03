@@ -1,4 +1,4 @@
-﻿#ifndef BITCOINGUI_H
+#ifndef BITCOINGUI_H
 #define BITCOINGUI_H
 
 #include <QMainWindow>
@@ -14,13 +14,13 @@ class OverviewPage;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
+class MultisigDialog;
 class Notificator;
 class RPCConsole;
 class MasternodeManager;
-class BlockExplorer;
 class MessagePage;
 class MessageModel;
-
+class BlockBrowser;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -77,10 +77,11 @@ private:
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
+    MultisigDialog *multisigPage;
     MasternodeManager *masternodeManagerPage;
     MessagePage *messagePage;
-    BlockExplorer *blockExplorer;
     QLabel* netLabel;
+    BlockBrowser *blockBrowser;
     QLabel *labelEncryptionIcon;
     QLabel *labelStakingIcon;
     QLabel *labelConnectionsIcon;
@@ -97,6 +98,7 @@ private:
     QAction *addressBookAction;
     QAction *signMessageAction;
     QAction *verifyMessageAction;
+    QAction *multisigAction;
     QAction *aboutAction;
     QAction *receiveCoinsAction;
     QAction *optionsAction;
@@ -111,8 +113,8 @@ private:
     QAction *openRPCConsoleAction;
     QAction *masternodeManagerAction;
     QAction *messageAction;
+    QAction *blockAction;
     QAction *showBackupsAction;
-    QAction *blockExplorerAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
@@ -168,6 +170,8 @@ public slots:
     void askFee(qint64 nFeeRequired, bool *payFee);
     void handleURI(QString strURI);
 
+    void gotoMultisigPage();
+
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
@@ -179,8 +183,8 @@ private slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage();
-    /** Switch to Block Explorer*/
-    void gotoBlockExplorer();
+    /** Switch to block explorer*/
+    void gotoBlockBrowser();
     /** Switch to masternode manager page*/
     void gotoMasternodeManagerPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */

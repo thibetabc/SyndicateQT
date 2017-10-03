@@ -1,4 +1,3 @@
-
 #include "net.h"
 #include "masternodeconfig.h"
 #include "util.h"

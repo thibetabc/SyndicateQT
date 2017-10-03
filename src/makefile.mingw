@@ -2,26 +2,29 @@
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-USE_UPNP=-
-USE_WALLET=1
+USE_UPNP:=0
+USE_WALLET:=1
+USE_IPV6:=1
 
-BOOST_SUFFIX?=-mgw49-mt-s-1_57
+BOOST_SUFFIX?=-mgw72-mt-s-1_57
 
 INCLUDEPATHS= \
  -I"$(CURDIR)" \
- -I"D:/deps/boost_1_57_0" \
- -I"D:/deps/db-4.8.30.NC/build_unix" \
- -I"D:/deps/openssl-1.0.1p/include" \
- -I"D:/deps/secp256k1-ECC/include" \
- -I"D:/deps/"
+ -I"D:/coindeps32/boost/include/" \
+ -I"D:/coindeps32/db/include" \
+ -I"D:/coindeps32/openssl/include" \
+ -I"D:/coindeps32/secp256k1/include" \
+ -I"D:/coindeps32/miniupnpc/include" \
+ -I"D:/coindeps32/gmp/include"
 
 LIBPATHS= \
  -L"$(CURDIR)/leveldb" \
- -L"D:/deps/boost_1_57_0/stage/lib" \
- -L"D:/deps/db-4.8.30.NC/build_unix" \
- -L"D:/deps/openssl-1.0.1p/lib" \
- -L"D:/deps/secp256k1-ECC/.libs" \
- -L"D:/deps/miniupnpc"
+ -L"D:/coindeps32/boost/lib" \
+ -L"D:/coindeps32/db/lib" \
+ -L"D:/coindeps32/openssl/lib" \
+ -L"D:/coindeps32/secp256k1/lib" \
+ -L"D:/coindeps32/miniupnpc/lib" \
+ -L"D:/coindeps32/gmp/lib"
 
 LIBS= \
  -l leveldb \
@@ -34,7 +37,8 @@ LIBS= \
  -l db_cxx \
  -l ssl \
  -l secp256k1 \
- -l crypto
+ -l crypto \
+ -l gmp
 
 DEFS=-DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
@@ -51,6 +55,10 @@ ifneq (${USE_UPNP}, -)
  DEFS += -DMINIUPNP_STATICLIB -DUSE_UPNP=$(USE_UPNP)
 endif
 
+ifneq (${USE_IPV6}, -)
+	DEFS += -DUSE_IPV6=$(USE_IPV6)
+endif
+
 LIBS += -l mingwthrd -l kernel32 -l user32 -l gdi32 -l comdlg32 -l winspool -l winmm -l shell32 -l comctl32 -l ole32 -l oleaut32 -l uuid -l rpcrt4 -l advapi32 -l ws2_32 -l mswsock -l shlwapi
 
 # TODO: make the mingw builds smarter about dependencies, like the linux/osx builds are
@@ -58,8 +66,8 @@ HEADERS = $(wildcard *.h)
 
 OBJS= \
     obj/alert.o \
-	obj/allocators.o \
-    obj/cleanse.o \
+    obj/allocators.o \
+    obj/support/cleanse.o \
     obj/base58.o \
     obj/version.o \
     obj/checkpoints.o \
@@ -84,7 +92,6 @@ OBJS= \
     obj/rpcblockchain.o \
     obj/rpcrawtransaction.o \
     obj/rpcsmessage.o \
-    obj/timedata.o \
     obj/script.o \
     obj/scrypt.o \
     obj/sync.o \
@@ -157,18 +164,9 @@ obj/%.o: %.c $(HEADERS)
 Syndicated.exe: $(OBJS:obj/%=obj/%)
 	g++ $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
-obj/scrypt-x86.o: scrypt-x86.S
-	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
-
-obj/scrypt-x86_64.o: scrypt-x86_64.S
-	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
-
-obj/scrypt-arm.o: scrypt-arm.S
-	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
-
 clean:
 	-rm -f obj/*.o
-	-rm -f darksilkd.exe
+	-rm -f Syndicated.exe
 	-rm -f obj/build.h
 	cd leveldb && TARGET_OS=NATIVE_WINDOWS $(MAKE) clean && cd ..
 

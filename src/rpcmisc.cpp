@@ -9,7 +9,6 @@
 #include "net.h"
 #include "netbase.h"
 #include "rpcserver.h"
-#include "timedata.h"
 #include "util.h"
 #include "stealth.h"
 #include "spork.h"
@@ -56,7 +55,7 @@ Value getinfo(const Array& params, bool fHelp)
     obj.push_back(Pair("timeoffset",    (int64_t)GetTimeOffset()));
     obj.push_back(Pair("moneysupply",   ValueFromAmount(pindexBest->nMoneySupply)));
     obj.push_back(Pair("connections",   (int)vNodes.size()));
-    obj.push_back(Pair("proxy",         (proxy.IsValid() ? proxy.ToStringIPPort() : string())));
+    obj.push_back(Pair("proxy",         (proxy.first.IsValid() ? proxy.first.ToStringIPPort() : string())));
     obj.push_back(Pair("ip",            GetLocalAddress(NULL).ToStringIP()));
 
     //diff.push_back(Pair("proof-of-work",  GetDifficulty()));
@@ -115,7 +114,7 @@ public:
             obj.push_back(Pair("hex", HexStr(subscript.begin(), subscript.end())));
             Array a;
             BOOST_FOREACH(const CTxDestination& addr, addresses)
-                a.push_back(CBitcoinAddress(addr).ToString());
+                a.push_back(CSyndicateAddress(addr).ToString());
             obj.push_back(Pair("addresses", a));
             if (whichType == TX_MULTISIG)
                 obj.push_back(Pair("sigsrequired", nRequired));
@@ -138,7 +137,7 @@ Value validateaddress(const Array& params, bool fHelp)
             "validateaddress <Syndicateaddress>\n"
             "Return information about <Syndicateaddress>.");
 
-    CBitcoinAddress address(params[0].get_str());
+    CSyndicateAddress address(params[0].get_str());
     bool isValid = address.IsValid();
 
     Object ret;
@@ -177,7 +176,7 @@ Value validatepubkey(const Array& params, bool fHelp)
     bool isCompressed = pubKey.IsCompressed();
     CKeyID keyID = pubKey.GetID();
 
-    CBitcoinAddress address;
+    CSyndicateAddress address;
     address.Set(keyID);
 
     Object ret;
@@ -214,7 +213,7 @@ Value verifymessage(const Array& params, bool fHelp)
     string strSign     = params[1].get_str();
     string strMessage  = params[2].get_str();
 
-    CBitcoinAddress addr(strAddress);
+    CSyndicateAddress addr(strAddress);
     if (!addr.IsValid())
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 

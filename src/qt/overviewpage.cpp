@@ -1,4 +1,4 @@
-﻿#include "overviewpage.h"
+#include "overviewpage.h"
 #include "ui_overviewpage.h"
 
 #include "clientmodel.h"
@@ -11,9 +11,6 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
-#include "main.h"
-#include "util.h"
-#include "rpcserver.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -24,7 +21,7 @@
 
 #define DECORATION_SIZE 64
 #define ICON_OFFSET 16
-#define NUM_ITEMS 8
+#define NUM_ITEMS 6
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -135,46 +132,6 @@ OverviewPage::OverviewPage(QWidget *parent) :
     ui->listTransactions->setMinimumWidth(300);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
-
-    if(GetBoolArg("-chart", true))
-    {
-      // setup Plot
-      // create graph
-      ui->diffplot->addGraph();
-      ui->diffplot->addGraph();
-
-      // give the axes some labels:
-    ui->diffplot->xAxis->setLabel("Last 250 Blocks");
-    ui->diffplot->xAxis->setLabelColor(QColor(255, 255, 255));
-
-    ui->diffplot->yAxis->setLabel("Difficulty");
-    ui->diffplot->yAxis->setLabelColor(QColor(255, 255, 255));
-
-      // lets match the background
-      ui->diffplot->setBackground(QColor(103, 108, 118));
-
-      // set the pens
-      ui->diffplot->graph(0)->setPen(QPen(QColor(42, 171, 228)));
-      ui->diffplot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 3));
-
-      ui->diffplot->graph(1)->setPen(QPen(QColor(0,0,255)));
-      ui->diffplot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 3));
-      ui->diffplot->graph(1)->setVisible(false);
-
-      // set axes label fonts:
-      QFont label = font();
-      ui->diffplot->xAxis->setLabelFont(QFont(QFont().family(), 10));
-      ui->diffplot->xAxis->setTickLabelColor(QColor(255, 255, 255));
-      ui->diffplot->xAxis->setTickLabelFont(QFont(QFont().family(), 10));
-
-      ui->diffplot->yAxis->setLabelFont(QFont(QFont().family(), 10));
-      ui->diffplot->yAxis->setTickLabelColor(QColor(255, 255, 255));
-      ui->diffplot->yAxis->setTickLabelFont(QFont(QFont().family(), 10));
-    }
-    else
-    {
-      ui->diffplot->setVisible(false);
-    }
 
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
@@ -299,6 +256,12 @@ void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
 void OverviewPage::setClientModel(ClientModel *model)
 {
     this->clientModel = model;
+    if(model)
+    {
+        // Show warning if this is a prerelease version
+        connect(model, SIGNAL(alertsChanged(QString)), this, SLOT(updateAlerts(QString)));
+        updateAlerts(model->getStatusBarWarnings());
+    }
 }
 
 void OverviewPage::setWalletModel(WalletModel *model)
@@ -351,6 +314,12 @@ void OverviewPage::updateDisplayUnit()
 
         ui->listTransactions->update();
     }
+}
+
+void OverviewPage::updateAlerts(const QString &warnings)
+{
+    this->ui->labelAlerts->setVisible(!warnings.isEmpty());
+    this->ui->labelAlerts->setText(warnings);
 }
 
 void OverviewPage::showOutOfSyncWarning(bool fShow)
@@ -412,16 +381,18 @@ void OverviewPage::updateDarksendProgress()
     if(nMaxToAnonymize >= nAnonymizeSyndicateAmount * COIN) {
         ui->labelAmountRounds->setToolTip(tr("Found enough compatible inputs to anonymize %1")
                                           .arg(strAnonymizeSyndicateAmount));
-        // strAnonymizeSyndicateAmount = strAnonymizeSyndicateAmount.remove(strAnonymizeSyndicateAmount.indexOf("."), BitcoinUnits::decimals(nDisplayUnit) + 1);
+        strAnonymizeSyndicateAmount = strAnonymizeSyndicateAmount.remove(strAnonymizeSyndicateAmount.indexOf("."), BitcoinUnits::decimals(nDisplayUnit) + 1);
         strAmountAndRounds = strAnonymizeSyndicateAmount + tr(" / %n Rounds", "", nDarksendRounds);
     } else {
         QString strMaxToAnonymize = BitcoinUnits::formatHtmlWithUnit(nDisplayUnit, nMaxToAnonymize, false, BitcoinUnits::separatorAlways);
-        ui->labelAmountRounds->setToolTip(tr("Not enough compatible inputs to anonymize %1,<br>"
-                                             "will anonymize %2 instead")
+        ui->labelAmountRounds->setToolTip(tr("Not enough compatible inputs to anonymize <span style='color:red;'>%1</span>,<br>"
+                                             "will anonymize <span style='color:red;'>%2</span> instead")
                                           .arg(strAnonymizeSyndicateAmount)
                                           .arg(strMaxToAnonymize));
         strMaxToAnonymize = strMaxToAnonymize.remove(strMaxToAnonymize.indexOf("."), BitcoinUnits::decimals(nDisplayUnit) + 1);
-        strAmountAndRounds = QString(BitcoinUnits::factor(nDisplayUnit) == 1 ? "" : "~") + strMaxToAnonymize + " / " + tr("%n Rounds", "", nDarksendRounds);
+        strAmountAndRounds = "<span style='color:red;'>" +
+                QString(BitcoinUnits::factor(nDisplayUnit) == 1 ? "" : "~") + strMaxToAnonymize +
+                " / " + tr("%n Rounds", "", nDarksendRounds) + "</span>";
     }
     ui->labelAmountRounds->setText(strAmountAndRounds);
 
@@ -599,80 +570,3 @@ void OverviewPage::toggleDarksend(){
 
     }
 }
-
-void OverviewPage::updatePlot(int count)
-{
-    // Double Check to make sure we don't try to update the plot when it is disabled
-    if (!GetBoolArg("-chart", true)) { return; }
-
-    // if(fDebug) { printf("Plot: Getting Ready: pidnexBest: %p\n", pindexBest); }
-
-    int numLookBack = 250;
-    double diffMax = 0;
-    CBlockIndex* pindex = pindexBest;
-    int height = nBestHeight;
-    int xStart = std::max<int>(height-numLookBack, 0) + 1;
-    int xEnd = height;
-
-    // Start at the end and walk backwards
-    int i = numLookBack-1;
-    int x = xEnd;
-
-    // This should be a noop if the size is already 2000
-    vX.resize(numLookBack);
-    vY.resize(numLookBack);
-    vXX.resize(numLookBack);
-    vYY.resize(numLookBack);
-
-    /*
-    if(fDebug) {
-        if(height != pindex->nHeight) {
-            printf("Plot: Warning: nBestHeight and pindexBest->nHeight don't match: %d:%d:\n", height, pindex->nHeight);
-        }
-    }
-
-    if(fDebug) { printf("Plot: Reading blockchain\n"); }
-    */
-    CBlockIndex* itr = pindex;
-    while(i >= 0 && itr != NULL)
-    {
-        // if(fDebug) { printf("Plot: Processing block: %d - pprev: %p\n", itr->nHeight, itr->pprev); }
-        vX[i] = itr->nHeight;
-        vY[i] = GetDifficulty(itr);
-        diffMax = std::max<double>(diffMax, vY[i]);
-
-        vXX[i] = itr->nHeight;
-        vYY[i] = GetDifficulty(GetLastBlockIndex(pindex, true));
-        diffMax = std::max<double>(diffMax, vYY[i]);
-
-        itr = itr->pprev;
-        i--;
-        x--;
-    }
-
-    // if(fDebug) { printf("Plot: Drawing plot\n"); }
-
-    ui->diffplot->graph(0)->setData(vX, vY);
-    ui->diffplot->graph(1)->setData(vXX, vYY);
-
-    // set axes ranges, so we see all data:
-    ui->diffplot->xAxis->setRange((double)xStart, (double)xEnd);
-    ui->diffplot->yAxis->setRange(0, diffMax+(diffMax/10));
-
-    ui->diffplot->xAxis->setAutoSubTicks(false);
-    ui->diffplot->yAxis->setAutoSubTicks(false);
-    ui->diffplot->xAxis->setSubTickCount(0);
-    ui->diffplot->yAxis->setSubTickCount(0);
-
-    ui->diffplot->xAxis2->setRange((double)xStart, (double)xEnd);
-    ui->diffplot->yAxis2->setRange(0, diffMax+(diffMax/10));
-
-    ui->diffplot->xAxis2->setAutoSubTicks(false);
-    ui->diffplot->yAxis2->setAutoSubTicks(false);
-    ui->diffplot->xAxis2->setSubTickCount(0);
-    ui->diffplot->yAxis2->setSubTickCount(0);
-
-    ui->diffplot->replot();
-
-    // if(fDebug) { printf("Plot: Done!\n"); }
- }

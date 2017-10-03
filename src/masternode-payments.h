@@ -1,4 +1,4 @@
-﻿
+
 
 // Copyright (c) 2014-2015 The Dash developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -13,7 +13,6 @@
 #include "base58.h"
 #include "main.h"
 #include "masternode.h"
-#include "timedata.h"
 
 using namespace std;
 

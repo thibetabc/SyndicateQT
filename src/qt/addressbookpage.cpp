@@ -1,4 +1,4 @@
-﻿#include "addressbookpage.h"
+#include "addressbookpage.h"
 #include "ui_addressbookpage.h"
 
 #include "addresstablemodel.h"
@@ -26,7 +26,6 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
     tab(tab)
 {
     ui->setupUi(this);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 #ifdef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
     ui->newAddressButton->setIcon(QIcon());
@@ -46,18 +45,18 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
         ui->tableView->setFocus();
         break;
     case ForEditing:
-        ui->buttonBox->setVisible(true);
+        ui->buttonBox->setVisible(false);
         break;
     }
     switch(tab)
     {
     case SendingTab:
-        ui->labelExplanation->setVisible(true);
+        ui->labelExplanation->setVisible(false);
         ui->deleteButton->setVisible(true);
-        ui->signMessage->setVisible(true);
+        ui->signMessage->setVisible(false);
         break;
     case ReceivingTab:
-        ui->deleteButton->setVisible(true);
+        ui->deleteButton->setVisible(false);
         ui->signMessage->setVisible(true);
         break;
     }

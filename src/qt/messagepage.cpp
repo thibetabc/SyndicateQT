@@ -1,4 +1,4 @@
-﻿#include "messagepage.h"
+#include "messagepage.h"
 #include "ui_messagepage.h"
 
 #include "sendmessagesdialog.h"
@@ -105,9 +105,6 @@ MessagePage::MessagePage(QWidget *parent) :
     connect(deleteAction,          SIGNAL(triggered()), this, SLOT(on_deleteButton_clicked()));
 
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
-
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->labelExplanation->setVisible(false);
 
     // Show Messages
     ui->listConversation->setItemDelegate(msgdelegate);

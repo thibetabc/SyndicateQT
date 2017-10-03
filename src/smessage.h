@@ -40,6 +40,7 @@ const unsigned int SMSG_MAX_MSG_WORST = LZ4_COMPRESSBOUND(SMSG_MAX_MSG_BYTES+SMS
 
 
 extern bool fSecMsgEnabled;
+extern void Misbehaving(NodeId nodeid, int howmuch);
 
 class SecMsgStored;
 
@@ -165,7 +166,7 @@ public:
 
 
 // -- get at the data
-class CBitcoinAddress_B : public CBitcoinAddress
+class CSyndicateAddress_B : public CSyndicateAddress
 {
 public:
     uint8_t getVersion()

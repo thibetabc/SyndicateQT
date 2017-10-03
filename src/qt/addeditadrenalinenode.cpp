@@ -1,4 +1,4 @@
-﻿#include "addeditadrenalinenode.h"
+#include "addeditadrenalinenode.h"
 #include "ui_addeditadrenalinenode.h"
 #include "masternodeconfig.h"
 #include "masternodemanager.h"
@@ -13,6 +13,7 @@
 #include "init.h"
 #include "base58.h"
 #include <QMessageBox>
+#include <QClipboard>
 
 AddEditAdrenalineNode::AddEditAdrenalineNode(QWidget *parent) :
     QDialog(parent),
@@ -20,17 +21,17 @@ AddEditAdrenalineNode::AddEditAdrenalineNode(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //Hide donation
-    ui->donationaddressLineEdit->setVisible(false);
-    ui->donationpercentageLineEdit->setVisible(false);
+
+
 
     //Labels
     ui->aliasLineEdit->setPlaceholderText("Enter your Masternode alias");
     ui->addressLineEdit->setPlaceholderText("Enter your IP & port");
     ui->privkeyLineEdit->setPlaceholderText("Enter your Masternode private key");
-    ui->txhashLineEdit->setPlaceholderText("Enter your 5000 SYNX TXID");
+    ui->txhashLineEdit->setPlaceholderText("Enter your 10000 TX TXID");
     ui->outputindexLineEdit->setPlaceholderText("Enter your transaction output index");
-
+    ui->donationaddressLineEdit->setPlaceholderText("Enter a TX address for your MN donation");
+    ui->donationpercentageLineEdit->setPlaceholderText("Input the % for the donation");
 }
 
 AddEditAdrenalineNode::~AddEditAdrenalineNode()
@@ -58,7 +59,7 @@ void AddEditAdrenalineNode::on_okButton_clicked()
     else if(ui->privkeyLineEdit->text() == "")
     {
         QMessageBox msg;
-        msg.setText("Please enter your masternode's private key.");
+        msg.setText("Please enter a masternode private key. This can be found using the \"masternode genkey\" command in the console.");
         msg.exec();
         return;
     }
@@ -72,7 +73,7 @@ void AddEditAdrenalineNode::on_okButton_clicked()
     else if(ui->outputindexLineEdit->text() == "")
     {
         QMessageBox msg;
-        msg.setText("Please enter a transaction output index.");
+        msg.setText("Please enter a transaction output index. This can be found using the \"masternode outputs\" command in the console.");
         msg.exec();
         return;
     }
@@ -106,4 +107,22 @@ void AddEditAdrenalineNode::on_okButton_clicked()
 void AddEditAdrenalineNode::on_cancelButton_clicked()
 {
     reject();
+}
+
+void AddEditAdrenalineNode::on_AddEditAddressPasteButton_clicked()
+{
+    // Paste text from clipboard into recipient field
+    ui->addressLineEdit->setText(QApplication::clipboard()->text());
+}
+
+void AddEditAdrenalineNode::on_AddEditPrivkeyPasteButton_clicked()
+{
+    // Paste text from clipboard into recipient field
+    ui->privkeyLineEdit->setText(QApplication::clipboard()->text());
+}
+
+void AddEditAdrenalineNode::on_AddEditTxhashPasteButton_clicked()
+{
+    // Paste text from clipboard into recipient field
+    ui->txhashLineEdit->setText(QApplication::clipboard()->text());
 }

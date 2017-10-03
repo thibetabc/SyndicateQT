@@ -1,4 +1,4 @@
-﻿#ifndef OVERVIEWPAGE_H
+#ifndef OVERVIEWPAGE_H
 #define OVERVIEWPAGE_H
 
 #include "util.h"
@@ -32,7 +32,6 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
     void updateDarksendProgress();
-	void updatePlot(int count);
 
 public slots:
     void darkSendStatus();
@@ -56,10 +55,6 @@ private:
     CAmount currentWatchUnconfBalance;
     CAmount currentWatchImmatureBalance;
     int nDisplayUnit;
-    QVector<double> vX;
-    QVector<double> vY;
-    QVector<double> vXX;
-    QVector<double> vYY;
 
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
@@ -70,6 +65,7 @@ private slots:
     void darksendReset();
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
+    void updateAlerts(const QString &warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
 };
 
