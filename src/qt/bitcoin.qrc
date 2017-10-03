@@ -22,6 +22,7 @@
         <file alias="eye_minus">res/icons/eye_minus.png</file>
         <file alias="eye_plus">res/icons/eye_plus.png</file>
         <file alias="options">res/icons/configure.png</file>
+        <file alias="masternodes">res/icons/masternodes.png</file>
         <file alias="receiving_addresses">res/icons/receive.png</file>
         <file alias="editpaste">res/icons/editpaste.png</file>
         <file alias="editcopy">res/icons/editcopy.png</file>
@@ -50,7 +51,6 @@
         <file alias="onion">res/icons/onion.png</file>
         <file alias="onionblack">res/icons/onion-black.png</file>
         <file alias="browse">res/icons/browse.png</file>
-        <file>res/icons/address-book_copy.png</file>
     </qresource>
     <qresource prefix="/icons/black">
         <file alias="connect_0">res/icons/black/connect0_16.png</file>
