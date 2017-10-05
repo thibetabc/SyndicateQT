@@ -77,8 +77,8 @@ POS Block Reward - 10 SYNX
 Masernode Reward - 50% of POS
 Masernode Collateral   - 5000 SYNX
 Difficulty Retarget - Every Block
-Port - 22348
-RPC Port - 9999
+Port - 9999
+RPC Port - 22348
  
 ``` LICENSE: The MIT License (MIT) Copyright (c) 2014-2017 The Syndicate Developers, see LICENSE for additional detail 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
