@@ -214,7 +214,12 @@ Value listunspent(const Array& params, bool fHelp)
             CTxDestination address;
             if (ExtractDestination(pk, address))
             {
+                #warning BOOST_VERSION
+                #if ((BOOST_VERSION / 10000 == 1) && (BOOST_VERSION / 100 % 1000 == 58))
+                const CScriptID& hash = boost::get<CScriptID>(address);
+                #else
                 const CScriptID& hash = boost::get<CScriptID&>(address);
+                #endif
                 CScript redeemScript;
                 if (pwalletMain->GetCScript(hash, redeemScript))
                     entry.push_back(Pair("redeemScript", HexStr(redeemScript.begin(), redeemScript.end())));
