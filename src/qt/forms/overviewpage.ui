@@ -524,6 +524,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="runAutoDenom">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="palette">
              <palette>
               <active>
@@ -988,6 +991,9 @@
               </property>
               <property name="value">
                <number>0</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
               </property>
              </widget>
             </item>

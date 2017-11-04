@@ -101,6 +101,8 @@ protected:
  * outside of the unit tests.
  */
 const CChainParams &Params();
+/** Return parameters for the given network. */
+CChainParams& Params(CChainParams::Network network);
 
 /** Sets the params returned by Params() to those for the given network. */
 void SelectParams(CChainParams::Network network);

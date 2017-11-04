@@ -138,6 +138,10 @@ private:
 
     void clearWidgets();
 
+signals:
+    /** Restart handling */
+    void requestedRestart(QStringList args);
+
 public slots:
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
@@ -148,6 +152,8 @@ public slots:
        @see WalletModel::EncryptionStatus
     */
     void setEncryptionStatus(int status);
+    /** Get restart command-line parameters and request restart */
+    void handleRestart(QStringList args);
 
     /** Notify the user of an error in the network or transaction handling code. */
     void error(const QString &title, const QString &message, bool modal);

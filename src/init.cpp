@@ -52,6 +52,9 @@ using namespace boost;
 CWallet* pwalletMain = NULL;
 int nWalletBackups = 10;
 #endif
+
+volatile bool fRestartRequested = false; // true: restart false: shutdown
+
 CClientUIInterface uiInterface;
 bool fConfChange;
 unsigned int nNodeLifespan;
@@ -99,14 +102,15 @@ void StartShutdown()
 }
 bool ShutdownRequested()
 {
-    return fRequestShutdown;
+    return fRequestShutdown || fRestartRequested;
 }
 
-static boost::scoped_ptr<ECCVerifyHandle> globalVerifyHandle;
-
-void Shutdown()
+/** Preparing steps before shutting down or restarting the wallet */
+void PrepareShutdown()
 {
-	fRequestShutdown = true; // Needed when we shutdown the wallet
+    fRequestShutdown = true;  // Needed when we shutdown the wallet
+    fRestartRequested = true; // Needed when we restart the wallet
+
     LogPrintf("Shutdown : In progress...\n");
     static CCriticalSection cs_Shutdown;
     TRY_LOCK(cs_Shutdown, lockShutdown);
@@ -125,6 +129,7 @@ void Shutdown()
     StopNode();
     UnregisterNodeSignals(GetNodeSignals());
     DumpMasternodes();
+
     {
         LOCK(cs_main);
 #ifdef ENABLE_WALLET
@@ -138,10 +143,23 @@ void Shutdown()
 #endif
     boost::filesystem::remove(GetPidFile());
     UnregisterAllWallets();
+}
+
+static boost::scoped_ptr<ECCVerifyHandle> globalVerifyHandle;
+
+void Shutdown()
+{
+    // Shutdown part 1: prepare shutdown
+    if (!fRestartRequested) {
+        PrepareShutdown();
+    }
+
+// Shutdown part 2: delete wallet instance
 #ifdef ENABLE_WALLET
     delete pwalletMain;
     pwalletMain = NULL;
 #endif
+
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("Shutdown : done\n");

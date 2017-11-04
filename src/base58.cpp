@@ -353,6 +353,14 @@ bool CBitcoinAddress::IsValid() const {
     return fCorrectSize && fKnownVersion;
 }
 
+bool CBitcoinAddress::IsValid(const CChainParams& params) const
+{
+    bool fCorrectSize = vchData.size() == 20;
+    bool fKnownVersion = vchVersion == params.Base58Prefix(CChainParams::PUBKEY_ADDRESS) ||
+                         vchVersion == params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+    return fCorrectSize && fKnownVersion;
+}
+
 CTxDestination CBitcoinAddress::Get() const {
     if (!IsValid())
         return CNoDestination();

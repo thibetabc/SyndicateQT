@@ -257,8 +257,10 @@ HEADERS += src/qt/bitcoingui.h \
     src/keystore.h \
     src/qt/transactionfilterproxy.h \
     src/qt/transactionview.h \
+    src/qt/utilitydialog.h \
     src/qt/walletmodel.h \
     src/qt/walletmodeltransaction.h \
+    src/qt/winshutdownmonitor.h \
     src/rpcclient.h \
     src/rpcprotocol.h \
     src/rpcserver.h \
@@ -275,6 +277,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/paymentserver.h \
     src/ui_interface.h \
     src/qt/rpcconsole.h \
+    src/qt/splashscreen.h \
     src/version.h \
     src/netbase.h \
     src/clientversion.h \
@@ -380,8 +383,10 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/keystore.cpp \
     src/qt/transactionfilterproxy.cpp \
     src/qt/transactionview.cpp \
+    src/qt/utilitydialog.cpp \
     src/qt/walletmodel.cpp \
     src/qt/walletmodeltransaction.cpp \
+    src/qt/winshutdownmonitor.cpp \
     src/rpcclient.cpp \
     src/rpcprotocol.cpp \
     src/rpcserver.cpp \
@@ -404,6 +409,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/notificator.cpp \
     src/qt/paymentserver.cpp \
     src/qt/rpcconsole.cpp \
+    src/qt/splashscreen.cpp \
     src/noui.cpp \
     src/kernel.cpp \
     src/pbkdf2.cpp \

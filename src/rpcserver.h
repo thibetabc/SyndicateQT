@@ -14,9 +14,18 @@
 
 class CBlockIndex;
 
+/** Start RPC threads */
 void StartRPCThreads();
+/**
+ * Alternative to StartRPCThreads for the GUI, when no server is
+ * used. The RPC thread in this case is only used to handle timeouts.
+ * If real RPC threads have already been started this is a no-op.
+ */
+void StartDummyRPCThread();
+/** Stop RPC threads */
 void StopRPCThreads();
-
+/** Query whether RPC is running */
+bool IsRPCRunning();
 /*
   Type-check arguments; throws JSONRPCError if wrong type given. Does not check that
   the right number of arguments are passed, just that any passed are the correct type.

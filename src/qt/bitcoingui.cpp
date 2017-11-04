@@ -1258,8 +1258,11 @@ void BitcoinGUI::updateStakingIcon()
 
 void BitcoinGUI::detectShutdown()
 {
-    if (ShutdownRequested())
-        QMetaObject::invokeMethod(QCoreApplication::instance(), "quit", Qt::QueuedConnection);
+    if (ShutdownRequested()) {
+        if (rpcConsole)
+            rpcConsole->hide();
+        qApp->quit();
+    }
 }
 
 void BitcoinGUI::showProgress(const QString &title, int nProgress)
@@ -1283,4 +1286,11 @@ void BitcoinGUI::showProgress(const QString &title, int nProgress)
     }
     else if (progressDialog)
         progressDialog->setValue(nProgress);
+}
+
+/** Get restart command-line parameters and request restart */
+void BitcoinGUI::handleRestart(QStringList args)
+{
+    if (!ShutdownRequested())
+        emit requestedRestart(args);
 }

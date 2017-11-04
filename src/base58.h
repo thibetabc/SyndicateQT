@@ -104,6 +104,7 @@ public:
     bool Set(const CScriptID &id);
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
+    bool IsValid(const CChainParams& params) const;
 
     CSyndicateAddress() {}
     CSyndicateAddress(const CTxDestination &dest) { Set(dest); }
@@ -168,6 +169,7 @@ public:
     bool Set(const CScriptID &id);
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
+    bool IsValid(const CChainParams& params) const;
 
     CBitcoinAddress() {}
     CBitcoinAddress(const CTxDestination &dest) { Set(dest); }

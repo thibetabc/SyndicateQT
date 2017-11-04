@@ -6,6 +6,8 @@
 
 #include "paymentserver.h"
 
+#include "bitcoinunits.h"
+#include "guiutil.h"
 #include "guiconstants.h"
 #include "ui_interface.h"
 #include "util.h"
@@ -49,6 +51,48 @@ static QString ipcServerName()
 // to send payment.
 //
 static QStringList savedPaymentRequests;
+
+//
+// Sending to the server is done synchronously, at startup.
+// If the server isn't already running, startup continues,
+// and the items in savedPaymentRequest will be handled
+// when uiReady() is called.
+//
+// Warning: ipcSendCommandLine() is called early in init,
+// so don't use "emit message()", but "QMessageBox::"!
+//
+void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
+{
+    for (int i = 1; i < argc; i++) {
+        QString arg(argv[i]);
+        if (arg.startsWith("-"))
+            continue;
+
+        // If the Syndicate: URI contains a payment request, we are not able to detect the
+        // network as that would require fetching and parsing the payment request.
+        // That means clicking such an URI which contains a testnet payment request
+        // will start a mainnet instance and throw a "wrong network" error.
+        if (arg.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // Syndicate: URI
+        {
+            savedPaymentRequests.append(arg);
+
+            SendCoinsRecipient r;
+            if (GUIUtil::parseBitcoinURI(arg, &r) && !r.address.isEmpty()) {
+                CBitcoinAddress address(r.address.toStdString());
+
+                if (address.IsValid(Params(CChainParams::MAIN))) {
+                    SelectParams(CChainParams::MAIN);
+                } else if (address.IsValid(Params(CChainParams::TESTNET))) {
+                    SelectParams(CChainParams::TESTNET);
+                }
+            }
+        } else {
+            // Printing to debug.log is about the best we can do here, the
+            // GUI hasn't started yet so we can't pop up a message box.
+            qWarning() << "PaymentServer::ipcSendCommandLine : Payment request file does not exist: " << arg;
+        }
+    }
+}
 
 //
 // Sending to the server is done synchronously, at startup.

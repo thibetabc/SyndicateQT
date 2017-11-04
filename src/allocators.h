@@ -37,7 +37,6 @@ public:
 
     ~LockedPageManagerBase()
     {
-        assert(this->GetLockedPageCount() == 0);
     }
 
     // For all pages in affected range, increase lock count

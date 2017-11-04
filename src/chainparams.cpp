@@ -171,6 +171,19 @@ const CChainParams &Params() {
     return *pCurrentParams;
 }
 
+CChainParams& Params(CChainParams::Network network)
+{
+    switch (network) {
+    case CChainParams::MAIN:
+        return mainParams;
+    case CChainParams::TESTNET:
+        return testNetParams;
+    default:
+        assert(false && "Unimplemented network");
+        return mainParams;
+    }
+}
+
 void SelectParams(CChainParams::Network network) {
     switch (network) {
         case CChainParams::MAIN:
