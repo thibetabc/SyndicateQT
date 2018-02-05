@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <set>
@@ -8,6 +8,7 @@
 
 #include "rpcprotocol.h"
 #include "util.h"
+#include "amount.h"
 #include "ui_interface.h"
 #include "chainparams.h" // for Params().RPCPort()
 
@@ -256,6 +257,16 @@ int CommandLineRPC(int argc, char *argv[])
             strPrint = "error: " + write_string(error, false);
             int code = find_value(error.get_obj(), "code").get_int();
             nRet = abs(code);
+
+            if (error.type() != null_type){
+                const Value &errMsg = find_value(error.get_obj(), "message");
+                
+                strPrint = "error code: " +  boost::lexical_cast<std::string>(nRet) + "\n";
+                
+                if (!errMsg.is_null())
+                    strPrint += "error message: " + errMsg.get_str() + "\n";
+            }
+
         }
         else
         {

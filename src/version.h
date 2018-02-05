@@ -1,8 +1,8 @@
 // Copyright (c) 2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_VERSION_H
-#define BITCOIN_VERSION_H
+#ifndef SYNX_VERSION_H
+#define SYNX_VERSION_H
 
 #include "clientversion.h"
 #include <string>
@@ -38,7 +38,7 @@ static const int INIT_PROTO_VERSION = 209;
 // disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION = 61403;
 
-// minimum peer version accepted by DarkSendPool
+// minimum peer version accepted by StashedSendPool
 static const int MIN_POOL_PEER_PROTO_VERSION = 61403; 
 
 static const int MIN_INSTANTX_PROTO_VERSION = 61403;

@@ -1,0 +1,33 @@
+# /etc/conf.d/syndicated: config file for /etc/init.d/syndicated
+
+# Config file location
+#SYNDICATED_CONFIGFILE="/etc/syndicate/syndicate.conf"
+
+# What directory to write pidfile to?  (created and owned by $SYNDICATED_USER)
+#SYNDICATED_PIDDIR="/var/run/syndicated"
+
+# What filename to give the pidfile
+#SYNDICATED_PIDFILE="${SYNDICATED_PIDDIR}/syndicated.pid"
+
+# Where to write syndicated data (be mindful that the blockchain is large)
+#SYNDICATED_DATADIR="/var/lib/syndicated"
+
+# User and group to own syndicated process
+#SYNDICATED_USER="syndicate"
+#SYNDICATED_GROUP="syndicate"
+
+# Path to syndicated executable
+#SYNDICATED_BIN="/usr/bin/syndicated"
+
+# Nice value to run syndicated under
+#SYNDICATED_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#SYNDICATED_OPTS=""
+
+# The timeout in seconds OpenRC will wait for syndicated to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+SYNDICATED_SIGTERM_TIMEOUT=60

@@ -1,10 +1,11 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Copyright (c) 2017 Empinel/The Bitcoin Developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef _BITCOINRPC_SERVER_H_
-#define _BITCOINRPC_SERVER_H_ 1
+#ifndef _IONRPC_SERVER_H_
+#define _IONRPC_SERVER_H_ 1
 
 #include "uint256.h"
 #include "rpcprotocol.h"
@@ -14,18 +15,9 @@
 
 class CBlockIndex;
 
-/** Start RPC threads */
 void StartRPCThreads();
-/**
- * Alternative to StartRPCThreads for the GUI, when no server is
- * used. The RPC thread in this case is only used to handle timeouts.
- * If real RPC threads have already been started this is a no-op.
- */
-void StartDummyRPCThread();
-/** Stop RPC threads */
 void StopRPCThreads();
-/** Query whether RPC is running */
-bool IsRPCRunning();
+
 /*
   Type-check arguments; throws JSONRPCError if wrong type given. Does not check that
   the right number of arguments are passed, just that any passed are the correct type.
@@ -59,7 +51,7 @@ public:
 };
 
 /**
- * Bitcoin RPC command dispatcher.
+ * Syndicate RPC command dispatcher.
  */
 class CRPCTable
 {
@@ -194,7 +186,6 @@ extern json_spirit::Value getrawmempool(const json_spirit::Array& params, bool f
 extern json_spirit::Value getblockhash(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getblock(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getblockbynumber(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value getcheckpoint(const json_spirit::Array& params, bool fHelp);
 
 extern json_spirit::Value getnewstealthaddress(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value liststealthaddresses(const json_spirit::Array& params, bool fHelp);
@@ -203,22 +194,8 @@ extern json_spirit::Value sendtostealthaddress(const json_spirit::Array& params,
 extern json_spirit::Value scanforalltxns(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value scanforstealthtxns(const json_spirit::Array& params, bool fHelp);
 
-extern json_spirit::Value darksend(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value stashedsend(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value spork(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value masternode(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value masternodelist(const json_spirit::Array& params, bool fHelp);
-
-extern json_spirit::Value smsgenable(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgdisable(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsglocalkeys(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgoptions(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgscanchain(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgscanbuckets(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgaddkey(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsggetpubkey(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgsend(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgsendanon(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsginbox(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgoutbox(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value smsgbuckets(const json_spirit::Array& params, bool fHelp);
 #endif

@@ -1,6 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Copyright (c) 2017 Empinel/The Bitcoin Developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "rpcserver.h"
@@ -8,6 +9,7 @@
 #include "base58.h"
 #include "init.h"
 #include "util.h"
+#include "amount.h"
 #include "sync.h"
 #include "base58.h"
 #include "db.h"
@@ -37,14 +39,11 @@ using namespace json_spirit;
 
 static std::string strRPCUserColonPass;
 
-static bool fRPCRunning = false;
-
 // These are created by StartRPCThreads, destroyed in StopRPCThreads
 static asio::io_service* rpc_io_service = NULL;
 static map<string, boost::shared_ptr<deadline_timer> > deadlineTimers;
 static ssl::context* rpc_ssl_context = NULL;
 static boost::thread_group* rpc_worker_group = NULL;
-static boost::asio::io_service::work* rpc_dummy_work = NULL;
 
 void RPCTypeCheck(const Array& params,
                   const list<Value_type>& typesExpected,
@@ -247,20 +246,19 @@ static const CRPCCommand vRPCCommands[] =
     { "decodescript",           &decodescript,           false,     false,     false },
     { "signrawtransaction",     &signrawtransaction,     false,     false,     false },
     { "sendrawtransaction",     &sendrawtransaction,     false,     false,     false },
-    { "getcheckpoint",          &getcheckpoint,          true,      false,     false },
     { "sendalert",              &sendalert,              false,     false,     false },
     { "validateaddress",        &validateaddress,        true,      false,     false },
     { "validatepubkey",         &validatepubkey,         true,      false,     false },
     { "verifymessage",          &verifymessage,          false,     false,     false },
     { "searchrawtransactions",  &searchrawtransactions,  false,     false,     false },
 
-/* Dark features */
+/* Stashed features */
     { "spork",                  &spork,                  true,      false,      false },
     { "masternode",             &masternode,             true,      false,      true },
     { "masternodelist",         &masternodelist,         true,      false,      false },
     
 #ifdef ENABLE_WALLET
-    { "darksend",               &darksend,               false,     false,      true },
+    { "stashedsend",               &stashedsend,               false,     false,      true },
     { "getmininginfo",          &getmininginfo,          true,      false,     false },
     { "getstakinginfo",         &getstakinginfo,         true,      false,     false },
     { "getnewaddress",          &getnewaddress,          true,      false,     true },
@@ -318,19 +316,6 @@ static const CRPCCommand vRPCCommands[] =
     { "scanforstealthtxns",     &scanforstealthtxns,     false,     false,     false },
     { "importstealthaddress",   &importstealthaddress,   false,     false,     true },
     { "sendtostealthaddress",   &sendtostealthaddress,   false,     false,     true },
-    { "smsgenable",             &smsgenable,             false,     false,     false },
-    { "smsgdisable",            &smsgdisable,            false,     false,     false },
-    { "smsglocalkeys",          &smsglocalkeys,          false,     false,     false },
-    { "smsgoptions",            &smsgoptions,            false,     false,     false },
-    { "smsgscanchain",          &smsgscanchain,          false,     false,     false },
-    { "smsgscanbuckets",        &smsgscanbuckets,        false,     false,     false },
-    { "smsgaddkey",             &smsgaddkey,             false,     false,     false },
-    { "smsggetpubkey",          &smsggetpubkey,          false,     false,     false },
-    { "smsgsend",               &smsgsend,               false,     false,     false },
-    { "smsgsendanon",           &smsgsendanon,           false,     false,     false },
-    { "smsginbox",              &smsginbox,              false,     false,     false },
-    { "smsgoutbox",             &smsgoutbox,             false,     false,     false },
-    { "smsgbuckets",            &smsgbuckets,            false,     false,     false },
 #endif
 };
 
@@ -526,7 +511,7 @@ void StartRPCThreads()
     {
         unsigned char rand_pwd[32];
         GetRandBytes(rand_pwd, 32);
-        string strWhatAmI = "To use Syndicated";
+        string strWhatAmI = "To use iond";
         if (mapArgs.count("-server"))
             strWhatAmI = strprintf(_("To use the %s option"), "\"-server\"");
         else if (mapArgs.count("-daemon"))
@@ -535,7 +520,7 @@ void StartRPCThreads()
             _("%s, you must set a rpcpassword in the configuration file:\n"
               "%s\n"
               "It is recommended you use the following random password:\n"
-              "rpcuser=Syndicaterpc\n"
+              "rpcuser=syndicaterpc\n"
               "rpcpassword=%s\n"
               "(you do not need to remember this password)\n"
               "The username and password MUST NOT be the same.\n"
@@ -635,48 +620,19 @@ void StartRPCThreads()
     rpc_worker_group = new boost::thread_group();
     for (int i = 0; i < GetArg("-rpcthreads", 4); i++)
         rpc_worker_group->create_thread(boost::bind(&asio::io_service::run, rpc_io_service));
-
-    fRPCRunning = true;
-}
-
-void StartDummyRPCThread()
-{
-    if (rpc_io_service == NULL) {
-        rpc_io_service = new asio::io_service();
-        /* Create dummy "work" to keep the thread from exiting when no timeouts active,
-         * see http://www.boost.org/doc/libs/1_51_0/doc/html/boost_asio/reference/io_service.html#boost_asio.reference.io_service.stopping_the_io_service_from_running_out_of_work */
-        rpc_dummy_work = new asio::io_service::work(*rpc_io_service);
-        rpc_worker_group = new boost::thread_group();
-        rpc_worker_group->create_thread(boost::bind(&asio::io_service::run, rpc_io_service));
-        fRPCRunning = true;
-    }
 }
 
 void StopRPCThreads()
 {
-    if (rpc_io_service == NULL)
-        return;
-
-    // Set this to false first, so that longpolling loops will exit when woken up
-    fRPCRunning = false;
+    if (rpc_io_service == NULL) return;
 
     deadlineTimers.clear();
     rpc_io_service->stop();
     if (rpc_worker_group != NULL)
         rpc_worker_group->join_all();
-    delete rpc_dummy_work;
-    rpc_dummy_work = NULL;
-    delete rpc_worker_group;
-    rpc_worker_group = NULL;
-    delete rpc_ssl_context;
-    rpc_ssl_context = NULL;
-    delete rpc_io_service;
-    rpc_io_service = NULL;
-}
-
-bool IsRPCRunning()
-{
-    return fRPCRunning;
+    delete rpc_worker_group; rpc_worker_group = NULL;
+    delete rpc_ssl_context; rpc_ssl_context = NULL;
+    delete rpc_io_service; rpc_io_service = NULL;
 }
 
 void RPCRunHandler(const boost::system::error_code& err, boost::function<void(void)> func)
@@ -903,7 +859,7 @@ json_spirit::Value CRPCTable::execute(const std::string &strMethod, const json_s
 }
 
 std::string HelpExampleCli(string methodname, string args){
-    return "> Syndicated " + methodname + " " + args + "\n";
+    return "> iond " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(string methodname, string args){

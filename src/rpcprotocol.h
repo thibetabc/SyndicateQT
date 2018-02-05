@@ -1,10 +1,10 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef _BITCOINRPC_PROTOCOL_H_
-#define _BITCOINRPC_PROTOCOL_H_ 1
+#ifndef _IONRPC_PROTOCOL_H_
+#define _IONRPC_PROTOCOL_H_ 1
 
 #include "compat.h"
 
@@ -32,7 +32,7 @@ enum HTTPStatusCode
     HTTP_INTERNAL_SERVER_ERROR = 500,
 };
 
-// Bitcoin RPC error codes
+// Syndicate RPC error codes
 enum RPCErrorCode
 {
     // Standard JSON-RPC 2.0 errors
@@ -50,11 +50,11 @@ enum RPCErrorCode
     RPC_OUT_OF_MEMORY               = -7,  // Ran out of memory during operation
     RPC_INVALID_PARAMETER           = -8,  // Invalid, missing or duplicate parameter
     RPC_DATABASE_ERROR              = -20, // Database error
-    RPC_DESERIALIZATION_ERROR       = -22, // Error parsing or validating structure in raw format
+    RPC_DESERIALIZATSYNX_ERROR       = -22, // Error parsing or validating structure in raw format
     RPC_SERVER_NOT_STARTED          = -18, // RPC server was not started (StartRPCThreads() not called)
 
     // P2P client errors
-    RPC_CLIENT_NOT_CONNECTED        = -9,  // Bitcoin is not connected
+    RPC_CLIENT_NOT_CONNECTED        = -9,  // Syndicate is not connected
     RPC_CLIENT_IN_INITIAL_DOWNLOAD  = -10, // Still downloading initial blocks
     RPC_CLIENT_NODE_ALREADY_ADDED   = -23, // Node is already added
     RPC_CLIENT_NODE_NOT_ADDED       = -24, // Node has not been added before
@@ -68,7 +68,7 @@ enum RPCErrorCode
     RPC_WALLET_UNLOCK_NEEDED        = -13, // Enter the wallet passphrase with walletpassphrase first
     RPC_WALLET_PASSPHRASE_INCORRECT = -14, // The wallet passphrase entered was incorrect
     RPC_WALLET_WRONG_ENC_STATE      = -15, // Command given in wrong wallet encryption state (encrypting an encrypted wallet etc.)
-    RPC_WALLET_ENCRYPTION_FAILED    = -16, // Failed to encrypt the wallet
+    RPC_WALLET_ENCRYPTSYNX_FAILED    = -16, // Failed to encrypt the wallet
     RPC_WALLET_ALREADY_UNLOCKED     = -17, // Wallet is already unlocked
 };
 

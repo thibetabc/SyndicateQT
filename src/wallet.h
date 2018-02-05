@@ -1,9 +1,9 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_WALLET_H
-#define BITCOIN_WALLET_H
+#ifndef SYNX_WALLET_H
+#define SYNX_WALLET_H
 
 #include "walletdb.h"
 
@@ -12,13 +12,18 @@
 
 #include <stdlib.h>
 
+#include "chain.h"
 #include "crypter.h"
 #include "main.h"
 #include "key.h"
 #include "keystore.h"
-#include "script.h"
+//#include "script/script.h"
+#include "script/standard.h"
+#include "script/ismine.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "utilstrencodings.h"
+#include "amount.h"
 #include "stealth.h"
 
 // Settings
@@ -119,9 +124,9 @@ public:
     ///      strWalletFile (immutable after instantiation)
     mutable CCriticalSection cs_wallet;
 
-    bool SelectCoinsDark(int64_t nValueMin, int64_t nValueMax, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet, int nDarksendRoundsMin, int nDarksendRoundsMax) const;
-    bool SelectCoinsByDenominations(int nDenom, int64_t nValueMin, int64_t nValueMax, std::vector<CTxIn>& vCoinsRet, std::vector<COutput>& vCoinsRet2, int64_t& nValueRet, int nDarksendRoundsMin, int nDarksendRoundsMax);
-    bool SelectCoinsDarkDenominated(int64_t nTargetValue, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet) const;
+    bool SelectCoinsStashed(CAmount nValueMin, CAmount nValueMax, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet, int nStashedsendRoundsMin, int nStashedsendRoundsMax) const;
+    bool SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount nValueMax, std::vector<CTxIn>& vCoinsRet, std::vector<COutput>& vCoinsRet2, int64_t& nValueRet, int nStashedsendRoundsMin, int nStashedsendRoundsMax);
+    bool SelectCoinsStashedDenominated(int64_t nTargetValue, std::vector<CTxIn>& setCoinsRet, int64_t& nValueRet) const;
     bool SelectCoinsMasternode(CTxIn& vin, int64_t& nValueRet, CScript& pubScript) const;
     bool HasCollateralInputs(bool fOnlyConfirmed = true) const;
     bool IsCollateralAmount(int64_t nInputAmount) const;
@@ -274,29 +279,29 @@ public:
     CAmount GetDenominatedBalance(bool unconfirmed=false) const;
 
     bool CreateTransaction(const std::vector<std::pair<CScript, int64_t> >& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, int32_t& nChangePos, std::string& strFailReason, const CCoinControl *coinControl=NULL, AvailableCoinsType coin_type=ALL_COINS, bool useIX=false);
-    bool CreateTransaction(CScript scriptPubKey, int64_t nValue, std::string& sNarr, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, const CCoinControl *coinControl=NULL);
+    bool CreateTransaction(CScript scriptPubKey, CAmount nValue, std::string& sNarr, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, const CCoinControl *coinControl=NULL);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std::string strCommand="tx");
 
     bool AddAccountingEntry(const CAccountingEntry&, CWalletDB & pwalletdb);
 
     uint64_t GetStakeWeight() const;
-    bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, int64_t nFees, CTransaction& txNew, CKey& key);
+    bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CAmount nFees, CTransaction& txNew, CKey& key);
 
-    std::string SendMoney(CScript scriptPubKey, int64_t nValue, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
-    std::string SendMoneyToDestination(const CTxDestination &address, int64_t nValue, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
+    std::string SendMoney(CScript scriptPubKey, CAmount nValue, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
+    std::string SendMoneyToDestination(const CTxDestination &address, CAmount nValue, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
 
     bool NewStealthAddress(std::string& sError, std::string& sLabel, CStealthAddress& sxAddr);
     bool AddStealthAddress(CStealthAddress& sxAddr);
     bool UnlockStealthAddresses(const CKeyingMaterial& vMasterKeyIn);
     bool UpdateStealthAddress(std::string &addr, std::string &label, bool addIfNotExist);
 
-    bool CreateStealthTransaction(CScript scriptPubKey, int64_t nValue, std::vector<uint8_t>& P, std::vector<uint8_t>& narr, std::string& sNarr, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, const CCoinControl* coinControl=NULL);
-    std::string SendStealthMoney(CScript scriptPubKey, int64_t nValue, std::vector<uint8_t>& P, std::vector<uint8_t>& narr, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
-    bool SendStealthMoneyToDestination(CStealthAddress& sxAddress, int64_t nValue, std::string& sNarr, CWalletTx& wtxNew, std::string& sError, bool fAskFee=false);
+    bool CreateStealthTransaction(CScript scriptPubKey, CAmount nValue, std::vector<uint8_t>& P, std::vector<uint8_t>& narr, std::string& sNarr, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, const CCoinControl* coinControl=NULL);
+    std::string SendStealthMoney(CScript scriptPubKey, CAmount nValue, std::vector<uint8_t>& P, std::vector<uint8_t>& narr, std::string& sNarr, CWalletTx& wtxNew, bool fAskFee=false);
+    bool SendStealthMoneyToDestination(CStealthAddress& sxAddress, CAmount nValue, std::string& sNarr, CWalletTx& wtxNew, std::string& sError, bool fAskFee=false);
     bool FindStealthTransactions(const CTransaction& tx, mapValue_t& mapNarr);
 
-    std::string PrepareDarksendDenominate(int minRounds, int maxRounds);
-    int GenerateDarksendOutputs(int nTotalValue, std::vector<CTxOut>& vout);
+    std::string PrepareStashedsendDenominate(int minRounds, int maxRounds);
+    int GenerateStashedsendOutputs(int nTotalValue, std::vector<CTxOut>& vout);
     bool CreateCollateralTransaction(CTransaction& txCollateral, std::string& strReason);
     bool ConvertList(std::vector<CTxIn> vCoins, std::vector<int64_t>& vecAmounts);
 
@@ -313,10 +318,10 @@ public:
     std::set< std::set<CTxDestination> > GetAddressGroupings();
     std::map<CTxDestination, int64_t> GetAddressBalances();
 
-    // get the Darksend chain depth for a given input
-    int GetRealInputDarksendRounds(CTxIn in, int rounds) const;
+    // get the Stashedsend chain depth for a given input
+    int GetRealInputStashedsendRounds(CTxIn in, int rounds) const;
     // respect current settings
-    int GetInputDarksendRounds(CTxIn in) const;
+    int GetInputStashedsendRounds(CTxIn in) const;
 
     bool IsDenominated(const CTxIn &txin) const;
 
@@ -392,6 +397,7 @@ public:
     void SetBestChain(const CBlockLocator& loc);
 
     DBErrors LoadWallet(bool& fFirstRunRet);
+    DBErrors ZapWalletTx();
 
     bool SetAddressBookName(const CTxDestination& address, const std::string& strName);
 
@@ -869,8 +875,8 @@ public:
             if(pwallet->IsSpent(hashTx, i) || pwallet->IsLockedCoin(hashTx, i)) continue;
             if(fMasterNode && vout[i].nValue == GetMNCollateral(pindexBest->nHeight)*COIN) continue; // do not count MN-like outputs
 
-            const int rounds = pwallet->GetInputDarksendRounds(vin);
-            if(rounds >=-2 && rounds < nDarksendRounds) {
+            const int rounds = pwallet->GetInputStashedsendRounds(vin);
+            if(rounds >=-2 && rounds < nStashedsendRounds) {
                 nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                 if (!MoneyRange(nCredit))
                     throw std::runtime_error("CWalletTx::GetAnonamizableCredit() : value out of range");
@@ -903,8 +909,8 @@ public:
 
             if(pwallet->IsSpent(hashTx, i) || !pwallet->IsDenominated(vin)) continue;
 
-            const int rounds = pwallet->GetInputDarksendRounds(vin);
-            if(rounds >= nDarksendRounds){
+            const int rounds = pwallet->GetInputStashedsendRounds(vin);
+            if(rounds >= nStashedsendRounds){
                 nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                 if (!MoneyRange(nCredit))
                     throw std::runtime_error("CWalletTx::GetAnonymizedCredit() : value out of range");
@@ -1091,10 +1097,10 @@ public:
         return strprintf("COutput(%s, %d, %d) [%s]", tx->GetHash().ToString(), i, nDepth, FormatMoney(tx->vout[i].nValue));
     }
 
-    //Used with Darksend. Will return fees, then denominations, everything else, then very small inputs that aren't fees
+    //Used with Stashedsend. Will return fees, then denominations, everything else, then very small inputs that aren't fees
     int Priority() const
     {
-        BOOST_FOREACH(int64_t d, darkSendDenominations)
+        BOOST_FOREACH(int64_t d, stashedSendDenominations)
             if(tx->vout[i].nValue == d) return 10000;
         if(tx->vout[i].nValue < 1*COIN) return 20000;
 
@@ -1172,7 +1178,7 @@ public:
 
 
 
-/** Internal Syndicates.
+/** Internal ions.
  * Database key is acentry<account><counter>.
  */
 class CAccountingEntry

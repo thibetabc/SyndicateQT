@@ -1,12 +1,12 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "sendcoinsdialog.h"
 #include "ui_sendcoinsdialog.h"
 #include "addresstablemodel.h"
-#include "bitcoinunits.h"
+#include "syndicateunits.h"
 #include "clientmodel.h"
 #include "coincontroldialog.h"
 #include "guiutil.h"
@@ -52,7 +52,7 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 
     // Coin Control
-    ui->lineEditCoinControlChange->setFont(GUIUtil::bitcoinAddressFont());
+    ui->lineEditCoinControlChange->setFont(GUIUtil::syndicateAddressFont());
     connect(ui->pushButtonCoinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
     connect(ui->checkBoxCoinControlChange, SIGNAL(stateChanged(int)), this, SLOT(coinControlChangeChecked(int)));
     connect(ui->lineEditCoinControlChange, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
@@ -60,29 +60,29 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 
     // Dash specific
     QSettings settings;
-    if (!settings.contains("bUseDarkSend"))
-        settings.setValue("bUseDarkSend", false);
+    if (!settings.contains("bUseStashedSend"))
+        settings.setValue("bUseStashedSend", false);
     if (!settings.contains("bUseInstantX"))
         settings.setValue("bUseInstantX", false);
 
-    bool useDarkSend = settings.value("bUseDarkSend").toBool();
+    bool useStashedSend = settings.value("bUseStashedSend").toBool();
     bool useInstantX = settings.value("bUseInstantX").toBool();
 
     if(fLiteMode) {
-        ui->checkUseDarksend->setChecked(false);
-        ui->checkUseDarksend->setVisible(false);
+        ui->checkUseStashedsend->setChecked(false);
+        ui->checkUseStashedsend->setVisible(false);
         ui->checkInstantX->setVisible(false);
-        CoinControlDialog::coinControl->useDarkSend = false;
+        CoinControlDialog::coinControl->useStashedSend = false;
         CoinControlDialog::coinControl->useInstantX = false;
     }
     else{
-        ui->checkUseDarksend->setChecked(useDarkSend);
+        ui->checkUseStashedsend->setChecked(useStashedSend);
         ui->checkInstantX->setChecked(useInstantX);
-        CoinControlDialog::coinControl->useDarkSend = useDarkSend;
+        CoinControlDialog::coinControl->useStashedSend = useStashedSend;
         CoinControlDialog::coinControl->useInstantX = useInstantX;
     }
 
-    connect(ui->checkUseDarksend, SIGNAL(stateChanged ( int )), this, SLOT(updateDisplayUnit()));
+    connect(ui->checkUseStashedsend, SIGNAL(stateChanged ( int )), this, SLOT(updateDisplayUnit()));
     connect(ui->checkInstantX, SIGNAL(stateChanged ( int )), this, SLOT(updateInstantX()));
 
     // Coin Control: clipboard actions
@@ -110,47 +110,11 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     ui->labelCoinControlPriority->addAction(clipboardPriorityAction);
     ui->labelCoinControlLowOutput->addAction(clipboardLowOutputAction);
     ui->labelCoinControlChange->addAction(clipboardChangeAction);
-
-    /* init transaction fee section
-    if (!settings.contains("fFeeSectionMinimized"))
-        settings.setValue("fFeeSectionMinimized", true);
-    if (!settings.contains("nFeeRadio") && settings.contains("nTransactionFee") && settings.value("nTransactionFee").toLongLong() > 0) // compatibility
-        settings.setValue("nFeeRadio", 1); // custom
-    if (!settings.contains("nFeeRadio"))
-        settings.setValue("nFeeRadio", 0); // recommended
-    if (!settings.contains("nCustomFeeRadio") && settings.contains("nTransactionFee") && settings.value("nTransactionFee").toLongLong() > 0) // compatibility
-        settings.setValue("nCustomFeeRadio", 1); // total at least
-    if (!settings.contains("nCustomFeeRadio"))
-        settings.setValue("nCustomFeeRadio", 0); // per kilobyte
-    if (!settings.contains("nSmartFeeSliderPosition"))
-        settings.setValue("nSmartFeeSliderPosition", 0);
-    if (!settings.contains("nTransactionFee"))
-        settings.setValue("nTransactionFee", (qint64)DEFAULT_TRANSACTION_FEE);
-    if (!settings.contains("fPayOnlyMinFee"))
-        settings.setValue("fPayOnlyMinFee", false);
-    if (!settings.contains("fSendFreeTransactions"))
-        settings.setValue("fSendFreeTransactions", false);
-
-    ui->groupFee->setId(ui->radioSmartFee, 0);
-    ui->groupFee->setId(ui->radioCustomFee, 1);
-    ui->groupFee->button((int)std::max(0, std::min(1, settings.value("nFeeRadio").toInt())))->setChecked(true);
-    ui->groupCustomFee->setId(ui->radioCustomPerKilobyte, 0);
-    ui->groupCustomFee->setId(ui->radioCustomAtLeast, 1);
-    ui->groupCustomFee->button((int)std::max(0, std::min(1, settings.value("nCustomFeeRadio").toInt())))->setChecked(true);
-    ui->sliderSmartFee->setValue(settings.value("nSmartFeeSliderPosition").toInt());
-    ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
-    ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
-    ui->checkBoxFreeTx->setChecked(settings.value("fSendFreeTransactions").toBool());
-    minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
-    */
 }
 
 void SendCoinsDialog::setClientModel(ClientModel *clientModel)
 {
     this->clientModel = clientModel;
-    if (clientModel) {
-        //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateSmartFeeLabel()))
-    }
 }
 
 void SendCoinsDialog::setModel(WalletModel *model)
@@ -178,46 +142,11 @@ void SendCoinsDialog::setModel(WalletModel *model)
         connect(model->getOptionsModel(), SIGNAL(transactionFeeChanged(CAmount)), this, SLOT(coinControlUpdateLabels()));
         ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
         coinControlUpdateLabels();
-
-        /* fee section
-        connect(ui->sliderSmartFee, SIGNAL(valueChanged(int)), this, SLOT(updateSmartFeeLabel()));
-        connect(ui->sliderSmartFee, SIGNAL(valueChanged(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->sliderSmartFee, SIGNAL(valueChanged(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(updateFeeSectionControls()));
-        connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->groupCustomFee, SIGNAL(buttonClicked(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->groupCustomFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->checkBoxFreeTx, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->checkBoxFreeTx, SIGNAL(stateChanged(int)), this, SLOT(coinControlUpdateLabels()));
-        ui->customFee->setSingleStep(CWallet::minTxFee.GetFeePerK());
-        updateFeeSectionControls();
-        updateMinFeeLabel();
-        updateSmartFeeLabel();
-        updateGlobalFeeVariables();
-        */
     }
 }
 
 SendCoinsDialog::~SendCoinsDialog()
 {
-    /*
-    QSettings settings;
-    settings.setValue("fFeeSectionMinimized", fFeeMinimized);
-    settings.setValue("nFeeRadio", ui->groupFee->checkedId());
-    settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
-    settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
-    settings.setValue("nTransactionFee", (qint64)ui->customFee->value());
-    settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
-    settings.setValue("fSendFreeTransactions", ui->checkBoxFreeTx->isChecked());
-    */
-
     delete ui;
 }
 
@@ -253,14 +182,14 @@ void SendCoinsDialog::on_sendButton_clicked()
     QString strFee = "";
     recipients[0].inputType = ONLY_DENOMINATED;
 
-    if(ui->checkUseDarksend->isChecked()) {
+    if(ui->checkUseStashedsend->isChecked()) {
         recipients[0].inputType = ONLY_DENOMINATED;
         strFunds = tr("using") + " <b>" + tr("anonymous funds") + "</b>";
         QString strNearestAmount(
-            BitcoinUnits::formatWithUnit(
+            SyndicateUnits::formatWithUnit(
                 model->getOptionsModel()->getDisplayUnit(), 0.1 * COIN));
         strFee = QString(tr(
-            "(darksend requires this amount to be rounded up to the nearest %1)."
+            "(stashedsend requires this amount to be rounded up to the nearest %1)."
         ).arg(strNearestAmount));
     } else {
         recipients[0].inputType = ALL_COINS;
@@ -280,7 +209,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     foreach(const SendCoinsRecipient &rcp, recipients)
     {
         // generate bold amount string
-        QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
+        QString amount = "<b>" + SyndicateUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
         amount.append("</b> ").append(strFunds);
 
         // generate monospace address string
@@ -294,24 +223,34 @@ void SendCoinsDialog::on_sendButton_clicked()
     }
 
     fNewRecipientAllowed = false;
-
+	
     // request unlock only if was locked or unlocked for mixing:
     // this way we let users unlock by walletpassphrase or by menu
     // and make many transactions while unlocking through this dialog
     // will call relock
-    WalletModel::EncryptionStatus encStatus = model->getEncryptionStatus();
-    if(encStatus == model->Locked || encStatus == model->UnlockedForAnonymizationOnly)
-    {
-        WalletModel::UnlockContext ctx(model->requestUnlock());
-        if(!ctx.isValid())
-        {
-            // Unlock wallet was cancelled
-            fNewRecipientAllowed = true;
-            return;
-        }
-        send(recipients, strFee, formatted);
-        return;
-    }
+
+	WalletModel::EncryptionStatus encStatus = model->getEncryptionStatus();
+	if(encStatus == model->Locked || encStatus == model->UnlockedForAnonymizationOnly)
+	{
+		if (!fWalletUnlockStakingOnly) {
+			WalletModel::UnlockContext ctx(model->requestUnlock());
+	
+			if(!ctx.isValid())
+			{
+				// Unlock wallet was cancelled
+				fNewRecipientAllowed = true;
+				return;
+			}
+        
+			send(recipients, strFee, formatted);
+			return;
+		} else {
+			QMessageBox::warning(this, tr("Send Transaction Failed"), tr("Wallet is currently unlocked for Staking or unlocked for StashedSend Anonymization only! \nPlease unlock your wallet manually or wait for StashedSend mixing to complete before continuing"));
+			return;
+		}
+	}
+
+	
     // already unlocked or not encrypted at all
     send(recipients, strFee, formatted);
 }
@@ -328,7 +267,7 @@ void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee,
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
-        BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
+        SyndicateUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
 
     if(prepareStatus.status != WalletModel::OK) {
         fNewRecipientAllowed = true;
@@ -343,7 +282,7 @@ void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee,
     {
         // append fee string if a fee is required
         questionString.append("<hr /><span style='color:#aa0000;'>");
-        questionString.append(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
+        questionString.append(SyndicateUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
         questionString.append("</span> ");
         questionString.append(tr("are added as transaction fee"));
         questionString.append(" ");
@@ -357,15 +296,15 @@ void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee,
     questionString.append("<hr />");
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
     QStringList alternativeUnits;
-    foreach(BitcoinUnits::Unit u, BitcoinUnits::availableUnits())
+    foreach(SyndicateUnits::Unit u, SyndicateUnits::availableUnits())
     {
         if(u != model->getOptionsModel()->getDisplayUnit())
-            alternativeUnits.append(BitcoinUnits::formatHtmlWithUnit(u, totalAmount));
+            alternativeUnits.append(SyndicateUnits::formatHtmlWithUnit(u, totalAmount));
     }
 
     // Show total amount + all alternative units
     questionString.append(tr("Total Amount = <b>%1</b><br />= %2")
-        .arg(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
+        .arg(SyndicateUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount))
         .arg(alternativeUnits.join("<br />= ")));
 
     // Limit number of displayed entries
@@ -535,7 +474,7 @@ bool SendCoinsDialog::handleURI(const QString &uri)
 {
     SendCoinsRecipient rv;
     // URI has to be valid
-    if (GUIUtil::parseBitcoinURI(uri, &rv))
+    if (GUIUtil::parseSyndicateURI(uri, &rv))
     {
         CSyndicateAddress address(rv.address.toStdString());
         if (!address.IsValid())
@@ -563,14 +502,14 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& stake, c
     {
         uint64_t bal = 0;
         QSettings settings;
-        settings.setValue("bUseDarkSend", ui->checkUseDarksend->isChecked());
-        if(ui->checkUseDarksend->isChecked()) {
+        settings.setValue("bUseStashedSend", ui->checkUseStashedsend->isChecked());
+        if(ui->checkUseStashedsend->isChecked()) {
         bal = anonymizedBalance;
         } else {
         bal = balance;
         }
 
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), bal));
+        ui->labelBalance->setText(SyndicateUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), bal));
     }
 }
 
@@ -580,7 +519,7 @@ void SendCoinsDialog::updateDisplayUnit()
     if(!lockMain) return;
     setBalance(model->getBalance(), model->getStake(), model->getUnconfirmedBalance(), model->getImmatureBalance(), model->getAnonymizedBalance(),
     	model->getWatchBalance(), model->getWatchStake(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
-    CoinControlDialog::coinControl->useDarkSend = ui->checkUseDarksend->isChecked();
+    CoinControlDialog::coinControl->useStashedSend = ui->checkUseStashedsend->isChecked();
     coinControlUpdateLabels();
 }
 
@@ -638,7 +577,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         msgParams.first = tr("Error: Narration is too long.");
         break;
     case WalletModel::InsaneFee:
-        msgParams.first = tr("A fee %1 times higher than %2 per recipient is considered an insanely high fee.").arg(10000).arg(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), MIN_RELAY_TX_FEE));
+        msgParams.first = tr("A fee %1 times higher than %2 per recipient is considered an insanely high fee.").arg(10000).arg(SyndicateUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), MIN_RELAY_TX_FEE));
         break;
     case WalletModel::PrepareTransactionFailed:
         return;
@@ -648,111 +587,6 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
     }
     emit message(tr("Send Coins"), msgParams.first, false, msgParams.second);
 }
-/*
-void SendCoinsDialog::minimizeFeeSection(bool fMinimize)
-{
-    ui->labelFeeMinimized->setVisible(fMinimize);
-    ui->buttonChooseFee  ->setVisible(fMinimize);
-    ui->buttonMinimizeFee->setVisible(!fMinimize);
-    ui->frameFeeSelection->setVisible(!fMinimize);
-    ui->horizontalLayoutSmartFee->setContentsMargins(0, (fMinimize ? 0 : 6), 0, 0);
-    fFeeMinimized = fMinimize;
-}
-
-void SendCoinsDialog::on_buttonChooseFee_clicked()
-{
-    minimizeFeeSection(false);
-}
-
-void SendCoinsDialog::on_buttonMinimizeFee_clicked()
-{
-    updateFeeMinimizedLabel();
-    minimizeFeeSection(true);
-}
-
-void SendCoinsDialog::setMinimumFee()
-{
-    ui->radioCustomPerKilobyte->setChecked(true);
-    ui->customFee->setValue(CWallet::minTxFee.GetFeePerK());
-}
-
-void SendCoinsDialog::updateFeeSectionControls()
-{
-    ui->sliderSmartFee          ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelSmartFee           ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelSmartFee2          ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelSmartFee3          ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelFeeEstimation      ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelSmartFeeNormal     ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->labelSmartFeeFast       ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->checkBoxMinimumFee      ->setEnabled(ui->radioCustomFee->isChecked());
-    ui->labelMinFeeWarning      ->setEnabled(ui->radioCustomFee->isChecked());
-    ui->radioCustomPerKilobyte  ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
-    ui->radioCustomAtLeast      ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
-    ui->customFee               ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
-}
-
-void SendCoinsDialog::updateGlobalFeeVariables()
-{
-    if (ui->radioSmartFee->isChecked())
-    {
-        nTxConfirmTarget = (int)25 - (int)std::max(0, std::min(24, ui->sliderSmartFee->value()));
-        payTxFee = CFeeRate(0);
-    }
-    else
-    {
-        nTxConfirmTarget = 25;
-        payTxFee = CFeeRate(ui->customFee->value());
-        fPayAtLeastCustomFee = ui->radioCustomAtLeast->isChecked();
-    }
-
-    fSendFreeTransactions = ui->checkBoxFreeTx->isChecked();
-}
-
-void SendCoinsDialog::updateFeeMinimizedLabel()
-{
-    if(!model || !model->getOptionsModel())
-        return;
-
-    if (ui->radioSmartFee->isChecked())
-        ui->labelFeeMinimized->setText(ui->labelSmartFee->text());
-    else {
-        ui->labelFeeMinimized->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), ui->customFee->value()) +
-            ((ui->radioCustomPerKilobyte->isChecked()) ? "/kB" : ""));
-    }
-}
-
-void SendCoinsDialog::updateMinFeeLabel()
-{
-    if (model && model->getOptionsModel())
-        ui->checkBoxMinimumFee->setText(tr("Pay only the minimum fee of %1").arg(
-            BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), CWallet::minTxFee.GetFeePerK()) + "/kB")
-        );
-}
-
-void SendCoinsDialog::updateSmartFeeLabel()
-{
-    if(!model || !model->getOptionsModel())
-        return;
-
-    int nBlocksToConfirm = (int)25 - (int)std::max(0, std::min(24, ui->sliderSmartFee->value()));
-    CFeeRate feeRate = mempool.estimateFee(nBlocksToConfirm);
-    if (feeRate <= CFeeRate(0)) // not enough data => minfee
-    {
-        ui->labelSmartFee->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), CWallet::minTxFee.GetFeePerK()) + "/kB");
-        ui->labelSmartFee2->show(); // (Smart fee not initialized yet. This usually takes a few blocks...)
-        ui->labelFeeEstimation->setText("");
-    }
-    else
-    {
-        ui->labelSmartFee->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), feeRate.GetFeePerK()) + "/kB");
-        ui->labelSmartFee2->hide();
-        ui->labelFeeEstimation->setText(tr("Estimated to begin confirmation within %n block(s).", "", nBlocksToConfirm));
-    }
-
-    updateFeeMinimizedLabel();
-}
-*/
 
 // Coin Control: copy label "Quantity" to clipboard
 void SendCoinsDialog::coinControlClipboardQuantity()
@@ -898,7 +732,7 @@ void SendCoinsDialog::coinControlUpdateLabels()
             CoinControlDialog::payAmounts.append(entry->getValue().amount);
     }
 
-    ui->checkUseDarksend->setChecked(CoinControlDialog::coinControl->useDarkSend);
+    ui->checkUseStashedsend->setChecked(CoinControlDialog::coinControl->useStashedSend);
 
     if (CoinControlDialog::coinControl->HasSelected())
     {

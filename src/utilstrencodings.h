@@ -6,8 +6,8 @@
 /**
  * Utilities for converting data from/to strings.
  */
-#ifndef BITCOIN_UTILSTRENCODINGS_H
-#define BITCOIN_UTILSTRENCODINGS_H
+#ifndef SYNX_UTILSTRENCODINGS_H
+#define SYNX_UTILSTRENCODINGS_H
 
 #include <stdint.h>
 #include <string>
@@ -33,7 +33,6 @@
 
 /** This is needed because the foreach macro can't get over the comma in pair<t1, t2> */
 #define PAIRTYPE(t1, t2)    std::pair<t1, t2>
-
 
 
 std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = NULL);
@@ -107,4 +106,11 @@ bool TimingResistantEqual(const T& a, const T& b)
     return accumulator == 0;
 }
 
-#endif // BITCOIN_UTILSTRENCODINGS_H
+/** Parse number as fixed point according to JSON number syntax.
+ * See http://json.org/number.gif
+ * @returns true on success, false on error.
+ * @note The result must be in the range (-10^18,10^18), otherwise an overflow error will trigger.
+ */
+ bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out);
+ 
+#endif // SYNX_UTILSTRENCODINGS_H

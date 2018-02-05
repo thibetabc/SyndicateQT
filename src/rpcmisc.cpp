@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "base58.h"
@@ -10,6 +10,7 @@
 #include "netbase.h"
 #include "rpcserver.h"
 #include "util.h"
+#include "amount.h"
 #include "stealth.h"
 #include "spork.h"
 #ifdef ENABLE_WALLET
@@ -46,7 +47,7 @@ Value getinfo(const Array& params, bool fHelp)
         obj.push_back(Pair("walletversion", pwalletMain->GetVersion()));
         obj.push_back(Pair("balance",       ValueFromAmount(pwalletMain->GetBalance())));
         if(!fLiteMode)
-            obj.push_back(Pair("darksend_balance", ValueFromAmount(pwalletMain->GetAnonymizedBalance())));
+            obj.push_back(Pair("stashedsend_balance", ValueFromAmount(pwalletMain->GetAnonymizedBalance())));
         obj.push_back(Pair("newmint",       ValueFromAmount(pwalletMain->GetNewMint())));
         obj.push_back(Pair("stake",         ValueFromAmount(pwalletMain->GetStake())));
     }
@@ -134,8 +135,8 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress <Syndicateaddress>\n"
-            "Return information about <Syndicateaddress>.");
+            "validateaddress <syndicateaddress>\n"
+            "Return information about <syndicateaddress>.");
 
     CSyndicateAddress address(params[0].get_str());
     bool isValid = address.IsValid();
@@ -166,8 +167,8 @@ Value validatepubkey(const Array& params, bool fHelp)
 {
     if (fHelp || !params.size() || params.size() > 2)
         throw runtime_error(
-            "validatepubkey <Syndicatepubkey>\n"
-            "Return information about <Syndicatepubkey>.");
+            "validatepubkey <syndicatepubkey>\n"
+            "Return information about <syndicatepubkey>.");
 
     std::vector<unsigned char> vchPubKey = ParseHex(params[0].get_str());
     CPubKey pubKey(vchPubKey);
@@ -206,7 +207,7 @@ Value verifymessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw runtime_error(
-            "verifymessage <Syndicateaddress> <signature> <message>\n"
+            "verifymessage <syndicateaddress> <signature> <message>\n"
             "Verify a signed message");
 
     string strAddress  = params[0].get_str();
@@ -259,7 +260,7 @@ Value spork(const Array& params, bool fHelp)
         }
 
         // SPORK VALUE
-        int64_t nValue = params[1].get_int();
+        CAmount nValue = params[1].get_int();
 
         //broadcast new spork
         if(sporkManager.UpdateSpork(nSporkID, nValue)){

@@ -2,14 +2,11 @@
 #define MASTERNODEMANAGER_H
 
 #include "util.h"
+#include "amount.h"
 #include "sync.h"
 
 #include <QWidget>
 #include <QTimer>
-#include <QFuture>
-
-#define MASTERNODELIST_UPDATE_SECONDS 15
-#define MASTERNODELIST_FILTER_COOLDOWN_SECONDS 3
 
 namespace Ui {
     class MasternodeManager;
@@ -33,13 +30,12 @@ public:
 
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
-	void updateListConc();
+
 
 public slots:
     void updateNodeList();
-    void updateAdrenalineNode(QString alias, QString addr, QString privkey, QString txHash, QString txIndex, QString donationAddress, QString donationPercentage, QString status);
+    void updateAtomNode(QString alias, QString addr, QString privkey, QString txHash, QString txIndex, QString status);
     void on_UpdateButton_clicked();
-
 
 signals:
 
@@ -48,10 +44,7 @@ private:
     Ui::MasternodeManager *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-    CCriticalSection cs_adrenaline;
-    int64_t nTimeFilterUpdated;
-	bool fFilterUpdated;
-	QFuture<void> f1;
+    CCriticalSection cs_atom;
 
 private slots:
     void on_createButton_clicked();

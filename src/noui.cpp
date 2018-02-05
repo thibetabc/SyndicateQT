@@ -1,6 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Copyright (c) 2017 Empinel/The Bitcoin Developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "ui_interface.h"
@@ -31,7 +32,7 @@ static int noui_ThreadSafeMessageBox(const std::string& message, const std::stri
     return 4;
 }
 
-static bool noui_ThreadSafeAskFee(int64_t nFeeRequired, const std::string& strCaption)
+static bool noui_ThreadSafeAskFee(CAmount nFeeRequired, const std::string& strCaption)
 {
     return true;
 }
@@ -43,7 +44,7 @@ static void noui_InitMessage(const std::string &message)
 
 void noui_connect()
 {
-    // Connect bitcoind signal handlers
+    // Connect iond signal handlers
     uiInterface.ThreadSafeMessageBox.connect(noui_ThreadSafeMessageBox);
     uiInterface.ThreadSafeAskFee.connect(noui_ThreadSafeAskFee);
     uiInterface.InitMessage.connect(noui_InitMessage);

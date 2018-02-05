@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "walletmodel.h"
@@ -19,7 +19,6 @@
 #include "wallet.h"
 #include "walletdb.h" // for BackupWallet
 #include "spork.h"
-#include "smessage.h"
 
 #include <stdint.h>
 
@@ -139,13 +138,13 @@ void WalletModel::pollBalanceChanged()
     if(!lockWallet)
         return;
 
-    if(fForceCheckBalanceChanged || nBestHeight != cachedNumBlocks || nDarksendRounds != cachedDarksendRounds || cachedTxLocks != nCompleteTXLocks)
+    if(fForceCheckBalanceChanged || nBestHeight != cachedNumBlocks || nStashedsendRounds != cachedStashedsendRounds || cachedTxLocks != nCompleteTXLocks)
     {
         fForceCheckBalanceChanged = false;
 
         // Balance and number of transactions might have changed
         cachedNumBlocks = nBestHeight;
-        cachedDarksendRounds = nDarksendRounds;
+        cachedStashedsendRounds = nStashedsendRounds;
 
         checkBalanceChanged();
         if(transactionTableModel)
@@ -336,7 +335,6 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
     {
         LOCK2(cs_main, wallet->cs_wallet);
 
-        CWalletTx *newTx = transaction.getTransaction();
         CWalletTx wtx;
 
 
@@ -393,8 +391,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                         printf("ephem_pubkey %" PRIszu": %s\n", ephem_pubkey.size(), HexStr(ephem_pubkey).c_str());
                     };
 
-                    CScript scriptPubKey;
-                    scriptPubKey.SetDestination(addrTo.Get());
+                    CScript scriptPubKey = GetScriptForDestination(addrTo.Get());
 
                     vecSend.push_back(make_pair(scriptPubKey, rcp.amount));
 
@@ -443,8 +440,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 } // else drop through to normal
             }
 
-            CScript scriptPubKey;
-            scriptPubKey.SetDestination(CSyndicateAddress(sAddr).Get());
+            CScript scriptPubKey = GetScriptForDestination(CSyndicateAddress(sAddr).Get());
             vecSend.push_back(make_pair(scriptPubKey, rcp.amount));
 
             if (rcp.narration.length() > 0)
@@ -471,7 +467,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         }
 
         CReserveKey keyChange(wallet);
-        int64_t nFeeRequired = 0;
+        CAmount nFeeRequired = 0;
         int nChangePos = -1;
         std::string strFailReason;
 

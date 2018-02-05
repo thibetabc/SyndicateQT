@@ -1,3 +1,7 @@
+// Copyright (c) 2011-2014 The Bitcoin developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef RPCCONSOLE_H
 #define RPCCONSOLE_H
 
@@ -8,23 +12,24 @@
 
 #include <QWidget>
 
+class ClientModel;
+
 namespace Ui {
     class RPCConsole;
 }
-class ClientModel;
 
 QT_BEGIN_NAMESPACE
 class QMenu;
 class QItemSelection;
 QT_END_NAMESPACE
 
-/** Local Bitcoin RPC console. */
+/** Local Syndicate RPC console. */
 class RPCConsole: public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit RPCConsole(QWidget *parent = 0);
+    explicit RPCConsole(QWidget *parent);
     ~RPCConsole();
 
     void setClientModel(ClientModel *model);
@@ -46,8 +51,6 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     /** open the debug.log from the current datadir */
     void on_openDebugLogfileButton_clicked();
-    /** display messagebox with program parameters (same as bitcoin-qt --help) */
-    void on_showCLOptionsButton_clicked();
     /** change the time range of the network traffic graph */
     void on_sldGraphRange_valueChanged(int value);
     /** update traffic statistics */
@@ -65,10 +68,6 @@ private slots:
     void clearSelectedNode();
     /** clear traffic graph */
     void on_btnClearTrafficGraph_clicked();
-    /** paste clipboard to line */
-    void on_pasteButton_clicked();
-    /** copy to clipboard */
-    void on_copyButton_clicked();
 
 public slots:
     void clear();
@@ -95,6 +94,7 @@ public slots:
     void unbanSelectedNode();
     /** Show folder with wallet backups in default browser */
     void showBackups();
+
 signals:
     // For RPC command executor
     void stopExecutor();

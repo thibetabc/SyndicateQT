@@ -1,18 +1,20 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Darkcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef MASTERNODE_H
 #define MASTERNODE_H
 
+#include "chain.h"
 #include "uint256.h"
 #include "sync.h"
 #include "net.h"
 #include "key.h"
 #include "util.h"
+#include "amount.h"
 #include "base58.h"
 #include "main.h"
-#include "script.h"
+#include "script/script.h"
 #include "masternode.h"
 
 class uint256;
@@ -31,7 +33,7 @@ class uint256;
 #define MASTERNODE_MIN_DSEEP_SECONDS           (30*60)
 #define MASTERNODE_MIN_DSEE_SECONDS            (5*60)
 #define MASTERNODE_PING_SECONDS                (1*60)
-#define MASTERNODE_EXPIRATION_SECONDS          (65*60)
+#define MASTERNODE_EXPIRATSYNX_SECONDS          (65*60)
 #define MASTERNODE_REMOVAL_SECONDS             (70*60)
 
 using namespace std;
@@ -44,7 +46,7 @@ extern map<int64_t, uint256> mapCacheBlockHashes;
 bool GetBlockHash(uint256& hash, int nBlockHeight);
 
 //
-// The Masternode Class. For managing the darksend process. It contains the input of the 5000 SYNX, signature to prove
+// The Masternode Class. For managing the stashedsend process. It contains the input of the 1000TX, signature to prove
 // it's the one who own that ip address and code for calculating the payment election.
 //
 class CMasternode

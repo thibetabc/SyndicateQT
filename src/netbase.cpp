@@ -1,7 +1,10 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#if defined(HAVE_CONFIG_H)
+#include "config/syndicate-config.h"
+#endif
 
 #include "netbase.h"
 
@@ -9,9 +12,15 @@
 #include "sync.h"
 #include "uint256.h"
 #include "util.h"
+#include "utilstrencodings.h"
 
 #ifndef WIN32
 #include <fcntl.h>
+#endif
+
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 #endif
 
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()

@@ -7,7 +7,7 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "addresstablemodel.h"
-#include "bitcoinunits.h"
+#include "syndicateunits.h"
 
 #include "wallet.h"
 #include "ui_interface.h"
@@ -220,7 +220,7 @@ TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel *paren
         walletModel(parent),
         priv(new TransactionTablePriv(wallet, this))
 {
-    columns << QString() <<  QString() << tr("Date") << tr("Type") << tr("Address") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    columns << QString() <<  QString() << tr("Date") << tr("Type") << tr("Address") << SyndicateUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
 
     priv->refreshWallet();
 
@@ -238,7 +238,7 @@ TransactionTableModel::~TransactionTableModel()
 /** Updates the column title to "Amount (DisplayUnit)" and emits headerDataChanged() signal for table headers to react. */
 void TransactionTableModel::updateAmountColumnTitle()
 {
-	columns[Amount] = BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+	columns[Amount] = SyndicateUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
 	emit headerDataChanged(Qt::Horizontal,Amount,Amount);
 }
 
@@ -348,7 +348,7 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Received with");
     case TransactionRecord::RecvFromOther:
         return tr("Received from");
-    case TransactionRecord::RecvWithDarksend:
+    case TransactionRecord::RecvWithStashedsend:
         return tr("Received via Darksend");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
@@ -358,16 +358,16 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
     case TransactionRecord::Generated:
         return tr("Mined");
 
-    case TransactionRecord::DarksendDenominate:
+    case TransactionRecord::StashedsendDenominate:
         return tr("Darksend Denominate");
-    case TransactionRecord::DarksendCollateralPayment:
+    case TransactionRecord::StashedsendCollateralPayment:
         return tr("Darksend Collateral Payment");
-    case TransactionRecord::DarksendMakeCollaterals:
+    case TransactionRecord::StashedsendMakeCollaterals:
         return tr("Darksend Make Collateral Inputs");
-    case TransactionRecord::DarksendCreateDenominations:
+    case TransactionRecord::StashedsendCreateDenominations:
         return tr("Darksend Create Denominations");
-    case TransactionRecord::Darksent:
-        return tr("Darksent");
+    case TransactionRecord::Stashedsent:
+        return tr("Stashedsent");
 
     default:
         return QString();
@@ -379,16 +379,16 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx
     switch(wtx->type)
     {
     case TransactionRecord::Generated:
-        return QIcon(fUseBlackTheme ? ":/icons/black/tx_mined" : ":/icons/tx_mined");
-    case TransactionRecord::RecvWithDarksend:
+        return QIcon(":/icons/tx_mined");
+    case TransactionRecord::RecvWithStashedsend:
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
-        return QIcon(fUseBlackTheme ? ":/icons/black/tx_input" : ":/icons/tx_input");
+        return QIcon(":/icons/tx_input");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
-        return QIcon(fUseBlackTheme ? ":/icons/black/tx_output" : ":/icons/tx_output");
+        return QIcon(":/icons/tx_output");
     default:
-        return QIcon(fUseBlackTheme ? ":/icons/black/tx_inout" : ":/icons/tx_inout");
+        return QIcon(":/icons/tx_inout");
     }
 }
 
@@ -405,10 +405,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     case TransactionRecord::RecvFromOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::RecvWithDarksend:
+    case TransactionRecord::RecvWithStashedsend:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
-    case TransactionRecord::Darksent:
+    case TransactionRecord::Stashedsent:
         return lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
         return QString::fromStdString(wtx->address) + watchAddress;
@@ -441,7 +441,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
 
 QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed) const
 {
-    QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit);
+    QString str = SyndicateUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit);
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)
@@ -573,7 +573,7 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         }
         if(index.column() == Amount && rec->type != TransactionRecord::Generated && (rec->credit+rec->debit) > 0)
         {
-            return fUseBlackTheme ? QColor(0, 255, 0) : QColor(0, 128, 0);
+            return QColor(0, 128, 0);
         }
         if(index.column() == ToAddress)
         {

@@ -3,6 +3,7 @@
 
 #include "uint256.h"
 #include "util.h"
+#include "amount.h"
 
 #include <QList>
 #include <QString>
@@ -76,12 +77,12 @@ public:
         RecvWithAddress,
         RecvFromOther,
         SendToSelf,
-        RecvWithDarksend,
-        DarksendDenominate,
-        DarksendCollateralPayment,
-        DarksendMakeCollaterals,
-        DarksendCreateDenominations,
-        Darksent
+        RecvWithStashedsend,
+        StashedsendDenominate,
+        StashedsendCollateralPayment,
+        StashedsendMakeCollaterals,
+        StashedsendCreateDenominations,
+        Stashedsent
     };
 
     /** Number of confirmation recommended for accepting a transaction */

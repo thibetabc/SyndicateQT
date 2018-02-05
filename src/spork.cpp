@@ -1,15 +1,15 @@
 // Copyright (c) 2015 The SYNX developers
 // Copyright (c) 2009-2012 The Darkcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
-#include "bignum.h"
 #include "sync.h"
 #include "net.h"
 #include "key.h"
 #include "util.h"
-#include "script.h"
+#include "amount.h"
+#include "script/script.h"
 #include "base58.h"
 #include "protocol.h"
 #include "spork.h"
@@ -29,7 +29,7 @@ std::map<int, CSporkMessage> mapSporksActive;
 
 void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
-    if(fLiteMode) return; //disable all darksend/masternode related functionality
+    if(fLiteMode) return; //disable all stashedsend/masternode related functionality
 
     if (strCommand == "spork")
     {
@@ -175,7 +175,7 @@ bool CSporkManager::CheckSignature(CSporkMessage& spork)
     CPubKey pubkey(ParseHex(strPubKey));
 
     std::string errorMessage = "";
-    if(!darkSendSigner.VerifyMessage(pubkey, spork.vchSig, strMessage, errorMessage)){
+    if(!stashedSendSigner.VerifyMessage(pubkey, spork.vchSig, strMessage, errorMessage)){
         return false;
     }
 
@@ -190,18 +190,18 @@ bool CSporkManager::Sign(CSporkMessage& spork)
     CPubKey pubkey2;
     std::string errorMessage = "";
 
-    if(!darkSendSigner.SetKey(strMasterPrivKey, errorMessage, key2, pubkey2))
+    if(!stashedSendSigner.SetKey(strMasterPrivKey, errorMessage, key2, pubkey2))
     {
         LogPrintf("CMasternodePayments::Sign - ERROR: Invalid masternodeprivkey: '%s'\n", errorMessage.c_str());
         return false;
     }
 
-    if(!darkSendSigner.SignMessage(strMessage, errorMessage, spork.vchSig, key2)) {
+    if(!stashedSendSigner.SignMessage(strMessage, errorMessage, spork.vchSig, key2)) {
         LogPrintf("CMasternodePayments::Sign - Sign message failed");
         return false;
     }
 
-    if(!darkSendSigner.VerifyMessage(pubkey2, spork.vchSig, strMessage, errorMessage)) {
+    if(!stashedSendSigner.VerifyMessage(pubkey2, spork.vchSig, strMessage, errorMessage)) {
         LogPrintf("CMasternodePayments::Sign - Verify message failed");
         return false;
     }
@@ -209,7 +209,7 @@ bool CSporkManager::Sign(CSporkMessage& spork)
     return true;
 }
 
-bool CSporkManager::UpdateSpork(int nSporkID, int64_t nValue)
+bool CSporkManager::UpdateSpork(int nSporkID, CAmount nValue)
 {
 
     CSporkMessage msg;

@@ -21,13 +21,13 @@ public:
 
     enum AddressType {
         AT_Unknown = 0, /**< User specified label */
-        AT_Normal = 1,  /**< Bitcoin address */
+        AT_Normal = 1,  /**< Syndicate address */
         AT_Stealth = 2  /**< Stealth address */
     };
 
     enum ColumnIndex {
         Label = 0,   /**< User specified label */
-        Address = 1,  /**< Bitcoin address */
+        Address = 1,  /**< Syndicate address */
 	Type = 2 /**< Address type */
     };
 
@@ -42,7 +42,7 @@ public:
         INVALID_ADDRESS,        /**< Unparseable address */
         DUPLICATE_ADDRESS,      /**< Address already in address book */
         WALLET_UNLOCK_FAILURE,  /**< Wallet could not be unlocked to create new receiving address */
-        KEY_GENERATION_FAILURE  /**< Generating a new public key for a receiving address failed */
+        KEY_GENERATSYNX_FAILURE  /**< Generating a new public key for a receiving address failed */
     };
 
     static const QString Send;      /**< Specifies send address */

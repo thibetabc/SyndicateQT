@@ -2,13 +2,14 @@
 
 #include "guiutil.h"
 
-#include "bitcoinaddressvalidator.h"
-#include "bitcoinunits.h"
+#include "syndicateaddressvalidator.h"
+#include "syndicateunits.h"
 #include "walletmodel.h"
 
 #include "init.h"
 #include "protocol.h"
 #include "util.h"
+#include "amount.h"
 
 #ifdef WIN32
 #ifdef _WIN32_WINNT
@@ -78,7 +79,7 @@ QString dateTimeStr(qint64 nTime)
     return dateTimeStr(QDateTime::fromTime_t((qint32)nTime));
 }
 
-QFont bitcoinAddressFont()
+QFont syndicateAddressFont()
 {
     QFont font("Monospace");
 #if QT_VERSION >= 0x040800
@@ -91,9 +92,9 @@ QFont bitcoinAddressFont()
 
 void setupAddressWidget(QLineEdit *widget, QWidget *parent)
 {
-    widget->setMaxLength(BitcoinAddressValidator::MaxAddressLength);
-    widget->setValidator(new BitcoinAddressValidator(parent));
-    widget->setFont(bitcoinAddressFont());
+    widget->setMaxLength(SyndicateAddressValidator::MaxAddressLength);
+    widget->setValidator(new SyndicateAddressValidator(parent));
+    widget->setFont(syndicateAddressFont());
 }
 
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
@@ -105,10 +106,10 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
     widget->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 }
 
-bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
+bool parseSyndicateURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // NovaCoin: check prefix
-    if(uri.scheme() != QString("Syndicate"))
+    // Syndicate: check prefix
+    if(uri.scheme() != QString("syndicate"))
         return false;
 
     SendCoinsRecipient rv;
@@ -138,7 +139,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!BitcoinUnits::parse(BitcoinUnits::BTC, i->second, &rv.amount))
+                if(!SyndicateUnits::parse(SyndicateUnits::SYNX, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -156,18 +157,18 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
     return true;
 }
 
-bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
+bool parseSyndicateURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert Syndicate:// to Syndicate:
+    // Convert syndicate:// to syndicate:
     //
-    //    Cannot handle this later, because bitcoin:// will cause Qt to see the part after // as host,
+    //    Cannot handle this later, because syndicate:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("Syndicate://", Qt::CaseInsensitive))
+    if(uri.startsWith("syndicate://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 11, "Syndicate:");
+        uri.replace(0, 11, "syndicate:");
     }
     QUrl uriInstance(uri);
-    return parseBitcoinURI(uriInstance, out);
+    return parseSyndicateURI(uriInstance, out);
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
@@ -574,7 +575,7 @@ boost::filesystem::path static GetAutostartDir()
 
 boost::filesystem::path static GetAutostartFilePath()
 {
-    return GetAutostartDir() / "Syndicate.desktop";
+    return GetAutostartDir() / "syndicate.desktop";
 }
 
 bool GetStartOnSystemStartup()
@@ -612,7 +613,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         boost::filesystem::ofstream optionFile(GetAutostartFilePath(), std::ios_base::out|std::ios_base::trunc);
         if (!optionFile.good())
             return false;
-        // Write a Syndicate.desktop file to the autostart directory:
+        // Write a syndicate.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         optionFile << "Name=Syndicate\n";
@@ -634,7 +635,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl);
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl)
 {
-    // loop through the list of startup items and try to find the Syndicate app
+    // loop through the list of startup items and try to find the syndicate app
     CFArrayRef listSnapshot = LSSharedFileListCopySnapshot(list, NULL);
     for(int i = 0; i < CFArrayGetCount(listSnapshot); i++) {
         LSSharedFileListItemRef item = (LSSharedFileListItemRef)CFArrayGetValueAtIndex(listSnapshot, i);
@@ -655,21 +656,21 @@ LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef
 
 bool GetStartOnSystemStartup()
 {
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef syndicateAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, syndicateAppUrl);
     return !!foundItem; // return boolified object
 }
 
 bool SetStartOnSystemStartup(bool fAutoStart)
 {
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef syndicateAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, syndicateAppUrl);
 
     if(fAutoStart && !foundItem) {
-        // add Syndicate app to startup item list
-        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, bitcoinAppUrl, NULL, NULL);
+        // add syndicate app to startup item list
+        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, syndicateAppUrl, NULL, NULL);
     }
     else if(!fAutoStart && foundItem) {
         // remove item
@@ -687,19 +688,19 @@ bool SetStartOnSystemStartup(bool fAutoStart) { return false; }
 HelpMessageBox::HelpMessageBox(QWidget *parent) :
     QMessageBox(parent)
 {
-    header = tr("Syndicate-Qt") + " " + tr("version") + " " +
+    header = tr("syndicate-Qt") + " " + tr("version") + " " +
         QString::fromStdString(FormatFullVersion()) + "\n\n" +
         tr("Usage:") + "\n" +
-        "  Syndicate-qt [" + tr("command-line options") + "]                     " + "\n";
+        "  syndicate-Qt [" + tr("command-line options") + "]                     " + "\n";
 
-    coreOptions = QString::fromStdString(HelpMessage());
+    coreOptions = QString::fromStdString(HelpMessage(HMM_SYNX_QT));
 
     uiOptions = tr("UI options") + ":\n" +
         "  -lang=<lang>           " + tr("Set language, for example \"de_DE\" (default: system locale)") + "\n" +
         "  -min                   " + tr("Start minimized") + "\n" +
         "  -splash                " + tr("Show splash screen on startup (default: 1)") + "\n";
 
-    setWindowTitle(tr("Syndicate-Qt"));
+    setWindowTitle(tr("syndicate-Qt"));
     setTextFormat(Qt::PlainText);
     // setMinimumWidth is ignored for QMessageBox so put in non-breaking spaces to make it wider.
     setText(header + QString(QChar(0x2003)).repeated(50));

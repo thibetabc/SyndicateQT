@@ -1,9 +1,9 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_WALLETDB_H
-#define BITCOIN_WALLETDB_H
+#ifndef SYNX_WALLETDB_H
+#define SYNX_WALLETDB_H
 
 #include "db.h"
 #include "key.h"
@@ -150,10 +150,14 @@ public:
 
     DBErrors ReorderTransactions(CWallet*);
     DBErrors LoadWallet(CWallet* pwallet);
+    
+	DBErrors FindWalletTx(CWallet* pwallet, std::vector<uint256>& vTxHash);
+	DBErrors ZapWalletTx(CWallet* pwallet);
+ 
     static bool Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys);
     static bool Recover(CDBEnv& dbenv, std::string filename);
 };
 
 bool BackupWallet(const CWallet& wallet, const std::string& strDest);
 
-#endif // BITCOIN_WALLETDB_H
+#endif // SYNX_WALLETDB_H

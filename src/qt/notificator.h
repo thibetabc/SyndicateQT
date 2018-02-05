@@ -1,6 +1,10 @@
 #ifndef NOTIFICATOR_H
 #define NOTIFICATOR_H
 
+#if defined(HAVE_CONFIG_H)
+#include "config/syndicate-config.h"
+#endif
+
 #include <QObject>
 #include <QIcon>
 
@@ -18,7 +22,7 @@ class Notificator: public QObject
 
 public:
     /** Create a new notificator.
-       @note Ownership of trayIcon is not Syndicatered to this object.
+       @note Ownership of trayIcon is not transferred to this object.
     */
     Notificator(const QString &programName=QString(), QSystemTrayIcon *trayIcon=0, QWidget *parent=0);
     ~Notificator();

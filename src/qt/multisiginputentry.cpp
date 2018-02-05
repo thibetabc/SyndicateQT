@@ -7,7 +7,7 @@
 #include "multisiginputentry.h"
 #include "ui_multisiginputentry.h"
 #include "main.h"
-#include "script.h"
+#include "script/script.h"
 #include "util.h"
 #include "wallet.h"
 #include "walletmodel.h"
@@ -129,10 +129,10 @@ void MultisigInputEntry::on_transactionId_textChanged(const QString &transaction
         {
             CSyndicateAddress address(addr);
             QString addressStr(address.ToString().c_str());
-            ui->transactionOutput->addItem(idStr + QString(" - ") + addressStr + QString(" - ") + amountStr + QString(" TX"));
+            ui->transactionOutput->addItem(idStr + QString(" - ") + addressStr + QString(" - ") + amountStr + QString(" SYNX"));
         }
         else
-            ui->transactionOutput->addItem(idStr + QString(" - ") + amountStr + QString(" TX"));
+            ui->transactionOutput->addItem(idStr + QString(" - ") + amountStr + QString(" SYNX"));
     }
 }
 

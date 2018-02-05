@@ -1,12 +1,13 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
+// Copyright (c) 2009-2017 The Bitcoin developers
 // Copyright (c) 2013 The NovaCoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "consensus/consensus.h"
 #include "txdb.h"
 #include "miner.h"
-#include "kernel.h"
+#include "stake.h"
 #include "masternodeman.h"
 #include "masternode-payments.h"
 
@@ -14,7 +15,7 @@ using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// BitcoinMiner
+// SyndicateMiner
 //
 
 extern unsigned int nMinerSleep;
@@ -104,7 +105,7 @@ public:
 CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFees)
 {
     // Create new block
-    auto_ptr<CBlock> pblock(new CBlock());
+    unique_ptr<CBlock> pblock(new CBlock());
     if (!pblock.get())
         return NULL;
 
@@ -122,7 +123,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
         CPubKey pubkey;
         if (!reservekey.GetReservedKey(pubkey))
             return NULL;
-        txNew.vout[0].scriptPubKey.SetDestination(pubkey.GetID());
+        txNew.vout[0].scriptPubKey = GetScriptForDestination(pubkey.GetID());
     }
     else
     {
@@ -164,11 +165,11 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
 
     // Collect memory pool transactions into the block
-    int64_t nFees = 0;
+    CAmount nFees = 0;
     {
         LOCK2(cs_main, mempool.cs);
         CTxDB txdb("r");
-//>SYNX<
+//>TX<
         // Priority order to process transactions
         list<COrphan> vOrphan; // list memory doesn't move
         map<uint256, vector<COrphan*> > mapDependers;
@@ -218,7 +219,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                     nTotalIn += mempool.mapTx[txin.prevout.hash].vout[txin.prevout.n].nValue;
                     continue;
                 }
-                int64_t nValueIn = txPrev.vout[txin.prevout.n].nValue;
+                CAmount nValueIn = txPrev.vout[txin.prevout.n].nValue;
                 nTotalIn += nValueIn;
 
                 int nConf = txindex.GetDepthInMainChain();
@@ -351,9 +352,9 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
         if (fDebug && GetBoolArg("-printpriority", false))
             LogPrintf("CreateNewBlock(): total size %u\n", nBlockSize);
-        // >SYNX<
+// >TX<
         if (!fProofOfStake)
-            pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
+            pblock->vtx[0].vout[0].nValue = GetCoinbaseValue(pindexPrev->nHeight + 1, nFees);
 
         if (pFees)
             *pFees = nFees;
@@ -382,7 +383,7 @@ void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& 
     ++nExtraNonce;
 
     unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
-    pblock->vtx[0].vin[0].scriptSig = (CScript() << nHeight << CBigNum(nExtraNonce)) + COINBASE_FLAGS;
+    pblock->vtx[0].vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
     assert(pblock->vtx[0].vin[0].scriptSig.size() <= 100);
 
     pblock->hashMerkleRoot = pblock->BuildMerkleTree();
@@ -439,7 +440,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
     uint256 hashBlock = pblock->GetHash();
     uint256 hashProof = pblock->GetPoWHash();
-    uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
+    uint256 hashTarget = uint256().SetCompact(pblock->nBits);
 
     if(!pblock->IsProofOfWork())
         return error("CheckWork() : %s is not a proof-of-work block", hashBlock.GetHex());
@@ -528,7 +529,7 @@ void ThreadStakeMiner(CWallet *pwallet)
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
 
     // Make this thread recognisable as the mining thread
-    RenameThread("Syndicate-miner");
+    RenameThread("syndicate-miner");
 
     CReserveKey reservekey(pwallet);
 
@@ -562,8 +563,8 @@ void ThreadStakeMiner(CWallet *pwallet)
         //
         // Create new block
         //
-        int64_t nFees;
-        auto_ptr<CBlock> pblock(CreateNewBlock(reservekey, true, &nFees));
+        CAmount nFees;
+        unique_ptr<CBlock> pblock(CreateNewBlock(reservekey, true, &nFees));
         if (!pblock.get())
             return;
 

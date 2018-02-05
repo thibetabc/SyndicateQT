@@ -15,7 +15,7 @@ class QDateTime;
 class QTimer;
 QT_END_NAMESPACE
 
-/** Model for Bitcoin network client. */
+/** Model for Syndicate network client. */
 class ClientModel : public QObject
 {
     Q_OBJECT
@@ -46,13 +46,15 @@ public:
     bool isImporting() const;
     //! Return warnings to be displayed in status bar
     QString getStatusBarWarnings() const;
-
+    //! Return network (main, testnet3, regtest)
+    QString getNetworkName() const;
+    
     QString formatFullVersion() const;
     QString formatBuildDate() const;
     bool isReleaseVersion() const;
     QString clientName() const;
     QString formatClientStartupTime() const;
-
+	
 private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;

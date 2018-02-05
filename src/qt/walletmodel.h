@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef WALLETMODEL_H
@@ -87,7 +87,7 @@ public:
     }
 };
 
-/** Interface to Bitcoin wallet from Qt view code. */
+/** Interface to Syndicate wallet from Qt view code. */
 class WalletModel : public QObject
 {
     Q_OBJECT
@@ -174,7 +174,7 @@ public:
 
         bool isValid() const { return valid; }
 
-        // Copy operator and constructor Syndicate the context
+        // Copy operator and constructor transfer the context
         UnlockContext(const UnlockContext& obj) { CopyFrom(obj); }
         UnlockContext& operator=(const UnlockContext& rhs) { CopyFrom(rhs); return *this; }
     private:
@@ -225,7 +225,7 @@ private:
     EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
     int cachedTxLocks;
-    int cachedDarksendRounds;
+    int cachedStashedsendRounds;
 
     QTimer *pollTimer;
 

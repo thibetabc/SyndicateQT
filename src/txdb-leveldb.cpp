@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 #include <map>
@@ -14,10 +14,11 @@
 #include <leveldb/filter_policy.h>
 #include <memenv/memenv.h>
 
-#include "kernel.h"
+#include "stake.h"
 #include "checkpoints.h"
 #include "txdb.h"
 #include "util.h"
+#include "amount.h"
 #include "main.h"
 #include "chainparams.h"
 
@@ -28,7 +29,7 @@ leveldb::DB *txdb; // global pointer for LevelDB object instance
 
 static leveldb::Options GetOptions() {
     leveldb::Options options;
-    int nCacheSizeMB = GetArg("-dbcache", 25);
+    int nCacheSizeMB = GetArg("-dbcache", 100);
     options.block_cache = leveldb::NewLRUCache(nCacheSizeMB * 1048576);
     options.filter_policy = leveldb::NewBloomFilterPolicy(10);
     return options;
@@ -56,6 +57,8 @@ void init_blockindex(leveldb::Options& options, bool fRemoveOld = false) {
         }
     }
 
+    options.create_if_missing = true;
+
     filesystem::create_directory(directory);
     LogPrintf("Opening LevelDB in %s\n", directory.string());
     leveldb::Status status = leveldb::DB::Open(options, directory.string(), &txdb);
@@ -80,7 +83,7 @@ CTxDB::CTxDB(const char* pszMode)
     bool fCreate = strchr(pszMode, 'c');
 
     options = GetOptions();
-    options.create_if_missing = true;
+    options.create_if_missing = fCreate;
     options.filter_policy = leveldb::NewBloomFilterPolicy(10);
 
     init_blockindex(options); // Init directory
@@ -295,12 +298,12 @@ bool CTxDB::WriteHashBestChain(uint256 hashBestChain)
     return Write(string("hashBestChain"), hashBestChain);
 }
 
-bool CTxDB::ReadBestInvalidTrust(CBigNum& bnBestInvalidTrust)
+bool CTxDB::ReadBestInvalidTrust(uint256& bnBestInvalidTrust)
 {
     return Read(string("bnBestInvalidTrust"), bnBestInvalidTrust);
 }
 
-bool CTxDB::WriteBestInvalidTrust(CBigNum bnBestInvalidTrust)
+bool CTxDB::WriteBestInvalidTrust(uint256 bnBestInvalidTrust)
 {
     return Write(string("bnBestInvalidTrust"), bnBestInvalidTrust);
 }
@@ -389,12 +392,13 @@ bool CTxDB::LoadBlockIndex()
             return error("LoadBlockIndex() : CheckIndex failed at %d", pindexNew->nHeight);
         }
 
-        // NovaCoin: build setStakeSeen
+        // Syndicate: build setStakeSeen
         if (pindexNew->IsProofOfStake())
             setStakeSeen.insert(make_pair(pindexNew->prevoutStake, pindexNew->nStakeTime));
 
         iterator->Next();
     }
+    
     delete iterator;
 
     boost::this_thread::interruption_point();
@@ -428,21 +432,22 @@ bool CTxDB::LoadBlockIndex()
     nBestChainTrust = pindexBest->nChainTrust;
 
     LogPrintf("LoadBlockIndex(): hashBestChain=%s  height=%d  trust=%s  date=%s\n",
-      hashBestChain.ToString(), nBestHeight, CBigNum(nBestChainTrust).ToString(),
+      hashBestChain.ToString(), nBestHeight, nBestChainTrust.ToString(),
       DateTimeStrFormat("%x %H:%M:%S", pindexBest->GetBlockTime()));
 
     // Load bnBestInvalidTrust, OK if it doesn't exist
-    CBigNum bnBestInvalidTrust;
+    uint256 bnBestInvalidTrust;
     ReadBestInvalidTrust(bnBestInvalidTrust);
-    nBestInvalidTrust = bnBestInvalidTrust.getuint256();
+    nBestInvalidTrust = bnBestInvalidTrust;
 
     // Verify blocks in the best chain
     int nCheckLevel = GetArg("-checklevel", 1);
-    int nCheckDepth = GetArg( "-checkblocks", 5000);
+    int nCheckDepth = GetArg( "-checkblocks", 500);
     if (nCheckDepth == 0)
         nCheckDepth = 1000000000; // suffices until the year 19000
     if (nCheckDepth > nBestHeight)
         nCheckDepth = nBestHeight;
+        
     LogPrintf("Verifying last %i blocks at level %i\n", nCheckDepth, nCheckLevel);
     CBlockIndex* pindexFork = NULL;
     map<pair<unsigned int, unsigned int>, CBlockIndex*> mapBlockPos;

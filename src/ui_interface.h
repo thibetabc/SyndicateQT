@@ -1,14 +1,15 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UI_INTERFACE_H
-#define BITCOIN_UI_INTERFACE_H
+#ifndef SYNX_UI_INTERFACE_H
+#define SYNX_UI_INTERFACE_H
 
 #include <boost/signals2/last_value.hpp>
 #include <boost/signals2/signal.hpp>
 
+#include "amount.h"
 #include <string>
 
 #include <stdint.h>
@@ -74,7 +75,7 @@ public:
     boost::signals2::signal<void (const std::string& message, const std::string& caption, unsigned int style)> ThreadSafeMessageBox;
 
     /** Ask the user whether they want to pay a fee or not. */
-    boost::signals2::signal<bool (int64_t nFeeRequired, const std::string& strCaption), boost::signals2::last_value<bool> > ThreadSafeAskFee;
+    boost::signals2::signal<bool (CAmount nFeeRequired, const std::string& strCaption), boost::signals2::last_value<bool> > ThreadSafeAskFee;
 
     /** Handle a URL passed at the command line. */
     boost::signals2::signal<void (const std::string& strURI)> ThreadSafeHandleURI;

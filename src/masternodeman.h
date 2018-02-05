@@ -1,18 +1,18 @@
 
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef MASTERNODEMAN_H
 #define MASTERNODEMAN_H
 
-#include "bignum.h"
 #include "sync.h"
 #include "net.h"
 #include "key.h"
-#include "core.h"
+#include "primitives/transaction.h"
 #include "util.h"
-#include "script.h"
+#include "amount.h"
+#include "script/script.h"
 #include "base58.h"
 #include "main.h"
 #include "masternode.h"
@@ -25,8 +25,6 @@ using namespace std;
 class CMasternodeMan;
 
 extern CMasternodeMan mnodeman;
-
-extern void Misbehaving(NodeId nodeid, int howmuch);
 
 void DumpMasternodes();
 
@@ -68,7 +66,7 @@ private:
     std::map<COutPoint, int64_t> mWeAskedForMasternodeListEntry;
 
 public:
-    // keep track of dsq count to prevent masternodes from gaming darksend queue
+    // keep track of dsq count to prevent masternodes from gaming stashedsend queue
     int64_t nDsqCount;
 
     IMPLEMENT_SERIALIZE

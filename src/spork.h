@@ -1,17 +1,17 @@
-// Copyright (c) 2015 The SYNX developers
+// Copyright (c) 2015 The Bitcoin developers
 // Copyright (c) 2009-2012 The Darkcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef SPORK_H
 #define SPORK_H
 
-#include "bignum.h"
 #include "sync.h"
 #include "net.h"
 #include "key.h"
 
 #include "util.h"
-#include "script.h"
+#include "amount.h"
+#include "script/script.h"
 #include "base58.h"
 #include "main.h"
 
@@ -49,12 +49,12 @@ using namespace boost;
 class CSporkMessage;
 class CSporkManager;
 
-#include "bignum.h"
 #include "net.h"
 #include "key.h"
 #include "util.h"
+#include "amount.h"
 #include "protocol.h"
-#include "darksend.h"
+#include "stashedsend.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace std;
@@ -80,7 +80,7 @@ class CSporkMessage
 public:
     std::vector<unsigned char> vchSig;
     int nSporkID;
-    int64_t nValue;
+    CAmount nValue;
     int64_t nTimeSigned;
 
     uint256 GetHash(){
@@ -119,7 +119,7 @@ public:
 
     std::string GetSporkNameByID(int id);
     int GetSporkIDByName(std::string strName);
-    bool UpdateSpork(int nSporkID, int64_t nValue);
+    bool UpdateSpork(int nSporkID, CAmount nValue);
     bool SetPrivKey(std::string strPrivKey);
     bool CheckSignature(CSporkMessage& spork);
     bool Sign(CSporkMessage& spork);

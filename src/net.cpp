@@ -1,15 +1,19 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#if defined(HAVE_CONFIG_H)
+#include "config/syndicate-config.h"
+#endif
+
 #include "db.h"
 #include "net.h"
 #include "main.h"
 #include "addrman.h"
 #include "chainparams.h"
-#include "core.h"
+#include "primitives/transaction.h"
 #include "ui_interface.h"
-#include "darksend.h"
+#include "stashedsend.h"
 #include "wallet.h"
 
 #ifdef WIN32
@@ -56,7 +60,6 @@ uint64_t nLocalHostNonce = 0;
 static std::vector<SOCKET> vhListenSocket;
 CAddrMan addrman;
 std::string strSubVersion;
-int nMaxConnections = 125;
 
 vector<CNode*> vNodes;
 CCriticalSection cs_vNodes;
@@ -80,8 +83,8 @@ CCriticalSection cs_nLastNodeId;
 static CSemaphore *semOutbound = NULL;
 
 // Signals for message handling
-static CNodeSignals g_signals;
-CNodeSignals& GetNodeSignals() { return g_signals; }
+static CNodeSignals nodeSignals;
+CNodeSignals& GetNodeSignals() { return nodeSignals; }
 
 void AddOneShot(string strDest)
 {
@@ -385,7 +388,7 @@ CNode* FindNode(const CService& addr)
     return NULL;
 }
 
-CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool darkSendMaster)
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool stashedSendMaster)
 {
     if (pszDest == NULL) {
         if (IsLocal(addrConnect))
@@ -395,8 +398,8 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool darkSendMaste
         CNode* pnode = FindNode((CService)addrConnect);
         if (pnode)
         {
-            if(darkSendMaster)
-                pnode->fDarkSendMaster = true;
+            if(stashedSendMaster)
+                pnode->fStashedSendMaster = true;
 
             pnode->AddRef();
             return pnode;
@@ -630,7 +633,7 @@ void CNode::copyStats(CNodeStats &stats)
     stats.fSyncNode = (this == pnodeSync);
 
     // It is common for nodes with good ping times to suddenly become lagged,
-    // due to a new block arriving or other large transfer.
+    // due to a new block arriving or other large syndicate.
     // Merely reporting pingtime might fool the caller into thinking the node was still responsive,
     // since pingtime does not update until the ping is complete, which might take a while.
     // So, if a ping is taking an unusually long time in flight,
@@ -640,7 +643,7 @@ void CNode::copyStats(CNodeStats &stats)
         nPingUsecWait = GetTimeMicros() - nPingUsecStart;
     }
 
-    // Raw ping time is in microseconds, but show it to user as whole seconds (Bitcoin users should be well used to small numbers with many decimal places by now :)
+    // Raw ping time is in microseconds, but show it to user as whole seconds (Syndicate users should be well used to small numbers with many decimal places by now :)
     stats.dPingTime = (((double)nPingUsecTime) / 1e6);
     stats.dPingWait = (((double)nPingUsecWait) / 1e6);
 
@@ -1595,7 +1598,7 @@ void ThreadMessageHandler()
                 TRY_LOCK(pnode->cs_vRecvMsg, lockRecv);
                 if (lockRecv)
                 {
-                    if (!g_signals.ProcessMessages(pnode))
+                    if (!nodeSignals.ProcessMessages(pnode))
                         pnode->CloseSocketDisconnect();
 
                     if (pnode->nSendSize < SendBufferSize())
@@ -1613,7 +1616,7 @@ void ThreadMessageHandler()
             {
                 TRY_LOCK(pnode->cs_vSend, lockSend);
                 if (lockSend)
-                    g_signals.SendMessages(pnode, pnode == pnodeTrickle);
+                    nodeSignals.SendMessages(pnode, pnode == pnodeTrickle);
             }
             boost::this_thread::interruption_point();
         }
@@ -1709,8 +1712,8 @@ bool BindListenPort(const CService &addrBind, string& strError)
 #endif
 #endif
 #ifdef WIN32
-        int nProtLevel = 10 /* PROTECTION_LEVEL_UNRESTRICTED */;
-        int nParameterId = 23 /* IPV6_PROTECTION_LEVEl */;
+        int nProtLevel = 10 /* PROTECTSYNX_LEVEL_UNRESTRICTED */;
+        int nParameterId = 23 /* IPV6_PROTECTSYNX_LEVEl */;
         // this call is allowed to fail
         setsockopt(hListenSocket, IPPROTO_IPV6, nParameterId, (const char*)&nProtLevel, sizeof(int));
 #endif
@@ -1900,13 +1903,11 @@ public:
 }
 instance_of_cnetcleanup;
 
-void CExplicitNetCleanup::callCleanup()
-{
-    // Explicit call to destructor of CNetCleanup because it's not implicitly called
-    // when the wallet is restarted from within the wallet itself.
-    CNetCleanup* tmp = new CNetCleanup();
-    delete tmp; // Stroustrup's gonna kill me for that
-}
+
+
+
+
+
 
 void RelayTransaction(const CTransaction& tx, const uint256& hash)
 {
@@ -2033,12 +2034,9 @@ bool CAddrDB::Read(CAddrMan& addr)
 
     // use file size to size memory buffer
     uint64_t fileSize = boost::filesystem::file_size(pathAddr);
-    uint64_t dataSize = fileSize - sizeof(uint256);
     // Don't try to resize to a negative number if file is small
-    if (fileSize >= sizeof(uint256))
-        dataSize = fileSize - sizeof(uint256);
-    if ( dataSize < 0 )
-        dataSize = 0;
+    uint64_t dataSize = fileSize >= sizeof(uint256) ? fileSize - sizeof(uint256) : 0;
+
     vector<unsigned char> vchData;
     vchData.resize(dataSize);
     uint256 hashIn;

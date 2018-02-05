@@ -1,16 +1,19 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Copyright (c) 2017 Empinel/The Bitcoin Developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "rpcserver.h"
 #include "chainparams.h"
+#include "consensus/consensus.h"
 #include "main.h"
+#include "proofs.h"
 #include "db.h"
 #include "txdb.h"
 #include "init.h"
 #include "miner.h"
-#include "kernel.h"
+#include "stake.h"
 
 #include <boost/assign/list_of.hpp>
 
@@ -46,7 +49,7 @@ Value getsubsidy(const Array& params, bool fHelp)
             "getsubsidy [nTarget]\n"
             "Returns proof-of-work subsidy value for the specified value of target.");
 
-    return (int64_t)GetProofOfStakeReward(pindexBest->pprev, 0, 0);
+    return (int64_t)GetCoinstakeValue(0, 0, pindexBest->nHeight);
 }
 
 Value getstakesubsidy(const Array& params, bool fHelp)
@@ -65,7 +68,7 @@ Value getstakesubsidy(const Array& params, bool fHelp)
         ssData >> tx;
     }
     catch (std::exception &e) {
-        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "SYNX decode failed");
+        throw JSONRPCError(RPC_DESERIALIZATSYNX_ERROR, "TX decode failed");
     }
 
     uint64_t nCoinAge;
@@ -73,7 +76,7 @@ Value getstakesubsidy(const Array& params, bool fHelp)
     if (!tx.GetCoinAge(txdb, pindexBest, nCoinAge))
         throw JSONRPCError(RPC_MISC_ERROR, "GetCoinAge failed");
 
-    return (uint64_t)GetProofOfStakeReward(pindexBest->pprev, nCoinAge, 0);
+    return (uint64_t)GetCoinstakeValue(nCoinAge, 0, pindexBest->nHeight);
 }
 
 Value getmininginfo(const Array& params, bool fHelp)
@@ -97,7 +100,7 @@ Value getmininginfo(const Array& params, bool fHelp)
     //diff.push_back(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
     obj.push_back(Pair("difficulty",    GetDifficulty(GetLastBlockIndex(pindexBest, true))));
 
-    obj.push_back(Pair("blockvalue",    (int64_t)GetProofOfStakeReward(pindexBest->pprev, 0, 0)));
+    obj.push_back(Pair("blockvalue",    (int64_t)GetCoinstakeValue(0, 0, pindexBest->nHeight)));
     obj.push_back(Pair("netmhashps",     GetPoWMHashPS()));
     obj.push_back(Pair("netstakeweight", GetPoSKernelPS()));
     obj.push_back(Pair("errors",        GetWarnings("statusbar")));
@@ -127,7 +130,7 @@ Value getstakinginfo(const Array& params, bool fHelp)
 
     uint64_t nNetworkWeight = GetPoSKernelPS();
     bool staking = nLastCoinStakeSearchInterval && nWeight;
-    nExpectedTime = staking ? (TARGET_SPACING * nNetworkWeight / nWeight) : 0;
+    nExpectedTime = staking ? (Params().TargetSpacing() * nNetworkWeight / nWeight) : 0;
 
     Object obj;
 
@@ -216,8 +219,8 @@ Value checkkernel(const Array& params, bool fHelp)
     if (!fCreateBlockTemplate)
         return result;
 
-    int64_t nFees;
-    auto_ptr<CBlock> pblock(CreateNewBlock(*pMiningKey, true, &nFees));
+    CAmount nFees;
+    unique_ptr<CBlock> pblock(CreateNewBlock(*pMiningKey, true, &nFees));
 
     pblock->nTime = pblock->vtx[0].nTime = nTime;
 
@@ -249,9 +252,6 @@ Value getworkex(const Array& params, bool fHelp)
 
     if (IsInitialBlockDownload())
         throw JSONRPCError(-10, "Syndicate is downloading blocks...");
-
-    if (pindexBest->nHeight >= Params().LastPOWBlock())
-        throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
     static mapNewBlock_t mapNewBlock;
@@ -303,7 +303,7 @@ Value getworkex(const Array& params, bool fHelp)
         char phash1[64];
         FormatHashBuffers(pblock, pmidstate, pdata, phash1);
 
-        uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
+        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
 
         CTransaction coinbaseTx = pblock->vtx[0];
         std::vector<uint256> merkle = pblock->GetMerkleBranch(0);
@@ -384,9 +384,6 @@ Value getwork(const Array& params, bool fHelp)
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Syndicate is downloading blocks...");
 
-    if (pindexBest->nHeight >= Params().LastPOWBlock())
-        throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
     static mapNewBlock_t mapNewBlock;    // FIXME: thread safety
     static vector<CBlock*> vNewBlock;
@@ -445,7 +442,7 @@ Value getwork(const Array& params, bool fHelp)
         char phash1[64];
         FormatHashBuffers(pblock, pmidstate, pdata, phash1);
 
-        uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
+        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
 
         Object result;
         result.push_back(Pair("midstate", HexStr(BEGIN(pmidstate), END(pmidstate)))); // deprecated
@@ -533,12 +530,6 @@ Value getblocktemplate(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Syndicate is not connected!");
 
-    //if (IsInitialBlockDownload())
-    //    throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Syndicate is downloading blocks...");
-
-    if (pindexBest->nHeight >= Params().LastPOWBlock())
-        throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-
     // Update block
     static unsigned int nTransactionsUpdatedLast;
     static CBlockIndex* pindexPrev;
@@ -619,7 +610,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
     Object aux;
     aux.push_back(Pair("flags", HexStr(COINBASE_FLAGS.begin(), COINBASE_FLAGS.end())));
 
-    uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
+    uint256 hashTarget = uint256().SetCompact(pblock->nBits);
 
     static Array aMutable;
     if (aMutable.empty())
@@ -664,7 +655,7 @@ Value submitblock(const Array& params, bool fHelp)
         ssBlock >> block;
     }
     catch (std::exception &e) {
-        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
+        throw JSONRPCError(RPC_DESERIALIZATSYNX_ERROR, "Block decode failed");
     }
 
     bool fAccepted = ProcessBlock(NULL, &block);

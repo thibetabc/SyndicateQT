@@ -1,8 +1,13 @@
-// Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_NETBASE_H
-#define BITCOIN_NETBASE_H
+
+#ifndef SYNX_NETBASE_H
+#define SYNX_NETBASE_H
+
+#if defined(HAVE_CONFIG_H)
+#include "config/syndicate-config.h"
+#endif
 
 #include "compat.h"
 #include "serialize.h"

@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2012 Bitcoin Developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "rpcserver.h"
@@ -14,6 +14,7 @@
 #include "sync.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "amount.h"
 
 #include <boost/foreach.hpp>
 #include "json/json_spirit_value.h"
@@ -93,7 +94,7 @@ Value getpeerinfo(const Array& params, bool fHelp)
         if (stats.dPingWait > 0.0)
             obj.push_back(Pair("pingwait", stats.dPingWait));
         obj.push_back(Pair("version", stats.nVersion));
-        obj.push_back(Pair("subversion",    strSubVersion));
+        obj.push_back(Pair("subversion", stats.strSubVer));
         obj.push_back(Pair("inbound", stats.fInbound));
         obj.push_back(Pair("startingheight", stats.nStartingHeight));
         if (fStateStats) {
@@ -241,7 +242,7 @@ Value getaddednodeinfo(const Array& params, bool fHelp)
     return ret;
 }
 
-// ppcoin: send alert.  
+// syndicate: send alert.  
 // There is a known deadlock situation with ThreadMessageHandler
 // ThreadMessageHandler: holds cs_vSend and acquiring cs_main in SendMessages()
 // ThreadRPCServer: holds cs_main and acquiring cs_vSend in alert.RelayTo()/PushMessage()/BeginMessage()

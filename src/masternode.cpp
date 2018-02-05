@@ -1,10 +1,11 @@
 #include "masternode.h"
 #include "masternodeman.h"
-#include "darksend.h"
-#include "core.h"
+#include "stashedsend.h"
+#include "primitives/transaction.h"
 #include "main.h"
 #include "sync.h"
 #include "util.h"
+#include "amount.h"
 #include "addrman.h"
 #include <boost/lexical_cast.hpp>
 
@@ -184,7 +185,7 @@ void CMasternode::Check()
         return;
     }
 
-    if(!UpdatedWithin(MASTERNODE_EXPIRATION_SECONDS)){
+    if(!UpdatedWithin(MASTERNODE_EXPIRATSYNX_SECONDS)){
         activeState = MASTERNODE_EXPIRED;
         return;
     }
@@ -192,7 +193,7 @@ void CMasternode::Check()
     if(!unitTest){
         CValidationState state;
         CTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(DARKSEND_POOL_MAX, darkSendPool.collateralPubKey);
+        CTxOut vout = CTxOut(STASHEDSEND_POOL_MAX, stashedSendPool.collateralPubKey);
         tx.vin.push_back(vin);
         tx.vout.push_back(vout);
 

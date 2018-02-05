@@ -1,0 +1,25 @@
+# It is not recommended to modify this file in-place, because it will
+# be overwritten during package upgrades. If you want to add further
+# options or overwrite existing ones then use
+# $ systemctl edit syndicated.service
+# See "man systemd.service" for details.
+
+# Note that almost all daemon options could be specified in
+# /etc/syndicate/syndicate.conf
+
+[Unit]
+Description=Syndicate daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/syndicated -daemon -conf=/etc/syndicate/syndicate.conf -pid=/run/syndicated/syndicated.pid
+# Creates /run/syndicated owned by syndicate
+RuntimeDirectory=syndicated
+User=syndicate
+Type=forking
+PIDFile=/run/syndicated/syndicated.pid
+Restart=on-failure
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

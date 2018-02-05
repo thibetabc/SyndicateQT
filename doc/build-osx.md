@@ -1,54 +1,115 @@
-Copyright (c) 2009-2012 Bitcoin Developers
-Distributed under the MIT/X11 software license, see the accompanying file
-license.txt or http://www.opensource.org/licenses/mit-license.php.  This
-product includes software developed by the OpenSSL Project for use in the
-OpenSSL Toolkit (http://www.openssl.org/).  This product includes cryptographic
-software written by Eric Young (eay@cryptsoft.com) and UPnP software written by
-Thomas Bernard.
+Mac OS X Build Instructions and Notes
+====================================
+The commands in this guide should be executed in a Terminal application.
+The built-in one is located in `/Applications/Utilities/Terminal.app`.
 
+Preparation
+-----------
+Install the OS X command line tools:
 
-Mac OS X Syndicated build instructions
-Laszlo Hanyecz <solar@heliacal.net>
-Douglas Huff <dhuff@jrbobdobbs.org>
+`xcode-select --install`
 
+When the popup appears, click `Install`.
 
-See readme-qt.rst for instructions on building Syndicate QT, the
-graphical user interface.
+Then install [Homebrew](https://brew.sh).
 
-Tested on 10.5 and 10.6 intel.  PPC is not supported because it's big-endian.
+Dependencies
+----------------------
 
-All of the commands should be executed in Terminal.app.. it's in
-/Applications/Utilities
+    brew install automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf python3 qt libevent
 
-You need to install XCode with all the options checked so that the compiler and
-everything is available in /usr not just /Developer I think it comes on the DVD
-but you can get the current version from http://developer.apple.com
+See [dependencies.md](dependencies.md) for a complete overview.
 
+If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG
 
-1.  Clone the github tree to get the source code:
+    brew install librsvg
 
-git clone http://github.com/Syndicatedev/Syndicatecoin Syndicate
+NOTE: Building with Qt4 is still supported, however, could result in a broken UI. Building with Qt5 is recommended.
 
-2.  Download and install MacPorts from http://www.macports.org/
+Berkeley DB
+-----------
+It is recommended to use Berkeley DB 4.8. If you have to build it yourself,
+you can use [the installation script included in contrib/](/contrib/install_db4.sh)
+like so
 
-2a. (for 10.7 Lion)
-    Edit /opt/local/etc/macports/macports.conf and uncomment "build_arch i386"
+```shell
+./contrib/install_db4.sh .
+```
 
-3.  Install dependencies from MacPorts
+from the root of the repository.
 
-sudo port install boost db48 openssl miniupnpc
+**Note**: You only need Berkeley DB if the wallet is enabled (see the section *Disable-Wallet mode* below).
 
-Optionally install qrencode (and set USE_QRCODE=1):
-sudo port install qrencode
+Build Syndicate Core
+------------------------
 
-4.  Now you should be able to build Syndicated:
+1. Clone the syndicate source code and cd into `syndicate`
 
-cd Syndicate/src
-make -f makefile.osx
+        git clone https://github.com/syndicate/syndicate
+        cd syndicate
 
-Run:
-  ./Syndicated --help  # for a list of command-line options.
-Run
-  ./Syndicated -daemon # to start the Syndicate daemon.
-Run
-  ./Syndicated help # When the daemon is running, to get a list of RPC commands
+2.  Build syndicate-core:
+
+    Configure and build the headless syndicate binaries as well as the GUI (if Qt is found).
+
+    You can disable the GUI build by passing `--without-gui` to configure.
+
+        ./autogen.sh
+        ./configure
+        make
+
+3.  It is recommended to build and run the unit tests:
+
+        make check
+
+4.  You can also create a .dmg that contains the .app bundle (optional):
+
+        make deploy
+
+Running
+-------
+
+Syndicate Core is now available at `./src/syndicated`
+
+Before running, it's recommended you create an RPC configuration file.
+
+    echo -e "rpcuser=syndicaterpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/Syndicate/syndicate.conf"
+
+    chmod 600 "/Users/${USER}/Library/Application Support/Syndicate/syndicate.conf"
+
+The first time you run syndicated, it will start downloading the blockchain. This process could take several hours.
+
+You can monitor the download process by looking at the debug.log file:
+
+    tail -f $HOME/Library/Application\ Support/Syndicate/debug.log
+
+Other commands:
+-------
+
+    ./src/syndicated -daemon # Starts the syndicate daemon.
+    ./src/syndicate-cli --help # Outputs a list of command-line options.
+    ./src/syndicate-cli help # Outputs a list of RPC commands when the daemon is running.
+
+Using Qt Creator as IDE
+------------------------
+You can use Qt Creator as an IDE, for syndicate development.
+Download and install the community edition of [Qt Creator](https://www.qt.io/download/).
+Uncheck everything except Qt Creator during the installation process.
+
+1. Make sure you installed everything through Homebrew mentioned above
+2. Do a proper ./configure --enable-debug
+3. In Qt Creator do "New Project" -> Import Project -> Import Existing Project
+4. Enter "syndicate-qt" as project name, enter src/qt as location
+5. Leave the file selection as it is
+6. Confirm the "summary page"
+7. In the "Projects" tab select "Manage Kits..."
+8. Select the default "Desktop" kit and select "Clang (x86 64bit in /usr/bin)" as compiler
+9. Select LLDB as debugger (you might need to set the path to your installation)
+10. Start debugging with Qt Creator
+
+Notes
+-----
+
+* Tested on OS X 10.8 through 10.13 on 64-bit Intel processors only.
+
+* Building with downloaded Qt binaries is not officially supported. See the notes in [#7714](https://github.com/syndicate/syndicate/issues/7714)

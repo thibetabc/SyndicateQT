@@ -1,6 +1,6 @@
 
 // Copyright (c) 2014-2015 The Dash developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef SRC_MASTERNODECONFIG_H_
@@ -28,18 +28,14 @@ public:
         std::string privKey;
         std::string txHash;
         std::string outputIndex;
-        std::string donationAddress;
-        std::string donationPercent;
     public:
 
-        CMasternodeEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex, std::string donationAddress, std::string donationPercent) {
+        CMasternodeEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
             this->alias = alias;
             this->ip = ip;
             this->privKey = privKey;
             this->txHash = txHash;
             this->outputIndex = outputIndex;
-            this->donationAddress = donationAddress;
-            this->donationPercent = donationPercent;
         }
 
         const std::string& getAlias() const {
@@ -81,14 +77,6 @@ public:
         void setIp(const std::string& ip) {
             this->ip = ip;
         }
-
-        const std::string& getDonationAddress() const {
-            return donationAddress;
-        }
-
-        const std::string& getDonationPercentage() const {
-            return donationPercent;
-        }
     };
 
     CMasternodeConfig() {
@@ -97,7 +85,7 @@ public:
 
     void clear();
     bool read(boost::filesystem::path path);
-    void add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex, std::string donationAddress, std::string donationPercent);
+    void add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex);
 
     std::vector<CMasternodeEntry>& getEntries() {
         return entries;

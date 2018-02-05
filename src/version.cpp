@@ -1,14 +1,17 @@
 // Copyright (c) 2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include <string>
 
 #include "version.h"
 
+// TODO: make sure this doesn't conflict with config/syndicate-config.h
+
 // Name of client reported in the 'version' message. Report the same name
-// for both bitcoind and bitcoin-qt, to make it harder for attackers to
+// for both iond and syndicate-qt, to make it harder for attackers to
 // target servers or GUI users specifically.
-const std::string CLIENT_NAME("Syndicate");
+
+const std::string CLIENT_NAME("Syndicate Core");
 
 // Client version number
 #define CLIENT_VERSION_SUFFIX   ""
@@ -36,7 +39,7 @@ const std::string CLIENT_NAME("Syndicate");
 // git will put "#define GIT_ARCHIVE 1" on the next line inside archives. 
 #define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
-#    define GIT_COMMIT_ID "61404"
+#    define GIT_COMMIT_ID "61402"
 #endif
 
 #define BUILD_DESC_FROM_COMMIT(maj,min,rev,build,commit) \

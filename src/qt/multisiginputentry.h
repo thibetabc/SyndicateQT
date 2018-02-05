@@ -5,7 +5,7 @@
 
 #include "uint256.h"
 #include "util.h"
-
+#include "amount.h"
 
 class CTxIn;
 class WalletModel;

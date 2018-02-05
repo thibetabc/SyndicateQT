@@ -1,16 +1,17 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin developers
+// Copyright (c) 2017 Empinel/The Bitcoin Developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "base58.h"
 #include "stealth.h"
-#include "smessage.h"
 #include "rpcserver.h"
 #include "init.h"
 #include "net.h"
 #include "netbase.h"
 #include "util.h"
+#include "amount.h"
 #include "wallet.h"
 #include "walletdb.h"
 
@@ -104,7 +105,7 @@ CScript _createmultisig(const Array& params)
     {
         const std::string& ks = keys[i].get_str();
 #ifdef ENABLE_WALLET
-        // Case 1: Bitcoin address and we have full public key:
+        // Case 1: Syndicate address and we have full public key:
         CSyndicateAddress address(ks);
         if (pwalletMain && address.IsValid())
         {
@@ -151,9 +152,9 @@ Value createmultisig(const Array& params, bool fHelp)
 
             "\nArguments:\n"
             "1. nrequired (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keys\" (string, required) A json array of keys which are bitcoin addresses or hex-encoded public keys\n"
+            "2. \"keys\" (string, required) A json array of keys which are syndicate addresses or hex-encoded public keys\n"
             " [\n"
-            " \"key\" (string) bitcoin address or hex-encoded public key\n"
+            " \"key\" (string) syndicate address or hex-encoded public key\n"
             " ,...\n"
             " ]\n"
 
@@ -222,7 +223,7 @@ Value getnewaddress(const Array& params, bool fHelp)
             "\nArguments:\n"
             "1. \"account\"        (string, optional) The account name for the address to be linked to. if not provided, the default account \"\" is used. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"Syndicateaddress\"    (string) The new Syndicate address\n"
+            "\"syndicateaddress\"    (string) The new Syndicate address\n"
             "\nExamples:\n"
             + HelpExampleCli("getnewaddress", "")
             + HelpExampleCli("getnewaddress", "\"\"")
@@ -262,8 +263,7 @@ CSyndicateAddress GetAccountAddress(string strAccount, bool bForceNew=false)
     // Check if the current key has been used
     if (account.vchPubKey.IsValid())
     {
-        CScript scriptPubKey;
-        scriptPubKey.SetDestination(account.vchPubKey.GetID());
+        CScript scriptPubKey = GetScriptForDestination(account.vchPubKey.GetID());
         for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin();
              it != pwalletMain->mapWallet.end() && account.vchPubKey.IsValid();
              ++it)
@@ -297,7 +297,7 @@ Value getaccountaddress(const Array& params, bool fHelp)
             "\nArguments:\n"
             "1. \"account\"       (string, required) The account name for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"Syndicateaddress\"   (string) The account Syndicate address\n"
+            "\"syndicateaddress\"   (string) The account Syndicate address\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccountaddress", "")
             + HelpExampleCli("getaccountaddress", "\"\"")
@@ -321,14 +321,14 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount \"Syndicateaddress\" \"account\"\n"
+            "setaccount \"syndicateaddress\" \"account\"\n"
             "\nSets the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"Syndicateaddress\"  (string, required) The Syndicate address to be associated with an account.\n"
+            "1. \"syndicateaddress\"  (string, required) The Syndicate address to be associated with an account.\n"
             "2. \"account\"         (string, required) The account to assign the address to.\n"
             "\nExamples:\n"
-            + HelpExampleCli("setaccount", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" \"tabby\"")
-            + HelpExampleRpc("setaccount", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\", \"tabby\"")
+            + HelpExampleCli("setaccount", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" \"tabby\"")
+            + HelpExampleRpc("setaccount", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\", \"tabby\"")
         );
 
     CSyndicateAddress address(params[0].get_str());
@@ -363,15 +363,15 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount \"Syndicateaddress\"\n"
+            "getaccount \"syndicateaddress\"\n"
             "\nReturns the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"Syndicateaddress\"  (string, required) The Syndicate address for account lookup.\n"
+            "1. \"syndicateaddress\"  (string, required) The Syndicate address for account lookup.\n"
             "\nResult:\n"
             "\"accountname\"        (string) the account address\n"
             "\nExamples:\n"
-            + HelpExampleCli("getaccount", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\"")
-            + HelpExampleRpc("getaccount", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\"")
+            + HelpExampleCli("getaccount", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\"")
+            + HelpExampleRpc("getaccount", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\"")
         );
 
     CSyndicateAddress address(params[0].get_str());
@@ -396,7 +396,7 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
             "1. \"account\"  (string, required) The account name.\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"Syndicateaddress\"  (string) a Syndicate address associated with the given account\n"
+            "  \"syndicateaddress\"  (string) a Syndicate address associated with the given account\n"
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
@@ -422,11 +422,11 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddress \"Syndicateaddress\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddress \"syndicateaddress\" amount ( \"comment\" \"comment-to\" )\n"
             "\nSent an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-           "1. \"Syndicateaddress\"  (string, required) The Syndicate address to send to.\n"
+           "1. \"syndicateaddress\"  (string, required) The Syndicate address to send to.\n"
             "2. \"amount\"      (numeric, required) The amount in SYNX to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -436,9 +436,9 @@ Value sendtoaddress(const Array& params, bool fHelp)
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtoaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 0.1")
-            + HelpExampleCli("sendtoaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 0.1 \"donation\" \"seans outpost\"")
-            + HelpExampleRpc("sendtoaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\", 0.1, \"donation\", \"seans outpost\"")
+            + HelpExampleCli("sendtoaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 0.1")
+            + HelpExampleCli("sendtoaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 0.1 \"donation\" \"seans outpost\"")
+            + HelpExampleRpc("sendtoaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\", 0.1, \"donation\", \"seans outpost\"")
         );
 
     EnsureWalletIsUnlocked();
@@ -487,8 +487,8 @@ Value listaddressgroupings(const Array& params, bool fHelp)
             "[\n"
             "  [\n"
             "    [\n"
-            "      \"Syndicateaddress\",     (string) The Syndicate address\n"
-            "      amount,                 (numeric) The amount in btc\n"
+            "      \"syndicateaddress\",     (string) The Syndicate address\n"
+            "      amount,                 (numeric) The amount in syndicate\n"
             "      \"account\"             (string, optional) The account\n"
             "    ]\n"
             "    ,...\n"
@@ -526,11 +526,11 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage \"Syndicateaddress\" \"message\"\n"
+            "signmessage \"syndicateaddress\" \"message\"\n"
             "\nSign a message with the private key of an address"
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"Syndicateaddress\"  (string, required) The Syndicate address to use for the private key.\n"
+            "1. \"syndicateaddress\"  (string, required) The Syndicate address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -538,11 +538,11 @@ Value signmessage(const Array& params, bool fHelp)
             "\nUnlock the wallet for 30 seconds\n"
             + HelpExampleCli("walletpassphrase", "\"mypassphrase\" 30") +
             "\nCreate the signature\n"
-            + HelpExampleCli("signmessage", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" \"my message\"") +
+            + HelpExampleCli("signmessage", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" \"my message\"") +
             "\nVerify the signature\n"
-            + HelpExampleCli("verifymessage", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" \"signature\" \"my message\"") +
+            + HelpExampleCli("verifymessage", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" \"signature\" \"my message\"") +
             "\nAs json rpc\n"
-            + HelpExampleRpc("signmessage", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\", \"my message\"")
+            + HelpExampleRpc("signmessage", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\", \"my message\"")
         );
 
     EnsureWalletIsUnlocked();
@@ -577,30 +577,30 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress \"Syndicateaddress\" ( minconf )\n"
-            "\nReturns the total amount received by the given Syndicateaddress in transactions with at least minconf confirmations.\n"
+            "getreceivedbyaddress \"syndicateaddress\" ( minconf )\n"
+            "\nReturns the total amount received by the given syndicateaddress in transactions with at least minconf confirmations.\n"
             "\nArguments:\n"
-            "1. \"Syndicateaddress\"  (string, required) The Syndicate address for transactions.\n"
+            "1. \"syndicateaddress\"  (string, required) The Syndicate address for transactions.\n"
             "2. minconf             (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "amount   (numeric) The total amount in SYNX received at this address.\n"
             "\nExamples:\n"
             "\nThe amount from transactions with at least 1 confirmation\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\"") +
+            + HelpExampleCli("getreceivedbyaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\"") +
             "\nThe amount including unconfirmed transactions, zero confirmations\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 0") +
+            + HelpExampleCli("getreceivedbyaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 0") +
             "\nThe amount with at least 10 confirmation, very safe\n"
-            + HelpExampleCli("getreceivedbyaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 10") +
+            + HelpExampleCli("getreceivedbyaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 10") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("getreceivedbyaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\", 10")
+            + HelpExampleRpc("getreceivedbyaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\", 10")
        );
 
-    // Bitcoin address
+    // Syndicate address
     CSyndicateAddress address = CSyndicateAddress(params[0].get_str());
     CScript scriptPubKey;
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Syndicate address");
-    scriptPubKey.SetDestination(address.Get());
+    scriptPubKey = GetScriptForDestination(address.Get());
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
 
@@ -874,13 +874,13 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 7)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"toSyndicateaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "sendfrom \"fromaccount\" \"toionaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
             "\nSent an amount from an account to a Syndicate address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"       (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
-            "2. \"toSyndicateaddress\"  (string, required) The Syndicate address to send funds to.\n"
+            "2. \"toionaddress\"  (string, required) The Syndicate address to send funds to.\n"
             "3. amount                (numeric, required) The amount in SYNX. (transaction fee is added on top).\n"
             "4. minconf               (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"           (string, optional) A comment used to store what the transaction is for. \n"
@@ -892,11 +892,11 @@ Value sendfrom(const Array& params, bool fHelp)
             "\"transactionid\"        (string) The transaction id.\n"
             "\nExamples:\n"
             "\nSend 0.01 SYNX from the default account to the address, must have at least 1 confirmation\n"
-            + HelpExampleCli("sendfrom", "\"\" \"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 0.01") +
+            + HelpExampleCli("sendfrom", "\"\" \"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 0.01") +
             "\nSend 0.01 from the tabby account to the given address, funds must have at least 10 confirmations\n"
-            + HelpExampleCli("sendfrom", "\"tabby\" \"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 0.01 10 \"donation\" \"seans outpost\"") +
+            + HelpExampleCli("sendfrom", "\"tabby\" \"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 0.01 10 \"donation\" \"seans outpost\"") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("sendfrom", "\"tabby\", \"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\", 0.01, 10, \"donation\", \"seans outpost\"")
+            + HelpExampleRpc("sendfrom", "\"tabby\", \"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\", 0.01, 10, \"donation\", \"seans outpost\"")
         );
 
     EnsureWalletIsUnlocked();
@@ -961,11 +961,11 @@ Value sendmany(const Array& params, bool fHelp)
             "                                    the number of addresses.\n"
             "\nExamples:\n"
             "\nSend two amounts to two different addresses:\n"
-            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\"") +
+            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\"") +
             "\nSend two amounts to two different addresses setting the confirmation and comment:\n"
-            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\" 10 \"testing\"") +
+            + HelpExampleCli("sendmany", "\"tabby\" \"{\\\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\" 10 \"testing\"") +
             "\nAs a json rpc call\n"
-            + HelpExampleRpc("sendmany", "\"tabby\", \"{\\\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\", 10, \"testing\"")
+            + HelpExampleRpc("sendmany", "\"tabby\", \"{\\\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\\\":0.01,\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\":0.02}\", 10, \"testing\"")
         );
 
     string strAccount = AccountFromValue(params[0]);
@@ -993,8 +993,7 @@ Value sendmany(const Array& params, bool fHelp)
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+s.name_);
         setAddress.insert(address);
 
-        CScript scriptPubKey;
-        scriptPubKey.SetDestination(address.Get());
+        CScript scriptPubKey = GetScriptForDestination(address.Get());
         CAmount nAmount = AmountFromValue(s.value_);
 
         totalAmount += nAmount;
@@ -1011,7 +1010,7 @@ Value sendmany(const Array& params, bool fHelp)
 
     // Send
     CReserveKey keyChange(pwalletMain);
-    int64_t nFeeRequired = 0;
+    CAmount nFeeRequired = 0;
     int nChangePos;
     std::string strFailReason;
     bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, nChangePos, strFailReason);
@@ -1049,13 +1048,13 @@ Value addmultisigaddress(const Array& params, bool fHelp)
             "3. \"account\"      (string, optional) An account to assign the addresses to.\n"
 
             "\nResult:\n"
-            "\"Syndicateaddress\"  (string) A Syndicate address associated with the keys.\n"
+            "\"syndicateaddress\"  (string) A Syndicate address associated with the keys.\n"
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
-            + HelpExampleCli("addmultisigaddress", "2 \"[\\\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\\\",\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\"]\"") +
+            + HelpExampleCli("addmultisigaddress", "2 \"[\\\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\\\",\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\"]\"") +
             "\nAs json rpc call\n"
-            + HelpExampleRpc("addmultisigaddress", "2, \"[\\\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\\\",\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\"]\"")
+            + HelpExampleRpc("addmultisigaddress", "2, \"[\\\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\\\",\\\"ThiLpx7oYd5YuuhsJAUD5ZsEX2YHgU98Us\\\"]\"")
         ;
         throw runtime_error(msg);
     }
@@ -1079,7 +1078,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         const std::string& ks = keys[i].get_str();
 
-        // Case 1: Bitcoin address and we have full public key:
+        // Case 1: Syndicate address and we have full public key:
         CSyndicateAddress address(ks);
         if (pwalletMain && address.IsValid())
         {
@@ -1385,7 +1384,7 @@ void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
             entry.push_back(Pair("account", strSentAccount));
             MaybePushAddress(entry, s.first);
             std::map<std::string, std::string>::const_iterator it = wtx.mapValue.find("DS");
-            entry.push_back(Pair("category", (it != wtx.mapValue.end() && it->second == "1") ? "darksent" : "send"));
+            entry.push_back(Pair("category", (it != wtx.mapValue.end() && it->second == "1") ? "stashedsent" : "send"));
             entry.push_back(Pair("amount", ValueFromAmount(-s.second)));
             entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
             if (fLong)
@@ -1475,7 +1474,7 @@ Value listtransactions(const Array& params, bool fHelp)
             "  {\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. \n"
             "                                                It will be \"\" for the default account.\n"
-            "    \"address\":\"Syndicateaddress\",    (string) The Syndicate address of the transaction. Not present for \n"
+            "    \"address\":\"syndicateaddress\",    (string) The Syndicate address of the transaction. Not present for \n"
             "                                                move transactions (category = move).\n"
             "    \"category\":\"send|receive|move\", (string) The transaction category. 'move' is a local (off blockchain)\n"
             "                                                transaction between accounts, and not associated with an address,\n"
@@ -1484,7 +1483,7 @@ Value listtransactions(const Array& params, bool fHelp)
             "    \"amount\": x.xxx,          (numeric) The amount in SYNX. This is negative for the 'send' category, and for the\n"
             "                                         'move' category for moves outbound. It is positive for the 'receive' category,\n"
             "                                         and for the 'move' category for inbound funds.\n"
-            "    \"fee\": x.xxx,             (numeric) The amount of the fee in btc. This is negative and only available for the \n"
+            "    \"fee\": x.xxx,             (numeric) The amount of the fee in syndicate. This is negative and only available for the \n"
             "                                         'send' category of transactions.\n"
             "    \"confirmations\": n,       (numeric) The number of confirmations for the transaction. Available for 'send' and \n"
             "                                         'receive' category of transactions.\n"
@@ -1660,11 +1659,11 @@ Value listsinceblock(const Array& params, bool fHelp)
             "{\n"
             "  \"transactions\": [\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. Will be \"\" for the default account.\n"
-            "    \"address\":\"Syndicateaddress\",    (string) The Syndicate address of the transaction. Not present for move transactions (category = move).\n"
+            "    \"address\":\"syndicateaddress\",    (string) The Syndicate address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
             "    \"amount\": x.xxx,          (numeric) The amount in SYNX. This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
-            "    \"fee\": x.xxx,             (numeric) The amount of the fee in btc. This is negative and only available for the 'send' category of transactions.\n"
+            "    \"fee\": x.xxx,             (numeric) The amount of the fee in syndicate. This is negative and only available for the 'send' category of transactions.\n"
             "    \"confirmations\": n,       (numeric) The number of confirmations for the transaction. Available for 'send' and 'receive' category of transactions.\n"
             "    \"bcconfirmations\" : n,    (numeric) The number of Blockchain confirmations for the transaction. Available for 'send' and 'receive' category of transactions.\n"
             "    \"blockhash\": \"hashvalue\",     (string) The block hash containing the transaction. Available for 'send' and 'receive' category of transactions.\n"
@@ -1756,7 +1755,7 @@ Value gettransaction(const Array& params, bool fHelp)
             "2. \"includeWatchonly\"    (bool, optional, default=false) Whether to include watchonly addresses in balance calculation and details[]\n"
             "\nResult:\n"
             "{\n"
-            "  \"amount\" : x.xxx,        (numeric) The transaction amount in btc\n"
+            "  \"amount\" : x.xxx,        (numeric) The transaction amount in syndicate\n"
             "  \"confirmations\" : n,     (numeric) The number of confirmations\n"
             "  \"bcconfirmations\" : n,   (numeric) The number of Blockchain confirmations\n"
             "  \"blockhash\" : \"hash\",  (string) The block hash\n"
@@ -1768,9 +1767,9 @@ Value gettransaction(const Array& params, bool fHelp)
             "  \"details\" : [\n"
             "    {\n"
             "      \"account\" : \"accountname\",  (string) The account name involved in the transaction, can be \"\" for the default account.\n"
-            "      \"address\" : \"Syndicateaddress\",   (string) The Syndicate address involved in the transaction\n"
+            "      \"address\" : \"syndicateaddress\",   (string) The Syndicate address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
-            "      \"amount\" : x.xxx                  (numeric) The amount in btc\n"
+            "      \"amount\" : x.xxx                  (numeric) The amount in syndicate\n"
             "    }\n"
             "    ,...\n"
             "  ],\n"
@@ -1801,7 +1800,7 @@ Value gettransaction(const Array& params, bool fHelp)
         int64_t nCredit = wtx.GetCredit(filter);
         int64_t nDebit = wtx.GetDebit(filter);
         int64_t nNet = nCredit - nDebit;
-        int64_t nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
+        CAmount nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
 
         entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
         if (wtx.IsFromMe(filter))
@@ -1928,7 +1927,7 @@ Value walletpassphrase(const Array& params, bool fHelp)
             "\nExamples:\n"
             "\nUnlock the wallet for 60 seconds\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\" 60") +
-            "\nUnlock the wallet for 60 seconds but allow Darksend mixing only\n"
+            "\nUnlock the wallet for 60 seconds but allow Stashedsend mixing only\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\" 60 true") +
             "\nLock the wallet again (before 60 seconds)\n"
             + HelpExampleCli("walletlock", "") +
@@ -1967,7 +1966,7 @@ Value walletpassphrase(const Array& params, bool fHelp)
     nWalletUnlockTime = GetTime() + nSleepTime;
     RPCRunLater("lockwallet", boost::bind(LockWallet, pwalletMain), nSleepTime);
 
-    // ppcoin: if user OS account compromised prevent trivial sendmoney commands
+    // syndicate: if user OS account compromised prevent trivial sendmoney commands
     if (params.size() > 2)
         fWalletUnlockStakingOnly = params[2].get_bool();
     else
@@ -2030,7 +2029,7 @@ Value walletlock(const Array& params, bool fHelp)
             "\nSet the passphrase for 2 minutes to perform a transaction\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\" 120") +
             "\nPerform a send (requires passphrase set)\n"
-            + HelpExampleCli("sendtoaddress", "\"TfFxcTN7BJQp88cPJYRvFpUAAKefTib9uh\" 1.0") +
+            + HelpExampleCli("sendtoaddress", "\"SUUCtBZUVR98Cufh9BbSSqUPJFEtPKSLSe\" 1.0") +
             "\nClear the passphrase since we are done before 2 minutes is up\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs json rpc call\n"
@@ -2071,7 +2070,7 @@ Value encryptwallet(const Array& params, bool fHelp)
             "\nNow set the passphrase to use the wallet, such as for signing or sending Syndicate\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n"
-            + HelpExampleCli("signmessage", "\"Syndicateaddress\" \"test message\"") +
+            + HelpExampleCli("signmessage", "\"syndicateaddress\" \"test message\"") +
             "\nNow lock the wallet again by removing the passphrase\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs a json rpc call\n"
@@ -2095,7 +2094,7 @@ Value encryptwallet(const Array& params, bool fHelp)
             "Encrypts the wallet with <passphrase>.");
 
     if (!pwalletMain->EncryptWallet(strWalletPass))
-        throw JSONRPCError(RPC_WALLET_ENCRYPTION_FAILED, "Error: Failed to encrypt the wallet.");
+        throw JSONRPCError(RPC_WALLET_ENCRYPTSYNX_FAILED, "Error: Failed to encrypt the wallet.");
 
     // BDB seems to have a bad habit of writing old data into
     // slack space in .dat files; that is bad if the old data is
@@ -2105,7 +2104,7 @@ Value encryptwallet(const Array& params, bool fHelp)
 }
 
 
-// ppcoin: reserve balance from being staked for network protection
+// syndicate: reserve balance from being staked for network protection
 Value reservebalance(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 2)
@@ -2144,7 +2143,7 @@ Value reservebalance(const Array& params, bool fHelp)
 }
 
 
-// ppcoin: check wallet integrity
+// syndicate: check wallet integrity
 Value checkwallet(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 0)
@@ -2167,7 +2166,7 @@ Value checkwallet(const Array& params, bool fHelp)
 }
 
 
-// ppcoin: repair wallet
+// syndicate: repair wallet
 Value repairwallet(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 0)
@@ -2189,7 +2188,7 @@ Value repairwallet(const Array& params, bool fHelp)
     return result;
 }
 
-// NovaCoin: resend unconfirmed wallet transactions
+// Syndicate: resend unconfirmed wallet transactions
 Value resendtx(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 1)
@@ -2203,7 +2202,7 @@ Value resendtx(const Array& params, bool fHelp)
     return Value::null;
 }
 
-// ppcoin: make a public-private key pair
+// syndicate: make a public-private key pair
 Value makekeypair(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 1)

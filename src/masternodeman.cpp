@@ -1,9 +1,10 @@
 #include "masternodeman.h"
 #include "masternode.h"
 #include "activemasternode.h"
-#include "darksend.h"
-#include "core.h"
+#include "stashedsend.h"
+#include "primitives/transaction.h"
 #include "util.h"
+#include "amount.h"
 #include "addrman.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
@@ -570,13 +571,13 @@ void CMasternodeMan::ProcessMasternodeConnections()
 {
     LOCK(cs_vNodes);
 
-    if(!darkSendPool.pSubmittedToMasternode) return;
+    if(!stashedSendPool.pSubmittedToMasternode) return;
     
     BOOST_FOREACH(CNode* pnode, vNodes)
     {
-        if(darkSendPool.pSubmittedToMasternode->addr == pnode->addr) continue;
+        if(stashedSendPool.pSubmittedToMasternode->addr == pnode->addr) continue;
 
-        if(pnode->fDarkSendMaster){
+        if(pnode->fStashedSendMaster){
             LogPrintf("Closing masternode connection %s \n", pnode->addr.ToString().c_str());
             pnode->CloseSocketDisconnect();
         }
@@ -589,11 +590,11 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
     //Normally would disable functionality, NEED this enabled for staking.
     //if(fLiteMode) return;
 
-    if(!darkSendPool.IsBlockchainSynced()) return;
+    if(!stashedSendPool.IsBlockchainSynced()) return;
 
     LOCK(cs_process_message);
 
-    if (strCommand == "dsee") { //DarkSend Election Entry
+    if (strCommand == "dsee") { //StashedSend Election Entry
 
         CTxIn vin;
         CService addr;
@@ -618,7 +619,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             return;
         }
 
-        bool isIPV4 = addr.IsIPv4() && addr.IsRoutable();
+        bool isLocal = addr.IsRFC1918() || addr.IsLocal();
         //if(RegTest()) isLocal = false;
 
         std::string vchPubKey(pubkey.begin(), pubkey.end());
@@ -635,8 +636,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             return;
         }
 
-        CScript pubkeyScript;
-        pubkeyScript.SetDestination(pubkey.GetID());
+        CScript pubkeyScript = GetScriptForDestination(pubkey.GetID());
 
         if(pubkeyScript.size() != 25) {
             LogPrintf("dsee - pubkey the wrong size\n");
@@ -644,8 +644,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             return;
         }
 
-        CScript pubkeyScript2;
-        pubkeyScript2.SetDestination(pubkey2.GetID());
+        CScript pubkeyScript2 = GetScriptForDestination(pubkey2.GetID());
 
         if(pubkeyScript2.size() != 25) {
             LogPrintf("dsee - pubkey2 the wrong size\n");
@@ -659,7 +658,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
 
         std::string errorMessage = "";
-        if(!darkSendSigner.VerifyMessage(pubkey, vchSig, strMessage, errorMessage)){
+        if(!stashedSendSigner.VerifyMessage(pubkey, vchSig, strMessage, errorMessage)){
             LogPrintf("dsee - Got bad masternode address signature\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
@@ -697,7 +696,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         // make sure the vout that was signed is related to the transaction that spawned the masternode
         //  - this is expensive, so it's only done once per masternode
-        if(!darkSendSigner.IsVinAssociatedWithPubkey(vin, pubkey)) {
+        if(!stashedSendSigner.IsVinAssociatedWithPubkey(vin, pubkey)) {
             LogPrintf("dsee - Got mismatched pubkey and vin\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
@@ -706,11 +705,11 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         LogPrint("masternode", "dsee - Got NEW masternode entry %s\n", addr.ToString().c_str());
 
         // make sure it's still unspent
-        //  - this is checked later by .check() in many places and by ThreadCheckDarkSendPool()
+        //  - this is checked later by .check() in many places and by ThreadCheckStashedSendPool()
 
         CValidationState state;
         CTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(DARKSEND_POOL_MAX, darkSendPool.collateralPubKey);
+        CTxOut vout = CTxOut(STASHEDSEND_POOL_MAX, stashedSendPool.collateralPubKey);
         tx.vin.push_back(vin);
         tx.vout.push_back(vout);
         bool fAcceptable = false;
@@ -729,13 +728,13 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             }
 
             // verify that sig time is legit in past
-            // should be at least not earlier than block when 10000 TansferCoin tx got MASTERNODE_MIN_CONFIRMATIONS
+            // should be at least not earlier than block when 10000 Syndicate tx got MASTERNODE_MIN_CONFIRMATIONS
             uint256 hashBlock = 0;
             GetTransaction(vin.prevout.hash, tx, hashBlock);
             map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashBlock);
            if (mi != mapBlockIndex.end() && (*mi).second)
             {
-                CBlockIndex* pMNIndex = (*mi).second; // block for 5000 Syndicate tx -> 1 confirmation
+                CBlockIndex* pMNIndex = (*mi).second; // block for 10000 Syndicate tx -> 1 confirmation
                 CBlockIndex* pConfIndex = FindBlockByHeight((pMNIndex->nHeight + MASTERNODE_MIN_CONFIRMATIONS - 1)); // block where tx got MASTERNODE_MIN_CONFIRMATIONS
                 if(pConfIndex->GetBlockTime() > sigTime)
                 {
@@ -765,7 +764,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 activeMasternode.EnableHotColdMasterNode(vin, addr);
             }
 
-            if(count == -1 && isIPV4)
+            if(count == -1 && !isLocal)
                 mnodeman.RelayMasternodeEntry(vin, addr, vchSig, sigTime, pubkey, pubkey2, count, current, lastUpdated, protocolVersion, donationAddress, donationPercentage);
 
         } else {
@@ -782,7 +781,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
     }
 
-    else if (strCommand == "dseep") { //DarkSend Election Entry Ping
+    else if (strCommand == "dseep") { //StashedSend Election Entry Ping
 
         CTxIn vin;
         vector<unsigned char> vchSig;
@@ -813,7 +812,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 std::string strMessage = pmn->addr.ToString() + boost::lexical_cast<std::string>(sigTime) + boost::lexical_cast<std::string>(stop);
 
                 std::string errorMessage = "";
-                if(!darkSendSigner.VerifyMessage(pmn->pubkey2, vchSig, strMessage, errorMessage))
+                if(!stashedSendSigner.VerifyMessage(pmn->pubkey2, vchSig, strMessage, errorMessage))
                 {
                     LogPrintf("dseep - Got bad masternode address signature %s \n", vin.ToString().c_str());
                     //Misbehaving(pfrom->GetId(), 100);
@@ -869,7 +868,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 std::string strMessage = vin.ToString() + boost::lexical_cast<std::string>(nVote);
 
                 std::string errorMessage = "";
-                if(!darkSendSigner.VerifyMessage(pmn->pubkey2, vchSig, strMessage, errorMessage))
+                if(!stashedSendSigner.VerifyMessage(pmn->pubkey2, vchSig, strMessage, errorMessage))
                 {
                     LogPrintf("mvote - Got bad Masternode address signature %s \n", vin.ToString().c_str());
                     return;

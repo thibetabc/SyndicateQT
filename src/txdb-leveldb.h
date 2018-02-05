@@ -1,11 +1,12 @@
 // Copyright (c) 2009-2012 The Bitcoin Developers.
 // Authored by Google, Inc.
-// Distributed under the MIT/X11 software license, see the accompanying
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_LEVELDB_H
-#define BITCOIN_LEVELDB_H
+#ifndef SYNX_LEVELDB_H
+#define SYNX_LEVELDB_H
 
+#include "chain.h"
 #include "main.h"
 
 #include <map>
@@ -197,12 +198,12 @@ public:
     bool WriteBlockIndex(const CDiskBlockIndex& blockindex);
     bool ReadHashBestChain(uint256& hashBestChain);
     bool WriteHashBestChain(uint256 hashBestChain);
-    bool ReadBestInvalidTrust(CBigNum& bnBestInvalidTrust);
-    bool WriteBestInvalidTrust(CBigNum bnBestInvalidTrust);
+    bool ReadBestInvalidTrust(uint256& bnBestInvalidTrust);
+    bool WriteBestInvalidTrust(uint256 bnBestInvalidTrust);
     bool LoadBlockIndex();
 private:
     bool LoadBlockIndexGuts();
 };
 
 
-#endif // BITCOIN_DB_H
+#endif // SYNX_DB_H
