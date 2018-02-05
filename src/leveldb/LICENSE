@@ -1,0 +1,63 @@
+                `/:`                           
+             -odN:                             
+          `+mMMN-                              
+          +MMMM/.--`               ..          
+         +NMMMh/MMMMh            .dMMm+        
+       -mMMMMM/NMMMMM`          .NMMMMMd       
+      oMMMMMMM.sMMMMm.          .MMMMMMs       
+     /MMMMMMMMo `/N/             /mMMdyd-      
+     dMMMMMMMMM-  `                -+ :Mm      
+    .MMMMMMMMMMy                      -MM-     
+    :MMMMMMMMMM:                      `MM+     
+    /MMMMMMMMMm       `      `         dMh     
+    :MMMMMMMMMd    `+mM-    /MNy:      yMM.    
+    .MMMMMMMMMN`  -NMMy     `hMMMd`    dMMs    
+     +MMMMMMMMM/  `ydo        /dy:    -MMMM:   
+      /MMMMMMMMm`                    `mMMMMN.  
+       oMMMMMMMMm/    `ydmmNy     .+yNMMMMMMm` 
+       .MMMMMMMMMMmo.  `:oo-    /dMMMMMMMMMMMd 
+   :    NMMMMMMMMMMMMms:`   .:sNMMMMMMMMMMMMMMo
+   hm+. sMMMMMMMMMMMMMMMMNNNh+- +MMMMMMMMMMMMMN
+  `NMMMmymMMMMMMMMMMMMMMMd/`     dMMMMMMMMMMMMs
+  hMMMMMMMMMMMMMMMMMMMMy-        dMMMMMMMMMMMm`
+ `yNMMMMMMMMMMMMMMMMMMo    .h-.-oMMMMMMMMMMMM: 
+    `.:::sMMMMMMMMMMMMMs  -NMMMMMMMMMMMMMMMMh  
+         :MMMMMMMMMMMMMM+ .////NMMMMMMMMMMMd`  
+          +hdNNMMMMNNmdy/       .-://+++/:.    
+
+512E/F9B3EB9E 2017-06-03 Ionomy Gaming Platform
+(SECA - ECDSA+ECDHA - 03.06.2019) <ionomy@mail.i2p>
+Clearnet Home:     https://iond.freeiz.com/
+Clearnet Git:      https://github.com/cevap/ion/
+i2p Home:          http://ionomy.i2p/
+i2p Git:           http://git.psi.i2p/ionomy/
+(https://pgp.mit.edu/pks/lookup?op=get&search=0xF71FAC12F9B3EB9E)
+The MIT License
+
+Copyright (c) 2011 The LevelDB Authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
