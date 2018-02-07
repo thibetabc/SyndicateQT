@@ -83,6 +83,7 @@ SYNDICATE_CORE_H = \
   amount.h \
   arith_uint256.h \
   base58.h \
+  bignum.h \
   chain.h \
   chainparams.h  \
   chainparamsseeds.h \
@@ -218,11 +219,11 @@ libsyndicate_server_a_SOURCES = \
 	script/script_error.cpp \
 	spork.cpp \
 	stake.cpp \
+	uint256.cpp \
 	stashedsend-relay.cpp \
 	stashedsend.cpp \
 	txdb-leveldb.cpp \
 	txmempool.cpp \
-	uint256.cpp \
 	version.cpp \
 	$(SYNDICATE_CORE_H)
 

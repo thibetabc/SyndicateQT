@@ -68,7 +68,6 @@ void BIP32Hash(const unsigned char chainCode[32], unsigned int nChild, unsigned 
 
 uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val)
 {
-    /* Specialized implementation for efficiency */
     uint64_t d = val.GetUint64(0);
 
     uint64_t v0 = 0x736f6d6570736575ULL ^ k0;
@@ -108,7 +107,6 @@ uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val)
 
 uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra)
 {
-    /* Specialized implementation for efficiency */
     uint64_t d = val.GetUint64(0);
 
     uint64_t v0 = 0x736f6d6570736575ULL ^ k0;

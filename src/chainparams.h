@@ -9,6 +9,7 @@
 #include "uint256.h"
 #include "util.h"
 #include "amount.h"
+#include "bignum.h"
 
 #include <vector>
 
@@ -58,8 +59,8 @@ public:
     const MessageStartChars& MessageStart() const { return pchMessageStart; }
     const vector<unsigned char>& AlertKey() const { return vAlertPubKey; }
     int GetDefaultPort() const { return nDefaultPort; }
-    const uint256& ProofOfWorkLimit() const { return nProofOfWorkLimit; }
-    const uint256& ProofOfStakeLimit() const { return nProofOfStakeLimit; }
+	const CBigNum& ProofOfWorkLimit() const { return nProofOfWorkLimit; }
+	const CBigNum& ProofOfStakeLimit() const { return nProofOfStakeLimit; }
     int TargetSpacing() const { return nTargetSpacing; }
     int TargetTimespan() const { return nTargetTimespan; }
     virtual const CBlock& GenesisBlock() const = 0;
@@ -83,8 +84,8 @@ protected:
     vector<unsigned char> vAlertPubKey;
     int nDefaultPort;
     int nRPCPort;
-    uint256 nProofOfWorkLimit;
-    uint256 nProofOfStakeLimit;
+	CBigNum nProofOfWorkLimit;
+	CBigNum nProofOfStakeLimit;
     int nTargetSpacing;
     int nAdjustmentInterval;
     int nTargetTimespan;

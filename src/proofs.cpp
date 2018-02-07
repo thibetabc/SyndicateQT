@@ -14,6 +14,7 @@
 #include "amount.h"
 #include "checkpoints.h"
 #include "hashblock.h"
+#include "bignum.h"
 
 #include <math.h>
 #include <stdint.h> 
@@ -81,7 +82,7 @@ int64_t GetCoinstakeValue(int64_t nCoinAge, CAmount nFees, int nHeight)
 
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
-    uint256 bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
+	CBigNum bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
 
     if (pindexLast == NULL)
         return bnTargetLimit.GetCompact(); // genesis block
@@ -102,7 +103,7 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
     // target change every block
     // retarget with exponential moving toward target spacing
     // Includes fix for wrong retargeting difficulty by Mammix2
-    uint256 bnNew;
+	CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
 
     int64_t nInterval = Params().TargetTimespan() / Params().TargetSpacing();
@@ -117,7 +118,7 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 {
-    uint256 bnTarget;
+	CBigNum bnTarget;
     bnTarget.SetCompact(nBits);
 
     // Check range
@@ -125,7 +126,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
         return error("CheckProofOfWork() : nBits below minimum work");
 
     // Check proof of work matches claimed amount
-    if (hash > bnTarget)
+    if (hash > bnTarget.getuint256())
         return error("CheckProofOfWork() : hash doesn't match nBits");
 
     return true;

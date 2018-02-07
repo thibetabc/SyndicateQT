@@ -9,6 +9,7 @@
 #include "stake.h"
 #include "txdb.h"
 #include "script/interpreter.h"
+#include "bignum.h"
 
 using namespace std;
 
@@ -216,15 +217,15 @@ bool CheckStakeKernelHash(CBlockIndex* pindexPrev, unsigned int nBits, unsigned 
         return error("CheckStakeKernelHash() : min age violation");
 
     // Base target
-    uint256 bnTarget;
+	CBigNum bnTarget;
     bnTarget.SetCompact(nBits);
 
     // Weighted target
-    CAmount nValueIn = txPrev.vout[prevout.n].nValue;
-    uint256 bnWeight = nValueIn;
+	int64_t nValueIn = txPrev.vout[prevout.n].nValue;
+	CBigNum bnWeight = CBigNum(nValueIn);
     bnTarget *= bnWeight;
 
-    targetProofOfStake = bnTarget;
+    targetProofOfStake = bnTarget.getuint256();
 
     uint64_t nStakeModifier = pindexPrev->nStakeModifier;
     uint256 bnStakeModifierV2 = pindexPrev->bnStakeModifierV2;
@@ -248,6 +249,11 @@ bool CheckStakeKernelHash(CBlockIndex* pindexPrev, unsigned int nBits, unsigned 
             nTimeBlockFrom, txPrev.nTime, prevout.n, nTimeTx,
             hashProofOfStake.ToString());
     }
+
+	// Now check if proof-of-stake hash meets target protocol
+	if (CBigNum(hashProofOfStake) > bnTarget) {
+		return false;
+	}
 
     if (fDebug && !fPrintProofOfStake)
     {

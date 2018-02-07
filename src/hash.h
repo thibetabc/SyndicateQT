@@ -195,7 +195,7 @@ void BIP32Hash(const unsigned char chainCode[32], unsigned int nChild, unsigned 
  *      .Write(val.GetUint64(3))
  *      .Finalize()
  */
- uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val);
- uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra);
+uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val);
+uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra);
  
 #endif

@@ -59,8 +59,8 @@ public:
         vAlertPubKey = ParseHex("04cc24ab003c828cdd9cf4db2ebbde8esdfsdfsdsdfsdfsfsdfsdf1cecb3bbfa8b3127fcb9dd9b84d44112080827ed7c49a648af9fe788ff42e316aee665879c553f099e55299d6b54edd7e0");
         nDefaultPort = 9999;
         nRPCPort = 22348;
-        nProofOfWorkLimit = ~uint256(0) >> 16;
-        nProofOfStakeLimit = ~uint256(0) >> 20;
+        nProofOfWorkLimit = CBigNum(~uint256(0) >> 16);
+        nProofOfStakeLimit = CBigNum(~uint256(0) >> 20);
         nTargetSpacing = 60;
         nTargetTimespan = 10 * 60;  // 10 mins
 
@@ -77,7 +77,7 @@ public:
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
         genesis.nTime = 1465873655;
-        genesis.nBits = 0x1f00ffff;
+        genesis.nBits = nProofOfWorkLimit.GetCompact();
         genesis.nNonce = 48480;
 
         hashGenesisBlock = genesis.GetHash();
@@ -124,52 +124,35 @@ public:
         // The message start string is designed to be unlikely to occur in normal data.
         // The characters are rarely used upper ASCII, not valid as UTF-8, and produce
         // a large 4-byte int at any alignment.
-        pchMessageStart[0] = 0xd2;
-        pchMessageStart[1] = 0x2d;
-        pchMessageStart[2] = 0x1c;
-        pchMessageStart[3] = 0xe5;
-        vAlertPubKey = ParseHex("04cc24ab003c828cdd9cf4db2ebbde8esdfsdfsdsdfsdfsfsdfsdf1cecb3bbfa8b3127fcb9dd9b84d44112080827ed7c49a648af9fe788ff42e316aee665879c553f099e55299d6b54edd7e0");
-        nDefaultPort = 8999;
-        nRPCPort = 22346;
-        nProofOfWorkLimit = ~uint256(0) >> 16;
-        nProofOfStakeLimit = ~uint256(0) >> 20;
-        nTargetSpacing = 60;
-        nTargetTimespan = 10 * 60;  // 10 mins
-        strDataDir = "testnet";
+		pchMessageStart[0] = 0x2f;
+		pchMessageStart[1] = 0xca;
+		pchMessageStart[2] = 0x4d;
+		pchMessageStart[3] = 0x3e;
+		nProofOfWorkLimit = CBigNum(~uint256(0) >> 16);
+        vAlertPubKey = ParseHex("9as8d7f9a8sd76f90a7df90a8sdfhadf8asdfnhasdfn7as9d8f7awefh9asdf89asd78fhasd89fhasdf789hasdf89");
+		nDefaultPort = 27170;
+		nRPCPort = 27171;
+		strDataDir = "testnet";
 
-        const char* pszTimestamp = "June 13th, 2016: ISIS claims responsibility for the shooting massacre at Orlando FL gay night club yesterday morning leaving 49 dead & many wounded.";
-        std::vector<CTxIn> vin;
-        vin.resize(1);
-        vin[0].scriptSig = CScript() << 0 << CScriptNum(42) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-        std::vector<CTxOut> vout;
-        vout.resize(1);
-        vout[0].SetEmpty();
-        CTransaction txNew(1, 1465873655, vin, vout, 0);
-        genesis.vtx.push_back(txNew);
-        genesis.hashPrevBlock = 0;
-        genesis.hashMerkleRoot = genesis.BuildMerkleTree();
-        genesis.nVersion = 1;
-        genesis.nTime = 1465873655;
-        genesis.nBits = 0x1f00ffff;
-        genesis.nNonce = 48480;
+		// Modify the testnet genesis block so the timestamp is valid for a later start.
+		genesis.nBits = 520159231;
+		genesis.nNonce = 80086;
 
-        hashGenesisBlock = genesis.GetHash();
+		// assert(hashGenesisBlock == uint256("0x"));
 
-        assert(hashGenesisBlock == uint256("0x00008b645780949ad9a346df272390396d10f6c67a3bef9e2fe2114854786ac3"));
-        assert(genesis.hashMerkleRoot == uint256("0xffc835b4aab6d5002db95706cd864c5614dfb1d7cfda1ce3beedf740a9aca558"));
+		vFixedSeeds.clear();
+		vSeeds.clear();
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 63);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 85);
-        base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 153);
-        base58Prefixes[STEALTH_ADDRESS] = std::vector<unsigned char>(1, 40);
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
+		base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 97);
+		base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 196);
+		base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239);
+		base58Prefixes[STEALTH_ADDRESS] = std::vector<unsigned char>(1, 40);
+		base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
+		base58Prefixes[EXT_SECRET_KEY] = list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        vSeeds.clear();
+		convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
-        nPoolMaxTransactions = 3;
-        strStashedsendPoolDummyAddress = "SyndicateDarksendPoo1DummyAdy4viSr";
-        nLastPOWBlock = 0x7fffffff;
+		nLastPOWBlock = 0x7fffffff;
     }
 
     virtual const CBlock& GenesisBlock() const { return genesis; }

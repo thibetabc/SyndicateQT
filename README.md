@@ -1,5 +1,5 @@
-SyndicateQt is an open source community driven project.
-Join the community on Telegram https://t.me/syndicateLTD
+﻿SyndicateQt is an open source community driven project.
+Join the community on Telegram https://t.me/syndicateLtd
 
 ## SyndicateQt
 

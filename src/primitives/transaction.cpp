@@ -450,7 +450,7 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
 // age (trust score) of competing branches.
 bool CTransaction::GetCoinAge(CTxDB& txdb, const CBlockIndex* pindexPrev, uint64_t& nCoinAge) const
 {
-    uint256 bnCentSecond = 0;  // coin age in the unit of cent-seconds
+	CBigNum bnCentSecond = 0;  // coin age in the unit of cent-seconds
     nCoinAge = 0;
     int nStakeMinConfirmations = 180;
 
@@ -482,9 +482,9 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, const CBlockIndex* pindexPrev, uint64
         LogPrint("coinage", "coin age nValueIn=%d nTimeDiff=%d bnCentSecond=%s\n", nValueIn, nTime - txPrev.nTime, bnCentSecond.ToString());
     }
 
-    uint256 bnCoinDay = bnCentSecond * CENT / COIN / (24 * 60 * 60);
+	CBigNum bnCoinDay = bnCentSecond * CENT / COIN / (24 * 60 * 60);
     LogPrint("coinage", "coin age bnCoinDay=%s\n", bnCoinDay.ToString());
-    nCoinAge = bnCoinDay.GetLow64();
+    nCoinAge = bnCoinDay.getuint64();
     return true;
 }
 
