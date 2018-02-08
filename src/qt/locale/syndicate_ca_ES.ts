@@ -1825,8 +1825,8 @@ Address: %4
         <translation>Ús:</translation>
     </message>
     <message>
-        <source>Send command to -server or iond</source>
-        <translation>Enviar comandes a -server o iond</translation>
+        <source>Send command to -server or syndicated</source>
+        <translation>Enviar comandes a -server o syndicated</translation>
     </message>
     <message>
         <source>List commands</source>
@@ -1845,8 +1845,8 @@ Address: %4
         <translation>Especifiqueu el fitxer de configuració (per defecte: syndicate.conf)</translation>
     </message>
     <message>
-        <source>Specify pid file (default: iond.pid)</source>
-        <translation>Especificar arxiu pid (per defecte: iond.pid)</translation>
+        <source>Specify pid file (default: syndicated.pid)</source>
+        <translation>Especificar arxiu pid (per defecte: syndicated.pid)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>

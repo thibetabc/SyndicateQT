@@ -42,7 +42,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+15"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter an Alias (friendly name) for your Master Node and its address (either clearnet IP and port or Tor onion address and port). The address should be in the format 123.456.789.123:15200 or akjdsafxjkhasdf.onion:15200. You must send exactly 20,000 SYNX to the collateral address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter an Alias (friendly name) for your Master Node and its address (either clearnet IP and port or Tor onion address and port). The address should be in the format 123.456.789.123:9999 or akjdsafxjkhasdf.onion:9999. You must send exactly 5000 SYNX to the collateral address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4056,8 +4056,8 @@ Please unlock your wallet manually or wait for StashedSend mixing to complete be
     </message>
     <message>
         <location line="-47"/>
-        <source>Send command to -server or iond</source>
-        <translation>Send command to -server or iond</translation>
+        <source>Send command to -server or syndicated</source>
+        <translation>Send command to -server or syndicated</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -4516,8 +4516,8 @@ Please unlock your wallet manually or wait for StashedSend mixing to complete be
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: iond.pid)</source>
-        <translation>Specify pid file (default: iond.pid)</translation>
+        <source>Specify pid file (default: syndicated.pid)</source>
+        <translation>Specify pid file (default: syndicated.pid)</translation>
     </message>
     <message>
         <location line="+1"/>

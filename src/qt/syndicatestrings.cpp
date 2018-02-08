@@ -254,7 +254,7 @@ QT_TRANSLATE_NOOP("syndicate-core", "Rescan the block chain for missing wallet t
 QT_TRANSLATE_NOOP("syndicate-core", "Rescanning..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Run in the background as a daemon and accept commands"),
 QT_TRANSLATE_NOOP("syndicate-core", "SSL options: (see the Syndicate Wiki for SSL setup instructions)"),
-QT_TRANSLATE_NOOP("syndicate-core", "Send command to -server or iond"),
+QT_TRANSLATE_NOOP("syndicate-core", "Send command to -server or syndicated"),
 QT_TRANSLATE_NOOP("syndicate-core", "Send commands to node running on <ip> (default: 127.0.0.1)"),
 QT_TRANSLATE_NOOP("syndicate-core", "Send trace/debug info to console instead of debug.log file"),
 QT_TRANSLATE_NOOP("syndicate-core", "Sending..."),
