@@ -8,14 +8,14 @@ We would like to officially thank the past developers for their significant work
 They managed to place us in a right strategic direction, leaving a legacy of high paying Masternodes and POS rewards, but now, it is the time for the community to move forward.
 
 
-As we highly believe in the voice of the community we created the ìGovernance Platformî the place where people can vote for future projects. The platform will enable us to address the community future projects and simultaneously raise funds. 
+As we highly believe in the voice of the community we created the ‚ÄúGovernance Platform‚Äù the place where people can vote for future projects. The platform will enable us to address the community future projects and simultaneously raise funds. 
 
-As we also know that you like good news, weíre pleased to announce that the platform is live and operational and can be found at: www.syndicateltd.net
+As we also know that you like good news, we‚Äôre pleased to announce that the platform is live and operational and can be found at: www.syndicateltd.net
 
 
 ### GOVERNANCE PLATFORM 
 
-there are some facts you need to know before voting: 
+There are some facts you need to know before voting: 
 
 The most important thing that you should know is that received SYNX from voters will not be staked to influence the network, in fact staking rewards will 
 significantly increase, by dramatically lowering the network weight
@@ -43,13 +43,13 @@ Detailed aspects about projects + newsletter can be found in the Bluepaper below
 
 
 
-In order to keep the momentum with the good news, hereís some of our accomplishments since we started aiding the management of the coin: (09.09.2017) 
+In order to keep the momentum with the good news, here‚Äôs some of our accomplishments since we started aiding the management of the coin: (09.09.2017) 
 
 - Fixed Win/Mac/Linux wallets
 - New Look (Website, Logo)
 - New Social media accounts (Telegram, Twitter)
 - Medium blog for constant updates
-- Governance platform ñ 3 projects pending
+- Governance platform ‚Äì 3 projects pending
 - Masternode hosting service
 - New ANN
 - New Blockexplorer
