@@ -1,32 +1,82 @@
-Syndicate Core integration/staging repository
-=====================================
+SyndicateQt is an open source community driven project.
+Join the community on Telegram https://t.me/syndicateLtd
 
-[![Build Status](https://travis-ci.org/PIVX-Project/PIVX.svg?branch=master)](https://travis-ci.org/PIVX-Project/PIVX) [![GitHub version](https://badge.fury.io/gh/PIVX-Project%2FPIVX.svg)](https://badge.fury.io/gh/PIVX-Project%2FPIVX)
+## SyndicateQt
 
-Syndicate is an open source crypto-currency focused on fast private transactions with low transaction fees & environmental footprint.  It utilizes a custom Proof of Stake protocol for securing its network and uses an innovative variable seesaw reward mechanism that dynamically balances 90% of its block reward size between masternodes and staking nodes and 10% dedicated for budget proposals.
-- Fast transactions featuring guaranteed zero confirmation transactions.
-- Decentralized blockchain voting utilizing Masternode technology to form a DAO. The blockchain will distribute monthly treasury funds based on successful proposals submitted by the community and voted on by the DAO.
+First and foremost, we have the pleasure to announce that due to intense work and outstanding support from the community, Syndicate coin has been saved, and from now on, things will only get better.
+We would like to officially thank the past developers for their significant work with Syndicate. 
+They managed to place us in a right strategic direction, leaving a legacy of high paying Masternodes and POS rewards, but now, it is the time for the community to move forward.
 
-More information at [synx.online](http://synx.online/)
 
-### Coin Specs
-<table>
-<tr><td>Algo</td><td>X11</td></tr>
-<tr><td>Block Time</td><td>60 Seconds</td></tr>
-<tr><td>Difficulty Retargeting</td><td>Every Block</td></tr>
-<tr><td>Max Coin Supply (PoS Phase)</td><td>Infinite</td></tr>
-</table>
+As we highly believe in the voice of the community we created the “Governance Platform” the place where people can vote for future projects. The platform will enable us to address the community future projects and simultaneously raise funds. 
 
-### PoW Rewards Breakdown
+As we also know that you like good news, we’re pleased to announce that the platform is live and operational and can be found at: www.syndicateltd.net
 
-<table>
-<th>Block Height</th><th>Masternodes</th><th>Miner</th><th>Budget</th>
-<tr><td>3-512</td><td>0% (0 SYNX)</td><td>100% (10 SYNX)</td><td>N/A</td></tr>
-</table>
 
-### PoS Rewards Breakdown
+### GOVERNANCE PLATFORM 
 
-<table>
-<th>Phase</th><th>Block Height</th><th>Reward</th><th>Masternodes & Stakers</th><th>Budget</th>
-<tr><td>Phase X</td><td>513-Infinite</td><td>10 SYNX</td><td>See-Saw mechanism</td><td>10% (1 SYNX)</td></tr>
-</table>
+there are some facts you need to know before voting: 
+
+The most important thing that you should know is that received SYNX from voters will not be staked to influence the network, in fact staking rewards will 
+significantly increase, by dramatically lowering the network weight
+
+Voting ends when the first project receives the minimum amount of votes votes
+
+SYNX can be sent from anywhere (wallet or exchange)
+
+There is no minimum amount to send
+
+Always save a proof of your vote (TX-id) for future benefits & clarifications
+
+Project developing will start as soon as it reaches the minimum amount required (see the bluepaper)
+
+Deadline countdown begins at the end of the voting period
+
+If one of the projects will not raise enough votes to pass the requirement amount, 50% of the coins from the voters will be burned to support SYNX deflation and the other 50% percent will be reserved for community and team (New hires, Marketing, Salaries, Equipment, Graphic Design and Future Community bounties: Twitter, Bitcointalk, Bug Fixes)
+
+The winning project will receive a detailed Whitepaper, max 2 weeks after voting ends
+
+Detailed aspects about projects + newsletter can be found in the Bluepaper below
+
+
+##### Bluepaper: http://www.syndicateltd.net/bluepaper.pdf
+
+
+
+In order to keep the momentum with the good news, here’s some of our accomplishments since we started aiding the management of the coin: (09.09.2017) 
+
+- Fixed Win/Mac/Linux wallets
+- New Look (Website, Logo)
+- New Social media accounts (Telegram, Twitter)
+- Medium blog for constant updates
+- Governance platform – 3 projects pending
+- Masternode hosting service
+- New ANN
+- New Blockexplorer
+- New Github
+
+#### SPECIFICATIONS:
+
+Supply: Unlimited
+Mode - X11 POW (ENDED) / POS
+Active Mode - Full POS
+Block time   - 60 Seconds
+Block Maturity - 100 Blocks
+Minimum Stake age - 3 Hours
+POS Block Reward - 10 SYNX
+Masernode Reward - dynamically adjustsed by Seesaw mechanism 
+Masernode Collateral   - 5000 SYNX
+Difficulty Retarget - Every Block
+Port - 25992
+ 
+``` LICENSE: The MIT License (MIT) Copyright (c) 2014-2018 The Syndicate Developers, see LICENSE for additional detail 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software 
+is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be 
+included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY 
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN
+THE SOFTWARE.
