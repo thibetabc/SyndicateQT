@@ -3,17 +3,17 @@
 ./autogen.sh;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/x86_64-pc-linux-gnu
 make -j4 -k
-mkdir -p build/v1.9.9.0/x86_64-pc-linux-gnu;
-cp ./src/syndicated ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicated;
-cp ./src/syndicate-tx ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-tx;
-cp ./src/syndicate-cli ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-cli;
-cp ./src/qt/syndicate-qt ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-qt;
-strip ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicated
-strip ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-tx
-strip ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-cli
-strip ./build/v1.9.9.0/x86_64-pc-linux-gnu/syndicate-qt
+mkdir -p build/v2.0.0.0/x86_64-pc-linux-gnu;
+cp ./src/syndicated ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicated;
+cp ./src/syndicate-tx ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-tx;
+cp ./src/syndicate-cli ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-cli;
+cp ./src/qt/syndicate-qt ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-qt;
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicated
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-tx
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-cli
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-qt
 ## created detached signatures
-cd build/v1.9.9.0/x86_64-pc-linux-gnu;
+cd build/v2.0.0.0/x86_64-pc-linux-gnu;
 
 gpg --detach-sign -o syndicate-qt.sig syndicate-qt
 gpg --verify syndicate-qt.sig
@@ -34,17 +34,17 @@ make clean;cd src;make clean;cd ..;
 ./autogen.sh;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/i686-pc-linux-gnu
 make -j4 -k
-mkdir -p build/v1.9.9.0/i686-pc-linux-gnu;
-cp ./src/syndicated ./build/v1.9.9.0/i686-pc-linux-gnu/syndicated;
-cp ./src/syndicate-tx ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-tx;
-cp ./src/syndicate-cli ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-cli;
-cp ./src/qt/syndicate-qt ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-qt;
-strip ./build/v1.9.9.0/i686-pc-linux-gnu/syndicated
-strip ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-tx
-strip ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-cli
-strip ./build/v1.9.9.0/i686-pc-linux-gnu/syndicate-qt
+mkdir -p build/v2.0.0.0/i686-pc-linux-gnu;
+cp ./src/syndicated ./build/v2.0.0.0/i686-pc-linux-gnu/syndicated;
+cp ./src/syndicate-tx ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-tx;
+cp ./src/syndicate-cli ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-cli;
+cp ./src/qt/syndicate-qt ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-qt;
+strip ./build/v2.0.0.0/i686-pc-linux-gnu/syndicated
+strip ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-tx
+strip ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-cli
+strip ./build/v2.0.0.0/i686-pc-linux-gnu/syndicate-qt
 # created detached signatures
-cd build/v1.9.9.0/i686-pc-linux-gnu;
+cd build/v2.0.0.0/i686-pc-linux-gnu;
 
 gpg --detach-sign -o syndicate-qt.sig syndicate-qt
 gpg --verify syndicate-qt.sig
@@ -66,17 +66,17 @@ make clean;cd src;make clean;cd ..;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/x86_64-w64-mingw32
 make HOST=x86_64-w64-mingw32 -j4 -k;
 
-mkdir -p build/v1.9.9.0/x86_64-w64-mingw32;
-cp ./src/syndicated.exe ./build/v1.9.9.0/x86_64-w64-mingw32/syndicated.exe;
-cp ./src/syndicate-tx.exe ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-tx.exe;
-cp ./src/syndicate-cli.exe ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-cli.exe;
-cp ./src/qt/syndicate-qt.exe ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-qt.exe;
-strip ./build/v1.9.9.0/x86_64-w64-mingw32/syndicated.exe
-strip ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-tx.exe
-strip ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-cli.exe
-strip ./build/v1.9.9.0/x86_64-w64-mingw32/syndicate-qt.exe
+mkdir -p build/v2.0.0.0/x86_64-w64-mingw32;
+cp ./src/syndicated.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicated.exe;
+cp ./src/syndicate-tx.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-tx.exe;
+cp ./src/syndicate-cli.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-cli.exe;
+cp ./src/qt/syndicate-qt.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-qt.exe;
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicated.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-tx.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-cli.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-qt.exe
 ## created detached signatures
-cd build/v1.9.9.0/x86_64-w64-mingw32;
+cd build/v2.0.0.0/x86_64-w64-mingw32;
 
 
 ##/C= 	Country 	GB
@@ -124,17 +124,17 @@ make clean;cd src;make clean;cd ..;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/i686-w64-mingw32
 make HOST=i686-w64-mingw32 -j4 -k;
 
-mkdir -p build/v1.9.9.0/i686-w64-mingw32;
-cp ./src/syndicated.exe ./build/v1.9.9.0/i686-w64-mingw32/syndicated.exe;
-cp ./src/syndicate-tx.exe ./build/v1.9.9.0/i686-w64-mingw32/syndicate-tx.exe;
-cp ./src/syndicate-cli.exe ./build/v1.9.9.0/i686-w64-mingw32/syndicate-cli.exe;
-cp ./src/qt/syndicate-qt.exe ./build/v1.9.9.0/i686-w64-mingw32/syndicate-qt.exe;
-strip ./build/v1.9.9.0/i686-w64-mingw32/syndicated.exe
-strip ./build/v1.9.9.0/i686-w64-mingw32/syndicate-tx.exe
-strip ./build/v1.9.9.0/i686-w64-mingw32/syndicate-cli.exe
-strip ./build/v1.9.9.0/i686-w64-mingw32/syndicate-qt.exe
+mkdir -p build/v2.0.0.0/i686-w64-mingw32;
+cp ./src/syndicated.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicated.exe;
+cp ./src/syndicate-tx.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-tx.exe;
+cp ./src/syndicate-cli.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-cli.exe;
+cp ./src/qt/syndicate-qt.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-qt.exe;
+strip ./build/v2.0.0.0/i686-w64-mingw32/syndicated.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-tx.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-cli.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-qt.exe
 ## created detached signatures
-cd build/v1.9.9.0/i686-w64-mingw32;
+cd build/v2.0.0.0/i686-w64-mingw32;
 
 ##/C= 	Country 	GB
 ##/ST= 	State 	London
@@ -181,15 +181,15 @@ make clean;cd src;make clean;cd ..;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/arm-linux-gnueabihf
 make HOST=arm-linux-gnueabihf -j4 -k;
 
-mkdir -p build/v1.9.9.0/arm-linux-gnueabihf;
-cp ./src/syndicated ./build/v1.9.9.0/arm-linux-gnueabihf/syndicated;
-cp ./src/syndicate-tx ./build/v1.9.9.0/arm-linux-gnueabihf/syndicate-tx;
-cp ./src/syndicate-cli ./build/v1.9.9.0/arm-linux-gnueabihf/syndicate-cli;
-strip ./build/v1.9.9.0/arm-linux-gnueabihf/syndicated
-strip ./build/v1.9.9.0/arm-linux-gnueabihf/syndicate-tx
-strip ./build/v1.9.9.0/arm-linux-gnueabihf/syndicate-cli
+mkdir -p build/v2.0.0.0/arm-linux-gnueabihf;
+cp ./src/syndicated ./build/v2.0.0.0/arm-linux-gnueabihf/syndicated;
+cp ./src/syndicate-tx ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-tx;
+cp ./src/syndicate-cli ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-cli;
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicated
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-tx
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-cli
 # created detached signatures
-cd build/v1.9.9.0/arm-linux-gnueabihf;
+cd build/v2.0.0.0/arm-linux-gnueabihf;
 
 gpg --armor --detach-sign -o syndicated.sig syndicated
 gpg --verify syndicated.sig
@@ -208,15 +208,15 @@ make clean;cd src;make clean;cd ..;
 ./configure CPPFLAGS=-DNDEBUG --prefix=`pwd`/depends/aarch64-linux-gnu
 make HOST=aarch64-linux-gnu -j4 -k;
 
-mkdir -p build/v1.9.9.0/aarch64-linux-gnu;
-cp ./src/syndicated ./build/v1.9.9.0/aarch64-linux-gnu/syndicated;
-cp ./src/syndicate-tx ./build/v1.9.9.0/aarch64-linux-gnu/syndicate-tx;
-cp ./src/syndicate-cli ./build/v1.9.9.0/aarch64-linux-gnu/syndicate-cli;
-strip ./build/v1.9.9.0/aarch64-linux-gnu/syndicated
-strip ./build/v1.9.9.0/aarch64-linux-gnu/syndicate-tx
-strip ./build/v1.9.9.0/aarch64-linux-gnu/syndicate-cli
+mkdir -p build/v2.0.0.0/aarch64-linux-gnu;
+cp ./src/syndicated ./build/v2.0.0.0/aarch64-linux-gnu/syndicated;
+cp ./src/syndicate-tx ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-tx;
+cp ./src/syndicate-cli ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-cli;
+strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicated
+strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-tx
+strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-cli
 # created detached signatures
-cd build/v1.9.9.0/aarch64-linux-gnu;
+cd build/v2.0.0.0/aarch64-linux-gnu;
 
 gpg --armor --detach-sign -o syndicated.sig syndicated
 gpg --verify syndicated.sig
