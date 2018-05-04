@@ -1508,32 +1508,32 @@ Please check the address and try again.</source>
         <translation>익명화 레벨을 선택해주세요.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 SYNX</source>
-        <translation>2개의 개별 마스터노드를 이용하여 최대 10000 SYNX 를 섞을 수 있습니다.</translation>
+        <source>Use 2 separate masternodes to mix funds up to 5000 SYNX</source>
+        <translation>2개의 개별 마스터노드를 이용하여 최대 5000 SYNX 를 섞을 수 있습니다.</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 SYNX</source>
-        <translation>8개의 개별 마스터노드를 이용하여 최대 10000 SYNX 를 섞을 수 있습니다.</translation>
+        <source>Use 8 separate masternodes to mix funds up to 5000 SYNX</source>
+        <translation>8개의 개별 마스터노드를 이용하여 최대 5000 SYNX 를 섞을 수 있습니다.</translation>
     </message>
     <message>
         <source>Use 16 separate masternodes</source>
         <translation>16개의 개별 마스터노드를 사용</translation>
     </message>
     <message>
-        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 10000 SYNX</source>
-        <translation>이 옵션은 가장 빠르게 전송되며 10000 SYNX 익명화에 약 ~0.025 SYNX의 비용이 들어갑니다.</translation>
+        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 5000 SYNX</source>
+        <translation>이 옵션은 가장 빠르게 전송되며 5000 SYNX 익명화에 약 ~0.025 SYNX의 비용이 들어갑니다.</translation>
     </message>
     <message>
-        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 10000 SYNX</source>
-        <translation>이 옵션은 중간 정도의 속도로 전송되며 10000 SYNX 익명화에 약 0.05 SYNX의 비용이 들어갑니다.</translation>
+        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 5000 SYNX</source>
+        <translation>이 옵션은 중간 정도의 속도로 전송되며 5000 SYNX 익명화에 약 0.05 SYNX의 비용이 들어갑니다.</translation>
     </message>
     <message>
         <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
         <translation>이것은 가장 느리고 안전한 옵션입니다. 최고 익명성을 사용하면 비용이 발생합니다.</translation>
     </message>
     <message>
-        <source>0.1 SYNX per 10000 SYNX you anonymize.</source>
-        <translation>10000 SYNX 익명화에 0.1 SYNX 가 듭니다.</translation>
+        <source>0.1 SYNX per 5000 SYNX you anonymize.</source>
+        <translation>5000 SYNX 익명화에 0.1 SYNX 가 듭니다.</translation>
     </message>
     <message>
         <source>Obfuscation Configuration</source>
@@ -4004,12 +4004,12 @@ rpcpassword=%s
         <translation>이 트랜잭션를 위해 난독화 표기된 충분한 금액을 찾을 수 없습니다.</translation>
     </message>
     <message>
-        <source>Unable to locate enough Obfuscation non-denominated funds for this transaction that are not equal 10000 SYNX.</source>
-        <translation>이 트랜잭션를 위해 난독화 표기가 안된 충분한 금액을 찾을 수 없습니다. 10000 SYNX과 일치하지 않음.</translation>
+        <source>Unable to locate enough Obfuscation non-denominated funds for this transaction that are not equal 5000 SYNX.</source>
+        <translation>이 트랜잭션를 위해 난독화 표기가 안된 충분한 금액을 찾을 수 없습니다. 5000 SYNX과 일치하지 않음.</translation>
     </message>
     <message>
-        <source>Unable to locate enough funds for this transaction that are not equal 10000 SYNX.</source>
-        <translation>트랜잭션에 대한 충분한 금액을 찾을 수 없습니다. 10000 SYNX와 같지 않음</translation>
+        <source>Unable to locate enough funds for this transaction that are not equal 5000 SYNX.</source>
+        <translation>트랜잭션에 대한 충분한 금액을 찾을 수 없습니다. 5000 SYNX와 같지 않음</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>

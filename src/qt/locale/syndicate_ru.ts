@@ -1504,32 +1504,32 @@ Please check the address and try again.</source>
         <translation>Выберите уровень конфиденциальности.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 SYNX</source>
-        <translation>Используйте 2 разные мастерноды для смешивания средств до 10000 SYNX</translation>
+        <source>Use 2 separate masternodes to mix funds up to 5000 SYNX</source>
+        <translation>Используйте 2 разные мастерноды для смешивания средств до 5000 SYNX</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 SYNX</source>
-        <translation>Используйте 8 разных мастернод для смешивания средств до 10000 SYNX</translation>
+        <source>Use 8 separate masternodes to mix funds up to 5000 SYNX</source>
+        <translation>Используйте 8 разных мастернод для смешивания средств до 5000 SYNX</translation>
     </message>
     <message>
         <source>Use 16 separate masternodes</source>
         <translation>Используйте 16 разных мастернод</translation>
     </message>
     <message>
-        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 10000 SYNX</source>
-        <translation>Этот вариант является самым быстрым и будет стоить порядка ~0.025 SYNX для анонимизации 10000 SYNX</translation>
+        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 5000 SYNX</source>
+        <translation>Этот вариант является самым быстрым и будет стоить порядка ~0.025 SYNX для анонимизации 5000 SYNX</translation>
     </message>
     <message>
-        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 10000 SYNX</source>
-        <translation>Это средний по скорости вариант и он будет стоить около 0.05 SYNX для анонимизации 10000 SYNX</translation>
+        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 5000 SYNX</source>
+        <translation>Это средний по скорости вариант и он будет стоить около 0.05 SYNX для анонимизации 5000 SYNX</translation>
     </message>
     <message>
         <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
         <translation>Это самый медленный и безопасный вариант. Максимальная анонимность стоит</translation>
     </message>
     <message>
-        <source>0.1 SYNX per 10000 SYNX you anonymize.</source>
-        <translation>0.1 SYNX за 10000 SYNX которые вы собираетесь анонимизировать.</translation>
+        <source>0.1 SYNX per 5000 SYNX you anonymize.</source>
+        <translation>0.1 SYNX за 5000 SYNX которые вы собираетесь анонимизировать.</translation>
     </message>
     <message>
         <source>Obfuscation Configuration</source>
