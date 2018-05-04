@@ -2071,8 +2071,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Die angezeigte Information ist möglicherweise nicht mehr aktuell. Ihre Wallet synchronisiert sich automatisch mit dem SYNDICATE-Netzwerk, nachdem eine Verbindung hergestellt wurde. Aber dieser Vorgang ist noch nicht abgeschlossen.</translation>
     </message>
     <message>
-        <source>Enter an amount of Piv to convert to zPiv</source>
-        <translation>Eingabe des Piv-Betrags, um in zPiv umzuwandeln</translation>
+        <source>Enter an amount of Synx to convert to zSynx</source>
+        <translation>Eingabe des Synx-Betrags, um in zSynx umzuwandeln</translation>
     </message>
     <message>
         <source>Mint Zerocoin</source>
@@ -2127,12 +2127,12 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Status und/oder Mitteilungen aus der letzten Präge-Action</translation>
     </message>
     <message>
-        <source>zPiv Control</source>
-        <translation>zPiv Kontrolle</translation>
+        <source>zSynx Control</source>
+        <translation>zSynx Kontrolle</translation>
     </message>
     <message>
-        <source>zPiv Selected:</source>
-        <translation>zPiv Ausgewählt:</translation>
+        <source>zSynx Selected:</source>
+        <translation>zSynx Ausgewählt:</translation>
     </message>
     <message>
         <source>Quantity Selected:</source>
@@ -2481,7 +2481,7 @@ Bitte haben Sie Geduld...</translation>
         <translation>Ausgeben Zerocoin fehlgeschlagen mit Status =</translation>
     </message>
     <message>
-        <source>zPiv Spend #: </source>
+        <source>zSynx Spend #: </source>
         <translation>zSYNX Ausgeben #:</translation>
     </message>
     <message>
@@ -2505,8 +2505,8 @@ Bitte haben Sie Geduld...</translation>
         <translation>Adresse:</translation>
     </message>
     <message>
-        <source>zPiv Mint</source>
-        <translation>zPiv Prägen</translation>
+        <source>zSynx Mint</source>
+        <translation>zSynx Prägen</translation>
     </message>
     <message>
         <source>Sending successful, return code: </source>
@@ -3962,23 +3962,23 @@ Bitte haben Sie Geduld...</translation>
         <translation>Verschleiert</translation>
     </message>
     <message>
-        <source>Converted Piv to zPiv</source>
+        <source>Converted Synx to zSynx</source>
         <translation>Umgewandeltes SYNX zu zSYNX</translation>
     </message>
     <message>
-        <source>Spent zPiv</source>
+        <source>Spent zSynx</source>
         <translation>Ausgeben zSYNX</translation>
     </message>
     <message>
-        <source>Received Piv from zPiv</source>
+        <source>Received Synx from zSynx</source>
         <translation>Empfangene SYNX von zSYNX</translation>
     </message>
     <message>
-        <source>Minted Change as zPiv from zPiv Spend</source>
+        <source>Minted Change as zSynx from zSynx Spend</source>
         <translation>Geprägtes Wechselgeld als zSYNX von zSYNX Ausgabe</translation>
     </message>
     <message>
-        <source>Converted zPiv to Piv</source>
+        <source>Converted zSynx to Synx</source>
         <translation>Umgewandeltes zSYNX zu SYNX</translation>
     </message>
     <message>
@@ -3986,7 +3986,7 @@ Bitte haben Sie Geduld...</translation>
         <translation>nur beobachtet</translation>
     </message>
     <message>
-        <source>zPiv Accumulator</source>
+        <source>zSynx Accumulator</source>
         <translation>zSYNX Speicher</translation>
     </message>
     <message>
@@ -4097,7 +4097,7 @@ Bitte haben Sie Geduld...</translation>
         <translation>Masternode Vergütung</translation>
     </message>
     <message>
-        <source>Received Piv from zPiv</source>
+        <source>Received Synx from zSynx</source>
         <translation>Empfangen SYNX von zSYNX</translation>
     </message>
     <message>
@@ -4109,7 +4109,7 @@ Bitte haben Sie Geduld...</translation>
         <translation>Zerocoin Ausgabe</translation>
     </message>
     <message>
-        <source>Zerocoin Spend, Change in zPiv</source>
+        <source>Zerocoin Spend, Change in zSynx</source>
         <translation>Zerocoin Ausgabe, Wechselgeld in zSYNX</translation>
     </message>
     <message>
@@ -4278,9 +4278,9 @@ Bitte haben Sie Geduld...</translation>
     </message>
 </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
-        <source>Select zPiv to Spend</source>
+        <source>Select zSynx to Spend</source>
         <translation>Auswahl zSYNX als Ausgabe</translation>
     </message>
     <message>
@@ -4292,7 +4292,7 @@ Bitte haben Sie Geduld...</translation>
         <translation>0</translation>
     </message>
     <message>
-        <source>zPiv</source>
+        <source>zSynx</source>
         <translation>zSYNX</translation>
     </message>
     <message>

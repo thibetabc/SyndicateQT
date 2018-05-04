@@ -16,8 +16,8 @@ BITCOIND_USER=${BITCOIND_USER:-syndicate}
 BITCOIND_GROUP=${BITCOIND_GROUP:-syndicate}
 BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/syndicated}
 
-name="PIVX Core Daemon"
-description="PIVX crypto-currency p2p network daemon"
+name="Syndicate Core Daemon"
+description="Syndicate crypto-currency p2p network daemon"
 
 command="/usr/bin/syndicated"
 command_args="-pid=\"${BITCOIND_PIDFILE}\" \
@@ -78,7 +78,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"PIVX Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Syndicate Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1

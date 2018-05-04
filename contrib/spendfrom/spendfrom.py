@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Use the raw transactions API to spend PIVs received on particular addresses,
+# Use the raw transactions API to spend SYNXs received on particular addresses,
 # and send any change back to that same address.
 #
 # Example usage:
@@ -35,9 +35,9 @@ def check_json_precision():
 def determine_db_dir():
     """Return the default location of the syndicate data directory"""
     if platform.system() == "Darwin":
-        return os.path.expanduser("~/Library/Application Support/PIVX/")
+        return os.path.expanduser("~/Library/Application Support/Syndicate/")
     elif platform.system() == "Windows":
-        return os.path.join(os.environ['APPDATA'], "PIVX")
+        return os.path.join(os.environ['APPDATA'], "Syndicate")
     return os.path.expanduser("~/.syndicate")
 
 def read_bitcoin_config(dbdir):
@@ -221,9 +221,9 @@ def main():
 
     parser = optparse.OptionParser(usage="%prog [options]")
     parser.add_option("--from", dest="fromaddresses", default=None,
-                      help="addresses to get PIVs from")
+                      help="addresses to get SYNXs from")
     parser.add_option("--to", dest="to", default=None,
-                      help="address to get send PIVs to")
+                      help="address to get send SYNXs to")
     parser.add_option("--amount", dest="amount", default=None,
                       help="amount to send")
     parser.add_option("--fee", dest="fee", default="0.0",

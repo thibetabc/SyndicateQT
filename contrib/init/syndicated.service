@@ -1,5 +1,5 @@
 [Unit]
-Description=PIVX's distributed currency daemon
+Description=Syndicate's distributed currency daemon
 After=network.target
 
 [Service]

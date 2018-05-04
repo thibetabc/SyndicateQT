@@ -3775,7 +3775,7 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
     </message>
 </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
         <source>0</source>
         <translation>0</translation>
