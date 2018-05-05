@@ -22,6 +22,8 @@ class TransactionView;
 class WalletModel;
 class BlockExplorer;
 
+class CWallet;
+
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QModelIndex;
