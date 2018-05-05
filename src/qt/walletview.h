@@ -57,6 +57,8 @@ public:
 
     void showOutOfSyncWarning(bool fShow);
 
+    static void doRescan(CWallet* pwallet, CBlockIndex* genesis);
+
 private:
     ClientModel* clientModel;
     WalletModel* walletModel;
@@ -118,6 +120,8 @@ public slots:
     void lockWallet();
     /** Toggle wallet lock state */
     void toggleLockWallet();
+    /** Ask for and import a private key */
+    void importPrivateKey();
 
     /** Show used sending addresses */
     void usedSendingAddresses();
