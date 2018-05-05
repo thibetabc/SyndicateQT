@@ -132,7 +132,7 @@
         <translation>Herhaal nieuw wachtwoord</translation>
     </message>
     <message>
-        <source>For anonymization and staking only</source>
+        <source>For staking only</source>
         <translation>Alleen voor anonimisering en staking</translation>
     </message>
     <message>

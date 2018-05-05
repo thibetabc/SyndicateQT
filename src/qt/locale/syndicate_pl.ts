@@ -108,7 +108,7 @@
         <translation>Powtórz nowe hasło</translation>
     </message>
     <message>
-        <source>For anonymization and staking only</source>
+        <source>For staking only</source>
         <translation>Tylko dla anonimizacji i stakingu</translation>
     </message>
     <message>

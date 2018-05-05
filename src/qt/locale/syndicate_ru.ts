@@ -132,7 +132,7 @@
         <translation>Повторить новую кодовую фразу</translation>
     </message>
     <message>
-        <source>For anonymization and staking only</source>
+        <source>For staking only</source>
         <translation>Только для анонимизации и хранения</translation>
     </message>
     <message>

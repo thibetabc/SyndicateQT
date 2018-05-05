@@ -171,8 +171,8 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>For anonymization and staking only</source>
-        <translation>For anonymization and staking only</translation>
+        <source>For staking only</source>
+        <translation>For staking only</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="+44"/>

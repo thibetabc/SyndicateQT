@@ -128,7 +128,7 @@
         <translation>Повторете новата парола</translation>
     </message>
     <message>
-        <source>For anonymization and staking only</source>
+        <source>For staking only</source>
         <translation>Само за анонимизация и стейкване</translation>
     </message>
     <message>

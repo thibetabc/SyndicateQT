@@ -132,7 +132,7 @@
         <translation>Repita a nova palavra-chave</translation>
     </message>
     <message>
-        <source>For anonymization and staking only</source>
+        <source>For staking only</source>
         <translation>Para anonimização e staking somente</translation>
     </message>
     <message>
