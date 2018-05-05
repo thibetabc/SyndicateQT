@@ -36,8 +36,6 @@
 #include <QVBoxLayout>
 #include <QInputDialog> 
 
-#include <boost/thread.hpp>
-
 WalletView::WalletView(QWidget* parent) : QStackedWidget(parent),
                                           clientModel(0),
                                           walletModel(0)
@@ -420,13 +418,6 @@ void WalletView::toggleLockWallet()
     }
 }
 
-void WalletView::doRescan(CWallet* pwallet, CBlockIndex* genesis)
-{
-    // rescan to find txs associated with imported address
-    pwallet->ScanForWalletTransactions(genesis, true);
-    QMessageBox::information(0, tr(PACKAGE_NAME), tr("Rescan complete."));
-}
-
 // Helper to import a private key instead of making the user go to the debug console
 void WalletView::importPrivateKey()
 {
@@ -481,7 +472,11 @@ void WalletView::importPrivateKey()
             msgBox.setDefaultButton(QMessageBox::No);
 
             if (msgBox.exec() == QMessageBox::Yes)
-                boost::thread t{ WalletView::doRescan, pwalletMain, chainActive.Genesis() };
+            {
+                // rescan to find txs associated with imported address
+                pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+                QMessageBox::information(0, tr(PACKAGE_NAME), tr("Rescan complete."));
+            }
         }
         return;
     }

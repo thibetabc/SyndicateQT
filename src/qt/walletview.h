@@ -22,8 +22,6 @@ class TransactionView;
 class WalletModel;
 class BlockExplorer;
 
-class CWallet;
-
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QModelIndex;
@@ -58,8 +56,6 @@ public:
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     void showOutOfSyncWarning(bool fShow);
-
-    static void doRescan(CWallet* pwallet, CBlockIndex* genesis);
 
 private:
     ClientModel* clientModel;
