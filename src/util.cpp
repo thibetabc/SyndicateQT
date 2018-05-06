@@ -425,13 +425,13 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-// Windows < Vista: C:\Documents and Settings\Username\Application Data\SYNDICATE
-// Windows >= Vista: C:\Users\Username\AppData\Roaming\SYNDICATE
-// Mac: ~/Library/Application Support/SYNDICATE
+// Windows < Vista: C:\Documents and Settings\Username\Application Data\Syndicate
+// Windows >= Vista: C:\Users\Username\AppData\Roaming\Syndicate
+// Mac: ~/Library/Application Support/Syndicate
 // Unix: ~/.syndicate
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "SYNDICATE";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Syndicate";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -443,7 +443,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "SYNDICATE";
+    return pathRet / "Syndicate";
 #else
     // Unix
     return pathRet / ".syndicate";
