@@ -314,7 +314,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     tabGroup->addAction(sendCoinsAction);
 
     receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
-    receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and syndicate: URIs)"));
+    receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and walle: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
 #ifdef Q_OS_MAC
@@ -457,7 +457,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     showHelpMessageAction->setStatusTip(tr("Show the SYNDICATE Core help message to get a list with possible SYNDICATE command-line options"));
 
     importPrivateKeyAction = new QAction(QIcon(":/icons/key"), tr("&Import private key..."), this);
-    importPrivateKeyAction->setToolTip(tr("Import a Syndicate private key"));
+    importPrivateKeyAction->setToolTip(tr("Import a Walle private key"));
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));

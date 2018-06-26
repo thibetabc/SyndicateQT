@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
-// Copyright (c) 2018 The Syndicate developers
+// Copyright (c) 2018 The Walle developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -353,35 +353,35 @@ static const CRPCCommand vRPCCommands[] =
         {"hidden", "setmocktime", &setmocktime, true, false, false},
 
         /* SYNDICATE features */
-        {"syndicate", "masternode", &masternode, true, true, false},
-        {"syndicate", "listmasternodes", &listmasternodes, true, true, false},
-        {"syndicate", "getmasternodecount", &getmasternodecount, true, true, false},
-        {"syndicate", "masternodeconnect", &masternodeconnect, true, true, false},
-        {"syndicate", "masternodecurrent", &masternodecurrent, true, true, false},
-        {"syndicate", "masternodedebug", &masternodedebug, true, true, false},
-        {"syndicate", "startmasternode", &startmasternode, true, true, false},
-        {"syndicate", "createmasternodekey", &createmasternodekey, true, true, false},
-        {"syndicate", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
-        {"syndicate", "listmasternodeconf", &listmasternodeconf, true, true, false},
-        {"syndicate", "getmasternodestatus", &getmasternodestatus, true, true, false},
-        {"syndicate", "getmasternodewinners", &getmasternodewinners, true, true, false},
-        {"syndicate", "getmasternodescores", &getmasternodescores, true, true, false},
-        {"syndicate", "mnbudget", &mnbudget, true, true, false},
-        {"syndicate", "preparebudget", &preparebudget, true, true, false},
-        {"syndicate", "submitbudget", &submitbudget, true, true, false},
-        {"syndicate", "mnbudgetvote", &mnbudgetvote, true, true, false},
-        {"syndicate", "getbudgetvotes", &getbudgetvotes, true, true, false},
-        {"syndicate", "getnextsuperblock", &getnextsuperblock, true, true, false},
-        {"syndicate", "getbudgetprojection", &getbudgetprojection, true, true, false},
-        {"syndicate", "getbudgetinfo", &getbudgetinfo, true, true, false},
-        {"syndicate", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
-        {"syndicate", "mnfinalbudget", &mnfinalbudget, true, true, false},
-        {"syndicate", "checkbudgets", &checkbudgets, true, true, false},
-        {"syndicate", "mnsync", &mnsync, true, true, false},
-        {"syndicate", "spork", &spork, true, true, false},
-        {"syndicate", "getpoolinfo", &getpoolinfo, true, true, false},
+        {"walle", "masternode", &masternode, true, true, false},
+        {"walle", "listmasternodes", &listmasternodes, true, true, false},
+        {"walle", "getmasternodecount", &getmasternodecount, true, true, false},
+        {"walle", "masternodeconnect", &masternodeconnect, true, true, false},
+        {"walle", "masternodecurrent", &masternodecurrent, true, true, false},
+        {"walle", "masternodedebug", &masternodedebug, true, true, false},
+        {"walle", "startmasternode", &startmasternode, true, true, false},
+        {"walle", "createmasternodekey", &createmasternodekey, true, true, false},
+        {"walle", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
+        {"walle", "listmasternodeconf", &listmasternodeconf, true, true, false},
+        {"walle", "getmasternodestatus", &getmasternodestatus, true, true, false},
+        {"walle", "getmasternodewinners", &getmasternodewinners, true, true, false},
+        {"walle", "getmasternodescores", &getmasternodescores, true, true, false},
+        {"walle", "mnbudget", &mnbudget, true, true, false},
+        {"walle", "preparebudget", &preparebudget, true, true, false},
+        {"walle", "submitbudget", &submitbudget, true, true, false},
+        {"walle", "mnbudgetvote", &mnbudgetvote, true, true, false},
+        {"walle", "getbudgetvotes", &getbudgetvotes, true, true, false},
+        {"walle", "getnextsuperblock", &getnextsuperblock, true, true, false},
+        {"walle", "getbudgetprojection", &getbudgetprojection, true, true, false},
+        {"walle", "getbudgetinfo", &getbudgetinfo, true, true, false},
+        {"walle", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
+        {"walle", "mnfinalbudget", &mnfinalbudget, true, true, false},
+        {"walle", "checkbudgets", &checkbudgets, true, true, false},
+        {"walle", "mnsync", &mnsync, true, true, false},
+        {"walle", "spork", &spork, true, true, false},
+        {"walle", "getpoolinfo", &getpoolinfo, true, true, false},
 #ifdef ENABLE_WALLET
-//        {"syndicate", "obfuscation", &obfuscation, false, false, true}, /* not threadSafe because of SendMoney */
+//        {"walle", "obfuscation", &obfuscation, false, false, true}, /* not threadSafe because of SendMoney */
 
         /* Wallet */
         {"wallet", "addmultisigaddress", &addmultisigaddress, true, false, true},
@@ -608,7 +608,7 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(string methodname, string args)
 {
-    return "> syndicate-cli " + methodname + " " + args + "\n";
+    return "> walle-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(string methodname, string args)

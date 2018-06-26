@@ -28,7 +28,7 @@
       </sizepolicy>
      </property>
      <property name="pixmap">
-      <pixmap resource="../syndicate.qrc">:/images/about</pixmap>
+      <pixmap resource="../walle.qrc">:/images/about</pixmap>
      </property>
     </widget>
    </item>
@@ -97,7 +97,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../syndicate.qrc"/>
+  <include location="../walle.qrc"/>
  </resources>
  <connections>
   <connection>

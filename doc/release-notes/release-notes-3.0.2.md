@@ -1,30 +1,30 @@
-Syndicate Core version 3.0.2 is now available from:
+Walle Core version 3.0.2 is now available from:
 
-  <https://github.com/syndicate-project/syndicate/releases>
+  <https://github.com/walle-project/walle/releases>
 
 This is a new minor-revision version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/syndicate-project/syndicate/issues>
+  <https://github.com/walle-project/walle/issues>
 
 Recommended Update
 ==============
 
-Syndicate Core v3.0.2 is a recommended, semi-mandatory update for all users. This release contains transaction creation bug fixes for zSYNX spends, automint calculation adjustments, and other various updates/fixes.
+Walle Core v3.0.2 is a recommended, semi-mandatory update for all users. This release contains transaction creation bug fixes for zSYNX spends, automint calculation adjustments, and other various updates/fixes.
 
 zSYNX spending requires this update.
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Syndicate-Qt (on Mac) or syndicated/syndicate-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Walle-Qt (on Mac) or walled/walle-qt (on Linux).
 
 Compatibility
 ==============
 
-Syndicate Core is extensively tested on multiple operating systems using
+Walle Core is extensively tested on multiple operating systems using
 the Linux kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
@@ -32,7 +32,7 @@ No attempt is made to prevent installing or running the software on Windows XP, 
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-Syndicate Core should also work on most other Unix-like systems but is not
+Walle Core should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 ### :exclamation::exclamation::exclamation: MacOS 10.13 High Sierra :exclamation::exclamation::exclamation:
@@ -47,7 +47,7 @@ Auto Wallet Backup
 ---------------------
 In addition to the automatic wallet backup that is done at each start of the client, a new automatic backup function has been added that will, by default, create a backup of the wallet file during each zSYNX mint operation (zSYNX spends which re-mint their change are also included in this). This functionality is controlled by the `-backupzsynx` command-line option, which defaults to `1` (enabled, auto-backup).
 
-Users that wish to prevent this behavior (not recommended) can pass `-backupzsynx=0` at the command-line when starting the client, or add `backupzsynx=0` to their `syndicate.conf` file.
+Users that wish to prevent this behavior (not recommended) can pass `-backupzsynx=0` at the command-line when starting the client, or add `backupzsynx=0` to their `walle.conf` file.
 
 zSYNX Automint Calculations
 ---------------------
@@ -71,7 +71,7 @@ Due to the aforementioned issue with zSYNX spending, users may find that their a
 
 RPC Changes
 ---------------------
-The `bip38decrypt` command has had it's parameter order changed to be more consistent with it's counterpart. The command now expects the Syndicate address as it's first parameter and the passphrase as it's second parameter.
+The `bip38decrypt` command has had it's parameter order changed to be more consistent with it's counterpart. The command now expects the Walle address as it's first parameter and the passphrase as it's second parameter.
 
 Bip38 Compatibility With 3rd Party Tools
 ---------------------
@@ -125,4 +125,4 @@ Thanks to everyone who directly contributed to this release:
 - rejectedpromise
 - Warrows
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/syndicate-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/walle-project-translations/).

@@ -1,10 +1,10 @@
 Sample configuration files for:
 
-SystemD: syndicated.service
-Upstart: syndicated.conf
-OpenRC:  syndicated.openrc
-         syndicated.openrcconf
-CentOS:  syndicated.init
+SystemD: walled.service
+Upstart: walled.conf
+OpenRC:  walled.openrc
+         walled.openrcconf
+CentOS:  walled.init
 
 have been made available to assist packagers in creating node packages here.
 

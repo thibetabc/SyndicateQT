@@ -7,12 +7,12 @@ reset-files.bash
 *.tar.gz
 
 *.exe
-src/syndicate
-src/syndicated
-src/syndicate-cli
-src/syndicate-tx
-src/test/test_syndicate
-src/qt/test/test_syndicate-qt
+src/walle
+src/walled
+src/walle-cli
+src/walle-tx
+src/test/test_walle
+src/qt/test/test_walle-qt
 
 # autoreconf
 Makefile.in
@@ -38,8 +38,8 @@ confdefs.h
 conftest.cpp
 conftest.err
 libtool
-src/config/syndicate-config.h
-src/config/syndicate-config.h.in
+src/config/walle-config.h
+src/config/walle-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -65,7 +65,7 @@ src/qt/test/moc*.cpp
 *.o
 *.o-*
 *.patch
-.syndicate
+.walle
 *.a
 *.pb.cc
 *.pb.h
@@ -84,12 +84,12 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-syndicate-qt
-Syndicate-Qt.app
+walle-qt
+Walle-Qt.app
 
 # Unit-tests
 Makefile.test
-syndicate-qt_test
+walle-qt_test
 src/test/buildenv.py
 
 # Resources cpp
@@ -105,7 +105,7 @@ build
 #lcov
 *.gcno
 /*.info
-test_syndicate.coverage/
+test_walle.coverage/
 total.coverage/
 coverage_percent.txt
 

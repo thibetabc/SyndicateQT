@@ -4,14 +4,14 @@
 ./configure --prefix=`pwd`/depends/x86_64-pc-linux-gnu
 make -j4 -k
 mkdir -p build/v2.0.0.0/x86_64-pc-linux-gnu;
-cp ./src/syndicated ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicated;
-cp ./src/syndicate-tx ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-tx;
-cp ./src/syndicate-cli ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-cli;
-cp ./src/qt/syndicate-qt ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-qt;
-strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicated
-strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-tx
-strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-cli
-strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/syndicate-qt
+cp ./src/walled ./build/v2.0.0.0/x86_64-pc-linux-gnu/walled;
+cp ./src/walle-tx ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-tx;
+cp ./src/walle-cli ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-cli;
+cp ./src/qt/walle-qt ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-qt;
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/walled
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-tx
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-cli
+strip ./build/v2.0.0.0/x86_64-pc-linux-gnu/walle-qt
 
 cd build/v2.0.0.0/x86_64-pc-linux-gnu;
 cd ../../..;
@@ -24,14 +24,14 @@ make clean;cd src;make clean;cd ..;
 make HOST=x86_64-w64-mingw32 -j4 -k;
 
 mkdir -p build/v2.0.0.0/x86_64-w64-mingw32;
-cp ./src/syndicated.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicated.exe;
-cp ./src/syndicate-tx.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-tx.exe;
-cp ./src/syndicate-cli.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-cli.exe;
-cp ./src/qt/syndicate-qt.exe ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-qt.exe;
-strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicated.exe
-strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-tx.exe
-strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-cli.exe
-strip ./build/v2.0.0.0/x86_64-w64-mingw32/syndicate-qt.exe
+cp ./src/walled.exe ./build/v2.0.0.0/x86_64-w64-mingw32/walled.exe;
+cp ./src/walle-tx.exe ./build/v2.0.0.0/x86_64-w64-mingw32/walle-tx.exe;
+cp ./src/walle-cli.exe ./build/v2.0.0.0/x86_64-w64-mingw32/walle-cli.exe;
+cp ./src/qt/walle-qt.exe ./build/v2.0.0.0/x86_64-w64-mingw32/walle-qt.exe;
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/walled.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/walle-tx.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/walle-cli.exe
+strip ./build/v2.0.0.0/x86_64-w64-mingw32/walle-qt.exe
 ## created detached signatures
 cd build/v2.0.0.0/x86_64-w64-mingw32;
 
@@ -43,35 +43,35 @@ cd build/v2.0.0.0/x86_64-w64-mingw32;
 ##/OU= 	Organizational Unit 	IT Department
 ##/CN= 	Common Name 	example.com
 
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-qt-selfsigned.key -out ./syndicate-qt-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net";
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicated-selfsigned.key -out ./syndicated-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net";
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-tx-selfsigned.key -out ./syndicate-tx-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net"; 
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-cli-selfsigned.key -out ./syndicate-cli-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net"; 
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-qt-selfsigned.key -out ./walle-qt-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net";
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walled-selfsigned.key -out ./walled-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net";
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-tx-selfsigned.key -out ./walle-tx-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net"; 
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-cli-selfsigned.key -out ./walle-cli-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net"; 
 
-osslsigncode sign -certs syndicate-qt-selfsigned.crt -key syndicate-qt-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-qt-selfsigned.crt -key walle-qt-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-qt.exe -out syndicate-qt-signed.exe
+        -in walle-qt.exe -out walle-qt-signed.exe
 
-osslsigncode sign -certs syndicated-selfsigned.crt -key syndicated-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walled-selfsigned.crt -key walled-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicated.exe -out syndicated-signed.exe
+        -in walled.exe -out walled-signed.exe
 
-osslsigncode sign -certs syndicate-tx-selfsigned.crt -key syndicate-tx-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-tx-selfsigned.crt -key walle-tx-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-tx.exe -out syndicate-tx-signed.exe
+        -in walle-tx.exe -out walle-tx-signed.exe
 
-osslsigncode sign -certs syndicate-cli-selfsigned.crt -key syndicate-cli-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-cli-selfsigned.crt -key walle-cli-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-cli.exe -out syndicate-cli-signed.exe
+        -in walle-cli.exe -out walle-cli-signed.exe
 
-mv syndicate-qt-signed.exe syndicate-qt.exe;
-mv syndicated-signed.exe syndicated.exe;
-mv syndicate-tx-signed.exe syndicate-tx.exe;
-mv syndicate-cli-signed.exe syndicate-cli.exe;
+mv walle-qt-signed.exe walle-qt.exe;
+mv walled-signed.exe walled.exe;
+mv walle-tx-signed.exe walle-tx.exe;
+mv walle-cli-signed.exe walle-cli.exe;
 
 cd ../../..;
 make clean;cd src;make clean;cd ..;
@@ -82,14 +82,14 @@ make clean;cd src;make clean;cd ..;
 make HOST=i686-w64-mingw32 -j4 -k;
 
 mkdir -p build/v2.0.0.0/i686-w64-mingw32;
-cp ./src/syndicated.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicated.exe;
-cp ./src/syndicate-tx.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-tx.exe;
-cp ./src/syndicate-cli.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-cli.exe;
-cp ./src/qt/syndicate-qt.exe ./build/v2.0.0.0/i686-w64-mingw32/syndicate-qt.exe;
-strip ./build/v2.0.0.0/i686-w64-mingw32/syndicated.exe
-strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-tx.exe
-strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-cli.exe
-strip ./build/v2.0.0.0/i686-w64-mingw32/syndicate-qt.exe
+cp ./src/walled.exe ./build/v2.0.0.0/i686-w64-mingw32/walled.exe;
+cp ./src/walle-tx.exe ./build/v2.0.0.0/i686-w64-mingw32/walle-tx.exe;
+cp ./src/walle-cli.exe ./build/v2.0.0.0/i686-w64-mingw32/walle-cli.exe;
+cp ./src/qt/walle-qt.exe ./build/v2.0.0.0/i686-w64-mingw32/walle-qt.exe;
+strip ./build/v2.0.0.0/i686-w64-mingw32/walled.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/walle-tx.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/walle-cli.exe
+strip ./build/v2.0.0.0/i686-w64-mingw32/walle-qt.exe
 ## created detached signatures
 cd build/v2.0.0.0/i686-w64-mingw32;
 
@@ -100,35 +100,35 @@ cd build/v2.0.0.0/i686-w64-mingw32;
 ##/OU= 	Organizational Unit 	IT Department
 ##/CN= 	Common Name 	example.com
 
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-qt-selfsigned.key -out ./syndicate-qt-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net";
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicated-selfsigned.key -out ./syndicated-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net";
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-tx-selfsigned.key -out ./syndicate-tx-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net"; 
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./syndicate-cli-selfsigned.key -out ./syndicate-cli-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=syndicateltd.net"; 
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-qt-selfsigned.key -out ./walle-qt-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net";
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walled-selfsigned.key -out ./walled-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net";
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-tx-selfsigned.key -out ./walle-tx-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net"; 
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./walle-cli-selfsigned.key -out ./walle-cli-selfsigned.crt -subj "/C=AT/ST=Vienna/L=Vienna/O=Development/OU=Core Development/CN=walleltd.net"; 
 
-osslsigncode sign -certs syndicate-qt-selfsigned.crt -key syndicate-qt-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-qt-selfsigned.crt -key walle-qt-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-qt.exe -out syndicate-qt-signed.exe
+        -in walle-qt.exe -out walle-qt-signed.exe
 
-osslsigncode sign -certs syndicated-selfsigned.crt -key syndicated-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walled-selfsigned.crt -key walled-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicated.exe -out syndicated-signed.exe
+        -in walled.exe -out walled-signed.exe
 
-osslsigncode sign -certs syndicate-tx-selfsigned.crt -key syndicate-tx-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-tx-selfsigned.crt -key walle-tx-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-tx.exe -out syndicate-tx-signed.exe
+        -in walle-tx.exe -out walle-tx-signed.exe
 
-osslsigncode sign -certs syndicate-cli-selfsigned.crt -key syndicate-cli-selfsigned.key \
-        -n "Syndicate Ltd" -i http://www.syndicateltd.net/ \
+osslsigncode sign -certs walle-cli-selfsigned.crt -key walle-cli-selfsigned.key \
+        -n "Walle Ltd" -i http://www.walleltd.net/ \
         -t http://timestamp.verisign.com/scripts/timstamp.dll \
-        -in syndicate-cli.exe -out syndicate-cli-signed.exe
+        -in walle-cli.exe -out walle-cli-signed.exe
 
-mv syndicate-qt-signed.exe syndicate-qt.exe;
-mv syndicated-signed.exe syndicated.exe;
-mv syndicate-tx-signed.exe syndicate-tx.exe;
-mv syndicate-cli-signed.exe syndicate-cli.exe;
+mv walle-qt-signed.exe walle-qt.exe;
+mv walled-signed.exe walled.exe;
+mv walle-tx-signed.exe walle-tx.exe;
+mv walle-cli-signed.exe walle-cli.exe;
 
 cd ../../..;
 make clean;cd src;make clean;cd ..;
@@ -139,14 +139,14 @@ make clean;cd src;make clean;cd ..;
 make HOST=arm-linux-gnueabihf -j4 -k;
 
 mkdir -p build/v2.0.0.0/arm-linux-gnueabihf;
-cp ./src/syndicated ./build/v2.0.0.0/arm-linux-gnueabihf/syndicated;
-cp ./src/syndicate-tx ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-tx;
-cp ./src/syndicate-cli ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-cli;
-cp ./src/qt/syndicate-qt ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-qt;
-strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicated
-strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-tx
-strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-cli
-strip ./build/v2.0.0.0/arm-linux-gnueabihf/syndicate-qt
+cp ./src/walled ./build/v2.0.0.0/arm-linux-gnueabihf/walled;
+cp ./src/walle-tx ./build/v2.0.0.0/arm-linux-gnueabihf/walle-tx;
+cp ./src/walle-cli ./build/v2.0.0.0/arm-linux-gnueabihf/walle-cli;
+cp ./src/qt/walle-qt ./build/v2.0.0.0/arm-linux-gnueabihf/walle-qt;
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/walled
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/walle-tx
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/walle-cli
+strip ./build/v2.0.0.0/arm-linux-gnueabihf/walle-qt
 # created detached signatures
 cd build/v2.0.0.0/arm-linux-gnueabihf;
 cd ../../..;
@@ -158,14 +158,14 @@ make clean;cd src;make clean;cd ..;
 make HOST=aarch64-linux-gnu -j4 -k;
 
 mkdir -p build/v2.0.0.0/aarch64-linux-gnu;
-cp ./src/syndicated ./build/v2.0.0.0/aarch64-linux-gnu/syndicated;
-cp ./src/syndicate-tx ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-tx;
-cp ./src/syndicate-cli ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-cli;
-cp ./src/qt/syndicate-qt ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-qt;
-strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicated
-strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-tx
-strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-cli
-strip ./build/v2.0.0.0/aarch64-linux-gnu/syndicate-qt
+cp ./src/walled ./build/v2.0.0.0/aarch64-linux-gnu/walled;
+cp ./src/walle-tx ./build/v2.0.0.0/aarch64-linux-gnu/walle-tx;
+cp ./src/walle-cli ./build/v2.0.0.0/aarch64-linux-gnu/walle-cli;
+cp ./src/qt/walle-qt ./build/v2.0.0.0/aarch64-linux-gnu/walle-qt;
+strip ./build/v2.0.0.0/aarch64-linux-gnu/walled
+strip ./build/v2.0.0.0/aarch64-linux-gnu/walle-tx
+strip ./build/v2.0.0.0/aarch64-linux-gnu/walle-cli
+strip ./build/v2.0.0.0/aarch64-linux-gnu/walle-qt
 # created detached signatures
 cd build/v2.0.0.0/aarch64-linux-gnu;
 cd ../../..;

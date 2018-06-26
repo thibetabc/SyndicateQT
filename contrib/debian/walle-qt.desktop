@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Walle
+Comment=Walle P2P Cryptocurrency
+Comment[fr]=Walle, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Walle, eşten eşe kriptografik sanal para birimi
+Exec=walle-qt %u
+Terminal=false
+Type=Application
+Icon=walle128
+MimeType=x-scheme-handler/walle;
+Categories=Office;Finance;

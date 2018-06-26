@@ -5,7 +5,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/syndicate-config.h"
+#include "config/walle-config.h"
 #endif
 
 #include "optionsmodel.h"
@@ -87,10 +87,10 @@ void OptionsModel::Init()
         settings.setValue("nPreferredDenom", 0);
     nPreferredDenom = settings.value("nPreferredDenom", "0").toLongLong();
 
-    if (!settings.contains("nAnonymizeSyndicateAmount"))
-        settings.setValue("nAnonymizeSyndicateAmount", 1000);
+    if (!settings.contains("nAnonymizeWalleAmount"))
+        settings.setValue("nAnonymizeWalleAmount", 1000);
 
-    nAnonymizeSyndicateAmount = settings.value("nAnonymizeSyndicateAmount").toLongLong();
+    nAnonymizeWalleAmount = settings.value("nAnonymizeWalleAmount").toLongLong();
 
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
@@ -164,8 +164,8 @@ void OptionsModel::Init()
         SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
     if (settings.contains("nPreferredDenom"))
         SoftSetArg("-preferredDenom", settings.value("nPreferredDenom").toString().toStdString());
-    if (settings.contains("nAnonymizeSyndicateAmount"))
-        SoftSetArg("-anonymizesyndicateamount", settings.value("nAnonymizeSyndicateAmount").toString().toStdString());
+    if (settings.contains("nAnonymizeWalleAmount"))
+        SoftSetArg("-anonymizewalleamount", settings.value("nAnonymizeWalleAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -176,7 +176,7 @@ void OptionsModel::Reset()
 
     // Remove all entries from our QSettings object
     settings.clear();
-    resetSettings = true; // Needed in syndicate.cpp during shotdown to also remove the window positions
+    resetSettings = true; // Needed in walle.cpp during shotdown to also remove the window positions
 
     // default setting for OptionsModel::StartAtStartup - disabled
     if (GUIUtil::GetStartOnSystemStartup())
@@ -256,8 +256,8 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return QVariant(nZeromintPercentage);
         case ZeromintPrefDenom:
             return QVariant(nPreferredDenom);
-        case AnonymizeSyndicateAmount:
-            return QVariant(nAnonymizeSyndicateAmount);
+        case AnonymizeWalleAmount:
+            return QVariant(nAnonymizeWalleAmount);
         case Listen:
             return settings.value("fListen");
         default:
@@ -386,10 +386,10 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
             emit hideZeroBalancesChanged(fHideZeroBalances);
             break;
 
-        case AnonymizeSyndicateAmount:
-            nAnonymizeSyndicateAmount = value.toInt();
-            settings.setValue("nAnonymizeSyndicateAmount", nAnonymizeSyndicateAmount);
-            emit anonymizeSyndicateAmountChanged(nAnonymizeSyndicateAmount);
+        case AnonymizeWalleAmount:
+            nAnonymizeWalleAmount = value.toInt();
+            settings.setValue("nAnonymizeWalleAmount", nAnonymizeWalleAmount);
+            emit anonymizeWalleAmountChanged(nAnonymizeWalleAmount);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();

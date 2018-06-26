@@ -422,7 +422,7 @@ void WalletView::toggleLockWallet()
 void WalletView::importPrivateKey()
 {
     bool ok;
-    QString privKey = QInputDialog::getText(0, tr(PACKAGE_NAME), tr("Enter a Syndicate private key to import into your wallet."), QLineEdit::Normal, "", &ok);
+    QString privKey = QInputDialog::getText(0, tr(PACKAGE_NAME), tr("Enter a Walle private key to import into your wallet."), QLineEdit::Normal, "", &ok);
     if (ok && !privKey.isEmpty()) {
 
         LOCK2(cs_main, pwalletMain->cs_wallet);
@@ -433,7 +433,7 @@ void WalletView::importPrivateKey()
 
         CBitcoinSecret vchSecret;
         if (!vchSecret.SetString(privKey.toStdString())) {
-            QMessageBox::critical(0, tr(PACKAGE_NAME), tr("This doesn't appear to be a Syndicate private key."));
+            QMessageBox::critical(0, tr(PACKAGE_NAME), tr("This doesn't appear to be a Walle private key."));
             return;
         }
 

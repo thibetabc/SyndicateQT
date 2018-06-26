@@ -7,7 +7,7 @@
  * @license    This project is released under the MIT license.
  **/
 // Copyright (c) 2015-2017 The PIVX developers
-// Copyright (c) 2018 The Syndicate developers
+// Copyright (c) 2018 The Walle developers
 
 #include "denomination_functions.h"
 

@@ -18,7 +18,7 @@ For example:
   ./github-merge.py 3077
 
 (in any git repository) will help you merge pull request #3077 for the
-Syndicate-Project/Syndicate repository.
+Walle-Project/Walle repository.
 
 What it does:
 * Fetch master and the pull request.
@@ -36,16 +36,16 @@ couldn't mess with the sources.
 
 Setup
 ---------
-Configuring the github-merge tool for the Syndicate repository is done in the following way:
+Configuring the github-merge tool for the Walle repository is done in the following way:
 
-    git config githubmerge.repository Syndicate-Project/Syndicate
+    git config githubmerge.repository Walle-Project/Walle
     git config githubmerge.testcmd "make -j4 check" (adapt to whatever you want to use for testing)
     git config --global user.signingkey mykeyid (if you want to GPG sign)
 
 optimize-pngs.py
 ================
 
-A script to optimize png files in the Syndicate
+A script to optimize png files in the Walle
 repository (requires pngcrush).
 
 fix-copyright-headers.py
@@ -93,10 +93,10 @@ If only supported symbols are used the return value will be 0 and the output wil
 
 If there are 'unsupported' symbols, the return value will be 1 a list like this will be printed:
 
-    .../64/test_syndicate: symbol memcpy from unsupported version GLIBC_2.14
-    .../64/test_syndicate: symbol __fdelt_chk from unsupported version GLIBC_2.15
-    .../64/test_syndicate: symbol std::out_of_range::~out_of_range() from unsupported version GLIBCXX_3.4.15
-    .../64/test_syndicate: symbol _ZNSt8__detail15_List_nod from unsupported version GLIBCXX_3.4.15
+    .../64/test_walle: symbol memcpy from unsupported version GLIBC_2.14
+    .../64/test_walle: symbol __fdelt_chk from unsupported version GLIBC_2.15
+    .../64/test_walle: symbol std::out_of_range::~out_of_range() from unsupported version GLIBCXX_3.4.15
+    .../64/test_walle: symbol _ZNSt8__detail15_List_nod from unsupported version GLIBCXX_3.4.15
 
 update-translations.py
 ======================

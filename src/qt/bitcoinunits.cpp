@@ -41,11 +41,11 @@ QString BitcoinUnits::id(int unit)
 {
     switch (unit) {
     case SYNX:
-        return QString("syndicate");
+        return QString("walle");
     case mSYNX:
-        return QString("msyndicate");
+        return QString("mwalle");
     case uSYNX:
-        return QString::fromUtf8("usyndicate");
+        return QString::fromUtf8("uwalle");
     default:
         return QString("???");
     }

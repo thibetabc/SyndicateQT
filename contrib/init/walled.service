@@ -1,0 +1,26 @@
+[Unit]
+Description=Walle's distributed currency daemon
+After=network.target
+
+[Service]
+User=walle
+Group=walle
+
+Type=forking
+PIDFile=/var/lib/walled/walled.pid
+
+ExecStart=/usr/bin/walled -daemon -pid=/var/lib/walled/walled.pid \
+          -conf=/etc/walle/walle.conf -datadir=/var/lib/walled
+
+ExecStop=-/usr/bin/walle-cli -conf=/etc/walle/walle.conf \
+         -datadir=/var/lib/walled stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

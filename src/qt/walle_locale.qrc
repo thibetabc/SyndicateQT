@@ -1,0 +1,29 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/walle_bg.qm</file>
+        <file alias="ca">locale/walle_ca.qm</file>
+        <file alias="cs">locale/walle_cs.qm</file>
+        <file alias="da">locale/walle_da.qm</file>
+        <file alias="de">locale/walle_de.qm</file>
+        <file alias="en">locale/walle_en.qm</file>
+        <file alias="en_US">locale/walle_en_US.qm</file>
+        <file alias="es">locale/walle_es.qm</file>
+        <file alias="fi">locale/walle_fi.qm</file>
+        <file alias="fr_FR">locale/walle_fr_FR.qm</file>
+        <file alias="it">locale/walle_it.qm</file>
+        <file alias="ja">locale/walle_ja.qm</file>
+        <file alias="ko_KR">locale/walle_ko_KR.qm</file>
+        <file alias="nl">locale/walle_nl.qm</file>
+        <file alias="pl">locale/walle_pl.qm</file>
+        <file alias="pt">locale/walle_pt.qm</file>
+        <file alias="pt_BR">locale/walle_pt_BR.qm</file>
+        <file alias="ro_RO">locale/walle_ro_RO.qm</file>
+        <file alias="ru">locale/walle_ru.qm</file>
+        <file alias="sk">locale/walle_sk.qm</file>
+        <file alias="sv">locale/walle_sv.qm</file>
+        <file alias="tr">locale/walle_tr.qm</file>
+        <file alias="uk">locale/walle_uk.qm</file>
+        <file alias="zh_CN">locale/walle_zh_CN.qm</file>
+        <file alias="zh_TW">locale/walle_zh_TW.qm</file>
+    </qresource>
+</RCC>

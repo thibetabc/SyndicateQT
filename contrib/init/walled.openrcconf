@@ -1,0 +1,26 @@
+# /etc/conf.d/walled: config file for /etc/init.d/walled
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/walle/walle.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/walled"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/walled.pid"
+
+# Where to write walled data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/walled"
+
+# User and group to own walled process
+#BITCOIND_USER="walle"
+#BITCOIND_GROUP="walle"
+
+# Path to walled executable
+#BITCOIND_BIN="/usr/bin/walled"
+
+# Nice value to run walled under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

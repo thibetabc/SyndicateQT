@@ -1,5 +1,5 @@
 // Copyright (c) 2014 The Bitcoin developers
-// Copyright (c) 2018 The Syndicate developers
+// Copyright (c) 2018 The Walle developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,8 +10,8 @@
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between syndicate-cli and syndicated)
- * of a given instance of the Syndicate system.
+ * CBaseChainParams defines the base parameters (shared between walle-cli and walled)
+ * of a given instance of the Walle system.
  */
 class CBaseChainParams
 {

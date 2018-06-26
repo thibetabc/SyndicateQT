@@ -3021,7 +3021,7 @@ static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck()
 {
-    RenameThread("syndicate-scriptch");
+    RenameThread("walle-scriptch");
     scriptcheckqueue.Thread();
 }
 
